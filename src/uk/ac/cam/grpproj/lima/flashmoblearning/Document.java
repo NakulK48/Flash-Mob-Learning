@@ -23,5 +23,11 @@ public abstract class Document {
 	
 	/** Remove a tag */
 	public abstract void deleteTag(Tag t);
+	
+	/** Get the title of the document */
+	public abstract String getTitle();
+
+	/** Set the title of the document */
+	public abstract void setTitle(String title);
 
 }

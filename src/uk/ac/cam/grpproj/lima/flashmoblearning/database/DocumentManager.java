@@ -1,6 +1,12 @@
-package uk.ac.cam.grpproj.lima.flashmoblearning;
+package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
 import java.util.List;
+
+import uk.ac.cam.grpproj.lima.flashmoblearning.PublishedDocument;
+import uk.ac.cam.grpproj.lima.flashmoblearning.Revision;
+import uk.ac.cam.grpproj.lima.flashmoblearning.Tag;
+import uk.ac.cam.grpproj.lima.flashmoblearning.User;
+import uk.ac.cam.grpproj.lima.flashmoblearning.WIPDocument;
 
 /** Searches for documents in the database via various keys. Singleton. All database access for
  * documents is through this class, so we can change the schema here.

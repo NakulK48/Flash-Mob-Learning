@@ -2,6 +2,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
 import java.util.List;
 
+import uk.ac.cam.grpproj.lima.flashmoblearning.Document;
 import uk.ac.cam.grpproj.lima.flashmoblearning.PublishedDocument;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Revision;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Tag;
@@ -16,6 +17,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.WIPDocument;
  * Works in progress
  * Revisions of works in progress
  * Votes
+ * Tags (a single document [ID] can have many tags)
  */
 public abstract class DocumentManager {
 	
@@ -71,6 +73,9 @@ public abstract class DocumentManager {
 
 	/** Update a document's metadata (not revisions) */
 	public abstract void updateDocument(PublishedDocument d);
+	
+	/** Update a document's tags (stored separately) */
+	public abstract void updateTags(Document d);
 	
 	/** Add a (positive) vote on a given document */
 	public abstract void addVote(User u, PublishedDocument d);

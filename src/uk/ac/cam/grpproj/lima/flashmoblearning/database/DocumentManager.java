@@ -59,4 +59,7 @@ public abstract class DocumentManager {
 
 	/** Update a document's metadata (not revisions) */
 	public abstract void updateDocument(PublishedDocument d);
+	
+	/** Add a (positive) vote on a given document */
+	public abstract void addVote(User u, PublishedDocument d);
 }

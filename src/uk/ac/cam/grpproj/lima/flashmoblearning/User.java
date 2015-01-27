@@ -1,8 +1,9 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
-public interface User {
+/** Base of Student and Teacher. */
+public abstract class User {
 	
 	/** Name of the user */
-	public String getName();
+	public abstract String getName();
 	
 }

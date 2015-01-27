@@ -75,9 +75,4 @@ public abstract class DocumentManager {
 	/** Add a (positive) vote on a given document */
 	public abstract void addVote(User u, PublishedDocument d);
 
-	/** Get the login banner */
-	public abstract String getLoginBanner();
-
-	/** Set the login banner */
-	public abstract void setLoginBanner(String banner);
 }

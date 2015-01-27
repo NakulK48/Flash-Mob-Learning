@@ -17,26 +17,26 @@ public abstract class DocumentManager {
 	public abstract List<PublishedDocument> getPublishedByUser(User u, QueryParam param); 
 	
 	/** Get the documents a user is working on */
-	public abstract List<WIPDocument> getWorkInProgressByUser(User u);
+	public abstract List<WIPDocument> getWorkInProgressByUser(User u, QueryParam param);
 	
 	/** Get documents by tag */
-	public abstract List<PublishedDocument> getPublishedByTag(Tag t);
+	public abstract List<PublishedDocument> getPublishedByTag(Tag t, QueryParam param);
 
-	/** Get all featured documents */
-	public abstract List<PublishedDocument> getAllFeatured();
+	/** Get featured documents */
+	public abstract List<PublishedDocument> getFeatured(QueryParam param);
 	
 	/** Get all featured documents by tag */
-	public abstract List<PublishedDocument> getFeaturedByTag(Tag t);
+	public abstract List<PublishedDocument> getFeaturedByTag(Tag t, QueryParam param);
 	
 	/** Get all documents published. Should then be sorted by the ResultList. */
-	public abstract List<PublishedDocument> getAllPublished();
+	public abstract List<PublishedDocument> getPublished(QueryParam param);
 	
 	/** Delete everything owned by a user. Called by Login.deleteUser(). */
-	public abstract void deleteUser(User u);
+	public abstract void deleteUser(User u, QueryParam param);
 	
 	/** Get all revisions of a given Work In Progress document */
-	public abstract List<Revision> getRevisions(WIPDocument d);
+	public abstract List<Revision> getRevisions(WIPDocument d, QueryParam param);
 	
 	/** Get the one and only revision of a given PublishedDocument */
-	public abstract Revision getFinalRevision(PublishedDocument d);
+	public abstract Revision getFinalRevision(PublishedDocument d, QueryParam param);
 }

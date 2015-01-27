@@ -1,7 +1,7 @@
 
 public enum DocumentType {
 	
-	PLAINTEXT {
+	PLAINTEXT(false) {
 
 		@Override
 		public Editor createEditor(Document d, boolean runOnly) {
@@ -10,7 +10,7 @@ public enum DocumentType {
 		}
 		
 	},
-	SKULPT {
+	SKULPT(true) {
 
 		@Override
 		public Editor createEditor(Document d, boolean runOnly) {
@@ -19,7 +19,7 @@ public enum DocumentType {
 		}
 		
 	},
-	PI {
+	PI(true) {
 
 		@Override
 		public Editor createEditor(Document d, boolean runOnly) {
@@ -28,6 +28,10 @@ public enum DocumentType {
 		}
 		
 	};
+	
+	DocumentType(final boolean r) {
+		runnable = r;
+	}
 
 	abstract public Editor createEditor(Document d, boolean runOnly);
 	

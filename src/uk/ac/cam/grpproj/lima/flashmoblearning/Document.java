@@ -10,6 +10,10 @@ public abstract class Document {
 	
 	/** Every document has an immutable Owner */
 	public abstract User getOwner();
+
+	/** @return The parent Document this was forked from or null if this 
+	 * document was created from scratch. */
+	public abstract Document getParent();
 	
 	/** Get the current list of tags */
 	public abstract List<Tag> getTags();

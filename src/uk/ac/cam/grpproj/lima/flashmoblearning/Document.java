@@ -2,15 +2,15 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
 
 import java.util.List;
 
-public interface Document {
+public abstract class Document {
 	
 	/** Every document has an immutable Owner */
-	public User getOwner();
+	public abstract User getOwner();
 	
 	/** Get the current list of tags */
-	public List<Tag> getTags();
+	public abstract List<Tag> getTags();
 	
 	/** Add a tag */
-	public void addTag(Tag t);
+	public abstract void addTag(Tag t);
 
 }

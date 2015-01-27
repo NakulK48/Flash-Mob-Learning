@@ -2,7 +2,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
 
 import java.util.List;
 
-public abstract class WIPDocument implements Document {
+public abstract class WIPDocument extends Document {
 	
 	/** Every work-in-progress document has a unique ID which never changes. */
 	public abstract long getID();

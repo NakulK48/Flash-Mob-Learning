@@ -50,6 +50,12 @@ public abstract class DocumentManager {
 	// with Revision's: WIPDocument's have many revisions in a separate table, PublishedDocument's
 	// have one which is stored with the rest of the record. Revision's can be large.
 	
+	/** Delete a work-in-progress document. */
+	public abstract void deleteDocument(WIPDocument d);
+	
+	/** Delete a published document. Be careful with forks! */
+	public abstract void deleteDocument(PublishedDocument d);
+	
 	/** Add a revision to a Work In Progress document */
 	public abstract void addRevision(WIPDocument d, Revision r);
 	

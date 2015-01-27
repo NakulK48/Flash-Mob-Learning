@@ -9,4 +9,10 @@ public abstract class PublishedDocument extends Document{
 
 	/** Copy a document so we can edit it */
 	public abstract WIPDocument fork(User newOwner);
+	
+	/** Is this document Featured? */
+	public abstract boolean getFeatured();
+	
+	/** Set the Featured flag */
+	public abstract void setFeatured();
 }

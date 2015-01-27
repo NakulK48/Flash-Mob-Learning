@@ -7,7 +7,7 @@ public interface ResultList<T extends Document> {
 	/** How many results? */
 	public int size();
 	
-	/** Render using the current sorting mode */
+	/** Render a list of results using the current sorting mode */
 	public String render(int maxCount);
 	
 }

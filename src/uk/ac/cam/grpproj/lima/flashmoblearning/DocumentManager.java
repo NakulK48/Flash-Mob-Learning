@@ -1,7 +1,5 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
-import java.util.Iterator;
-
 /** Searches for documents in the database via various keys. Singleton. All database access for
  * documents is through this class, so we can change the schema here.
  */
@@ -25,4 +23,6 @@ public abstract class DocumentManager {
 	/** Get all documents published. Should then be sorted by the ResultList. */
 	public abstract ResultList<PublishedDocument> getAllPublished();
 	
+	/** Delete everything owned by a user. Called by Login.deleteUser(). */
+	public abstract void deleteUser(User u);
 }

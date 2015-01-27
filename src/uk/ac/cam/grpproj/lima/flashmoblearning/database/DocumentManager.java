@@ -10,6 +10,12 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.WIPDocument;
 
 /** Searches for documents in the database via various keys. Singleton. All database access for
  * documents is through this class, so we can change the schema here.
+ * 
+ * Rough schema:
+ * Published documents (single table, including content and vote count)
+ * Works in progress
+ * Revisions of works in progress
+ * Votes
  */
 public abstract class DocumentManager {
 	

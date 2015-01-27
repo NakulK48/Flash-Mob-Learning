@@ -13,5 +13,9 @@ public abstract class WIPDocument extends Document {
 	
 	/** Called when a new revision is saved */
 	public abstract void saveRevision(Revision r);
+	
+	/** Publish as a PublishedDocument. Creates a new PublishedDocument using the final revision
+	 * and calls the database to store it. */
+	public abstract PublishedDocument publish();
 
 }

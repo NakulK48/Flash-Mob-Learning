@@ -37,7 +37,7 @@ public abstract class DocumentManager {
 	/** Get all documents published. Should then be sorted by the ResultList. */
 	public abstract List<PublishedDocument> getPublished(QueryParam param);
 	
-	/** Delete everything owned by a user. Called by Login.deleteUser(). */
+	/** Delete all documents owned by a user. Called by Login.deleteUser(). */
 	public abstract void deleteUser(User u, QueryParam param);
 	
 	/** Get all revisions of a given Work In Progress document */

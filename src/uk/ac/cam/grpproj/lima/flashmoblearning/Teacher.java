@@ -1,5 +1,5 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
-public class Teacher implements User {
+public abstract class Teacher implements User {
 
 }

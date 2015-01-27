@@ -1,7 +1,28 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
-public class DocumentManager {
-	
-	// Search for documents in the database via various keys.
+import java.util.Iterator;
 
+/** Searches for documents in the database via various keys. Singleton. All database access for
+ * documents is through this class, so we can change the schema here.
+ */
+public abstract class DocumentManager {
+	
+	/** Get the documents a user has published */
+	public abstract ResultList<PublishedDocument> getPublishedByUser(User u);
+	
+	/** Get the documents a user is working on */
+	public abstract ResultList<WIPDocument> getWorkInProgressByUser(User u);
+	
+	/** Get documents by tag */
+	public abstract ResultList<PublishedDocument> getPublishedByTag(Tag t);
+
+	/** Get all featured documents */
+	public abstract ResultList<PublishedDocument> getAllFeatured();
+	
+	/** Get all featured documents by tag */
+	public abstract ResultList<PublishedDocument> getFeaturedByTag(Tag t);
+	
+	/** Get all documents published. Should then be sorted by the ResultList. */
+	public abstract ResultList<PublishedDocument> getAllPublished();
+	
 }

@@ -6,4 +6,7 @@ public abstract class User {
 	/** Name of the user */
 	public abstract String getName();
 	
+	/** Try to log in */
+	public abstract boolean login(String password);
+	
 }

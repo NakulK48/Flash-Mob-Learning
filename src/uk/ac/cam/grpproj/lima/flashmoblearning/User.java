@@ -9,7 +9,11 @@ public abstract class User {
 	/** Name of the user */
 	public abstract String getName();
 	
-	/** Try to log in */
-	public abstract boolean login(String password);
+	/** Try to log in.
+	 * @return True if the password is correct. */
+	public abstract boolean checkPassword(String password);
+	
+	/** Set password */
+	public abstract void setPassword(String newPassword);
 	
 }

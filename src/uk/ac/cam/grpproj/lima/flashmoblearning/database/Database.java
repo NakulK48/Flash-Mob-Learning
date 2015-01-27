@@ -5,7 +5,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.database;
  */
 public abstract class Database {
 
-	//static public Database get();
+	//static public Database getInstance();
 	
 	/** Shutdown the database */
 	public abstract void close();

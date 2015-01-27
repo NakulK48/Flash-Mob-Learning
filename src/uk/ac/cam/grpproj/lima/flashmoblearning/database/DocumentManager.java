@@ -39,4 +39,24 @@ public abstract class DocumentManager {
 	
 	/** Get the one and only revision of a given PublishedDocument */
 	public abstract Revision getFinalRevision(PublishedDocument d, QueryParam param);
+	
+	// Note that WIPDocument's and PublishedDocument's are stored differently due to issues
+	// with Revision's: WIPDocument's have many revisions in a separate table, PublishedDocument's
+	// have one which is stored with the rest of the record. Revision's can be large.
+	
+	/** Add a revision to a Work In Progress document */
+	public abstract void addRevision(WIPDocument d, Revision r);
+	
+	/** Add a new Work In Progress document, either with no revisions or with a single
+	 * revision based on another Document. */
+	public abstract void createDocument(WIPDocument d);
+	
+	/** Add a new published document. The revision is stored with the document. */
+	public abstract void createDocument(PublishedDocument d);
+	
+	/** Update a document's metadata (not revisions) */
+	public abstract void updateDocument(WIPDocument d);
+
+	/** Update a document's metadata (not revisions) */
+	public abstract void updateDocument(PublishedDocument d);
 }

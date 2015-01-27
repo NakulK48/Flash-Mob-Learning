@@ -26,4 +26,10 @@ public abstract class Database {
 	/** Get tag by name */
 	public abstract Tag getTag(String name);
 	
+	/** Get a unique ID for a document */
+	public abstract long createDocumentID();
+	
+	/** Get a unique ID for a user */
+	public abstract long createUserID();
+	
 }

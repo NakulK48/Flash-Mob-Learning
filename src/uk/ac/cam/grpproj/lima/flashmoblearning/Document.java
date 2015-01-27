@@ -4,6 +4,8 @@ import java.util.List;
 
 public abstract class Document {
 	
+	public abstract DocumentType getType();
+	
 	/** Every document has an immutable Owner */
 	public abstract User getOwner();
 	

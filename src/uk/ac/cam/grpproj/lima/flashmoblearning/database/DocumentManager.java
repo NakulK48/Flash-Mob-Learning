@@ -14,29 +14,29 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.WIPDocument;
 public abstract class DocumentManager {
 	
 	/** Get the documents a user has published */
-	public abstract ResultList<PublishedDocument> getPublishedByUser(User u);
+	public abstract List<PublishedDocument> getPublishedByUser(User u, QueryParam param); 
 	
 	/** Get the documents a user is working on */
-	public abstract ResultList<WIPDocument> getWorkInProgressByUser(User u);
+	public abstract List<WIPDocument> getWorkInProgressByUser(User u);
 	
 	/** Get documents by tag */
-	public abstract ResultList<PublishedDocument> getPublishedByTag(Tag t);
+	public abstract List<PublishedDocument> getPublishedByTag(Tag t);
 
 	/** Get all featured documents */
-	public abstract ResultList<PublishedDocument> getAllFeatured();
+	public abstract List<PublishedDocument> getAllFeatured();
 	
 	/** Get all featured documents by tag */
-	public abstract ResultList<PublishedDocument> getFeaturedByTag(Tag t);
+	public abstract List<PublishedDocument> getFeaturedByTag(Tag t);
 	
 	/** Get all documents published. Should then be sorted by the ResultList. */
-	public abstract ResultList<PublishedDocument> getAllPublished();
+	public abstract List<PublishedDocument> getAllPublished();
 	
 	/** Delete everything owned by a user. Called by Login.deleteUser(). */
 	public abstract void deleteUser(User u);
 	
 	/** Get all revisions of a given Work In Progress document */
-	abstract List<Revision> getRevisions(WIPDocument d);
+	public abstract List<Revision> getRevisions(WIPDocument d);
 	
 	/** Get the one and only revision of a given PublishedDocument */
-	abstract Revision getFinalRevision(PublishedDocument d);
+	public abstract Revision getFinalRevision(PublishedDocument d);
 }

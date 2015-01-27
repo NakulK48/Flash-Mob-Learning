@@ -2,8 +2,10 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
 
 import java.util.List;
 
+/** Base class for Document's. */
 public abstract class Document {
 	
+	/** A Document has a Type */
 	public abstract DocumentType getType();
 	
 	/** Every document has an immutable Owner */

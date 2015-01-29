@@ -4,6 +4,10 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.User;
 
 public abstract class LoginManager {
 	
+	public static LoginManager getInstance() {
+		return Database.getInstance().getLoginManager();
+	}
+	
 	/** Get a user by username */
 	public abstract User getUser(String username);
 	

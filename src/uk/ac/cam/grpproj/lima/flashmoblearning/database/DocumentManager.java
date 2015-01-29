@@ -21,6 +21,10 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.WIPDocument;
  */
 public abstract class DocumentManager {
 	
+	public static DocumentManager getInstance() {
+		return Database.getInstance().getDocumentManager();
+	}
+	
 	/** Get the documents a user has published */
 	public abstract List<PublishedDocument> getPublishedByUser(User u, QueryParam param); 
 	

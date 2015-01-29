@@ -8,8 +8,20 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.Tag;
  * Most of the work is done by DocumentManager and LoginManager.
  */
 public abstract class Database {
+	
+	private static Database instance;
 
-	//static public Database getInstance();
+//	public static init() {
+//		
+//	}
+//	
+//	public static initTest() {
+//		
+//	}
+	
+	public static Database getInstance() {
+		return instance;
+	}
 	
 	/** Shutdown the database */
 	public abstract void close();
@@ -31,5 +43,11 @@ public abstract class Database {
 	
 	/** Get a unique ID for a user */
 	public abstract long createUserID();
+
+	/** Get the DocumentManager */
+	public abstract DocumentManager getDocumentManager();
+
+	/** Get the LoginManager */
+	public abstract LoginManager getLoginManager();
 	
 }

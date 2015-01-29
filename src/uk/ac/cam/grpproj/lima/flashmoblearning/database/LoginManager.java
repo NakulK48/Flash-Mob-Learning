@@ -20,6 +20,4 @@ public abstract class LoginManager {
 	/** Modify a user, index by userId. */
 	public abstract User modifyUser(User u);
 	
-	
-	
 }

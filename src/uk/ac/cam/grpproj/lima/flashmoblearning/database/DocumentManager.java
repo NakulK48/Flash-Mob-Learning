@@ -1,5 +1,6 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +49,7 @@ public abstract class DocumentManager {
 	public abstract void deleteUser(User u, QueryParam param);
 	
 	/** Get all revisions of a given Work In Progress document */
-	public abstract List<Revision> getRevisions(WIPDocument d, QueryParam param);
+	public abstract LinkedList<Revision> getRevisions(WIPDocument d, QueryParam param);
 	
 	/** Get the one and only revision of a given PublishedDocument */
 	public abstract Revision getFinalRevision(PublishedDocument d, QueryParam param);
@@ -77,7 +78,7 @@ public abstract class DocumentManager {
 	 * Must implement both subclasses. */
 	public abstract void updateDocument(Document d);
 	
-	/** List all tags */
+	/** List all tags. Note tags are deleted once all references are deleted. */
 	public abstract Set<Tag> getTags();
 	
 	/** Get tag by name */

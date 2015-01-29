@@ -11,6 +11,7 @@ public class Tag {
 	
 	public Tag(String n) {
 		name = n;
+		if(n == null) throw new NullPointerException(); // Fail early.
 	}
 	
 	/** Has the tag been banned? */

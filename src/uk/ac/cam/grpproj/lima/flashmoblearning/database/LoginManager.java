@@ -12,7 +12,7 @@ public abstract class LoginManager {
 	public abstract User getUser(String username);
 	
 	/** Delete a user by username */
-	public abstract User deleteUser(String username);
+	public abstract void deleteUser(User user);
 	
 	/** Create a user */
 	public abstract User createUser(String username, String saltedPassword) throws DuplicateNameException;

@@ -67,7 +67,7 @@ public abstract class DocumentManager {
 	/** If a document's status changes from unpublished to published, all revisions but the latest is truncated **/
 	public abstract void updateDocument(Document d) throws NoSuchObjectException;
 	
-	/** List all tags. Note tags are deleted once all references are deleted. */
+	/** List all tags. */
 	public abstract Set<Tag> getTags() throws NoSuchObjectException;
 	
 	/** Get tag by name */

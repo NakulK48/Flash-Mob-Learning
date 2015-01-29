@@ -29,7 +29,7 @@ public abstract class DocumentManager {
 	
 	/** Get the documents a user has published */
 	public abstract List<PublishedDocument> getPublishedByUser(User u, QueryParam param) throws NoSuchObjectException;
-	
+
 	/** Get the documents a user is working on */
 	public abstract List<WIPDocument> getWorkInProgressByUser(User u, QueryParam param) throws NoSuchObjectException;
 	
@@ -56,6 +56,9 @@ public abstract class DocumentManager {
 	
 	/** Called when a revision is added to a document */
 	public abstract void addRevision(Document d, Revision r) throws NoSuchObjectException;
+
+	/** Called when a document is deleted or published */
+	public abstract void deleteRevision(List<Revision> r) throws NoSuchObjectException;
 	
 	/** Add a new document, either with no revisions or with a single revision based on another Document. */
 	public abstract void createDocument(Document d) throws NoSuchObjectException;

@@ -1,6 +1,5 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.DuplicateNameException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
 
 /** Base of Student and Teacher. */
@@ -9,7 +8,8 @@ public class User {
 	/** User has a fixed numerical ID, even if their name is changed. */
 	public final long id;
 
-	/** Name of the user */
+	/** Name of the user.
+	 * FIXME Consider ability (for teacher?) to change user names. */
 	public final String name;
 
 	private String encryptedPassword;
@@ -27,12 +27,7 @@ public class User {
 		synchronized(this) {
 			if(this.encryptedPassword.equals(newPassword)) return;
 		}
-		try {
-			LoginManager.getInstance().modifyUser(this);
-		} catch (DuplicateNameException e) {
-			// Impossible.
-			throw new Error(e);
-		}
+		LoginManager.getInstance().modifyUser(this);
 	}
 	
 	public User(long id, String name, String epass) {

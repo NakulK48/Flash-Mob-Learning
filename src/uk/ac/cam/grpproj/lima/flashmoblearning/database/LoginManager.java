@@ -17,8 +17,8 @@ public abstract class LoginManager {
 	/** Create a user */
 	public abstract User createUser(String username, String saltedPassword) throws DuplicateNameException;
 	
-	/** Modify a user, index by userId */
-	public abstract User modifyUser(User u) throws DuplicateNameException;
+	/** Modify a user, index by userId. */
+	public abstract User modifyUser(User u);
 	
 	
 	

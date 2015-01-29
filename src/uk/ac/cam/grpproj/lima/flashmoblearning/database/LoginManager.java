@@ -22,4 +22,9 @@ public abstract class LoginManager {
 	/** Modify a user, index by userId. */
 	public abstract User modifyUser(User u) throws SQLException, NoSuchObjectException, DuplicateNameException;
 
+	/** Get the login banner */
+	public abstract String getLoginBanner() throws SQLException;
+
+	/** Set the login banner */
+	public abstract void setLoginBanner(String banner) throws SQLException;
 }

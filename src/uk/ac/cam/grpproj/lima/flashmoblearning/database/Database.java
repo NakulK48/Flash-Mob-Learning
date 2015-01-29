@@ -27,12 +27,6 @@ public abstract class Database {
 	/** Shutdown the database */
 	public abstract void close();
 
-	/** Get the login banner */
-	public abstract String getLoginBanner() throws SQLException;
-
-	/** Set the login banner */
-	public abstract void setLoginBanner(String banner) throws SQLException;
-
 	/** Get the DocumentManager */
 	public abstract DocumentManager getDocumentManager();
 

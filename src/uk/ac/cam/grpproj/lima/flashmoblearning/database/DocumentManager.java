@@ -62,7 +62,7 @@ public abstract class DocumentManager {
 	/** Delete a published document. Be careful with forks! */
 	public abstract void deleteDocument(PublishedDocument d);
 	
-	/** Add a revision to a Work In Progress document */
+	/** Called when a revision is added to a Work In Progress document */
 	public abstract void addRevision(WIPDocument d, Revision r);
 	
 	/** Add a new Work In Progress document, either with no revisions or with a single

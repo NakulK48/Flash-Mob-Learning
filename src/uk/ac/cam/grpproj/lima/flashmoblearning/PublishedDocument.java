@@ -16,7 +16,7 @@ public class PublishedDocument extends Document{
 	private boolean isFeatured;
 	
 	public PublishedDocument(WIPDocument original) {
-		super(original.docType, original.owner, original.parentDoc, original.getTitle());
+		super(original.docType, original.owner, original.parentDoc, original.getTitle(), System.currentTimeMillis());
 		isFeatured = false;
 	}
 	

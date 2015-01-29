@@ -13,7 +13,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
 public class WIPDocument extends Document {
 	
 	public WIPDocument(PublishedDocument forked, User newOwner, Revision initialRevision) {
-		super(forked.docType, newOwner, forked, forked.getTitle());
+		super(forked.docType, newOwner, forked, forked.getTitle(), System.currentTimeMillis());
 		DocumentManager.getInstance().addRevision(this, initialRevision);
 	}
 	

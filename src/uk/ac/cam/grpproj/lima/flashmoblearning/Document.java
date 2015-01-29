@@ -19,6 +19,8 @@ public class Document {
 	/** The parent Document this was forked from or null if this 
 	 * document was created from scratch. */
 	public final Document parentDoc;
+	/** Time and date of creation of the document */
+	public final long creationTime;
 
 	/** Tags associated with this document. Can be modified, when modified we update the
 	 * database automatically. Non-null. */
@@ -28,13 +30,14 @@ public class Document {
 	private String title;
 	
 	public Document(DocumentType docType, User owner, Document parentDoc,
-			String title) {
+			String title, long time) {
 		id = Database.getInstance().createDocumentID();
 		this.docType = docType;
 		this.owner = owner;
 		this.parentDoc = parentDoc;
 		this.tags = new HashSet<Tag>();
 		this.title = title;
+		this.creationTime = time;
 	}
 
 	/** Get the current list of tags. Read-only. */

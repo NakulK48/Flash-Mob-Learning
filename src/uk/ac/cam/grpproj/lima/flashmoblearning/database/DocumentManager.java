@@ -72,12 +72,10 @@ public abstract class DocumentManager {
 	/** Add a new published document. The revision is stored with the document. */
 	public abstract void createDocument(PublishedDocument d);
 	
-	/** Update a document's metadata (not revisions) */
-	public abstract void updateDocument(WIPDocument d);
+	/** Update a document's metadata (not revisions).
+	 * Must implement both subclasses. */
+	public abstract void updateDocument(Document d);
 
-	/** Update a document's metadata (not revisions) */
-	public abstract void updateDocument(PublishedDocument d);
-	
 	/** Update a document's tags (stored separately) */
 	public abstract void updateTags(Document d);
 	

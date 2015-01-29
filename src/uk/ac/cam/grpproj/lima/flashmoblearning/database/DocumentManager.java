@@ -79,6 +79,12 @@ public abstract class DocumentManager {
 	/** Update a document's tags (stored separately) */
 	public abstract void updateTags(Document d);
 	
+	/** Update a tag. I.e. it may go from banned to unbanned o vice versa. */
+	public abstract void updateTag(Tag tag);
+	
+	/** Delete a tag. Database will delete references from all documents to this tag. */
+	public abstract void deleteTag(Tag tag);
+
 	/** Add a (positive) vote on a given document */
 	public abstract void addVote(User u, PublishedDocument d);
 

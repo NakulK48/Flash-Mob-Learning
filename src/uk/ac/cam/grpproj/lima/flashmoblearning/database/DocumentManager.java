@@ -1,6 +1,7 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
 import java.util.List;
+import java.util.Set;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.Document;
 import uk.ac.cam.grpproj.lima.flashmoblearning.PublishedDocument;
@@ -75,7 +76,13 @@ public abstract class DocumentManager {
 	/** Update a document's metadata (not revisions).
 	 * Must implement both subclasses. */
 	public abstract void updateDocument(Document d);
-
+	
+	/** List all tags */
+	public abstract Set<Tag> getTags();
+	
+	/** Get tag by name */
+	public abstract Tag getTag(String name);
+	
 	/** Update a document's tags (stored separately) */
 	public abstract void updateTags(Document d);
 	

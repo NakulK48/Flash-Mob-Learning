@@ -32,12 +32,6 @@ public abstract class Database {
 	/** Set the login banner */
 	public abstract void setLoginBanner(String banner);
 	
-	/** List all tags */
-	public abstract Set<Tag> getTags();
-	
-	/** Get tag by name */
-	public abstract Tag getTag(String name);
-	
 	/** Get a unique ID for a document */
 	public abstract long createDocumentID();
 	

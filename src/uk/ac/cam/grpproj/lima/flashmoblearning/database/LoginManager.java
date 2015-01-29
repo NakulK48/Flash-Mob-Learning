@@ -9,15 +9,15 @@ public abstract class LoginManager {
 	}
 	
 	/** Get a user by username */
-	public abstract User getUser(String username);
+	public abstract User getUser(String username) throws NoSuchObjectException;
 	
 	/** Delete a user by username */
-	public abstract void deleteUser(User user) throws NoSuchUserException;
+	public abstract void deleteUser(User user) throws NoSuchObjectException;
 	
 	/** Create a user */
 	public abstract User createUser(String username, String saltedPassword) throws DuplicateNameException;
 	
 	/** Modify a user, index by userId. */
-	public abstract User modifyUser(User u);
+	public abstract User modifyUser(User u) throws NoSuchObjectException, DuplicateNameException;
 	
 }

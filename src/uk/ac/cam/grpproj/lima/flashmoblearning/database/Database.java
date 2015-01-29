@@ -31,12 +31,6 @@ public abstract class Database {
 
 	/** Set the login banner */
 	public abstract void setLoginBanner(String banner);
-	
-	/** Get a unique ID for a document */
-	public abstract long createDocumentID();
-	
-	/** Get a unique ID for a user */
-	public abstract long createUserID();
 
 	/** Get the DocumentManager */
 	public abstract DocumentManager getDocumentManager();

@@ -12,8 +12,9 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
 /** A document that is still being worked on. Has a revision history. Has not been published. */
 public class WIPDocument extends Document {
 	
-	public WIPDocument(PublishedDocument forked, User newOwner) {
+	public WIPDocument(PublishedDocument forked, User newOwner, Revision initialRevision) {
 		super(forked.docType, newOwner, forked, forked.getTitle());
+		DocumentManager.getInstance().addRevision(this, initialRevision);
 	}
 	
 	private SoftReference<LinkedList<Revision>> revisionsRef;

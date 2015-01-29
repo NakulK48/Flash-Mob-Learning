@@ -45,7 +45,7 @@ public class PublishedDocument extends Document{
 
 	/** Copy a document so we can edit it */
 	public WIPDocument fork(User newOwner) {
-		return new WIPDocument(this, newOwner);
+		return new WIPDocument(this, newOwner, getContentRevision());
 	}
 	
 	/** Is this document Featured? */

@@ -23,8 +23,14 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.WIPDocument;
  * Tags (a single document [ID] can have many tags)
  */
 public abstract class DocumentManager {
-	
-	public static DocumentManager getInstance() {
+
+	private Database m_Database;
+
+	protected DocumentManager(Database database) {
+		m_Database = database;
+	}
+
+	public static DocumentManager getInstance() throws NotInitializedException {
 		return Database.getInstance().getDocumentManager();
 	}
 	

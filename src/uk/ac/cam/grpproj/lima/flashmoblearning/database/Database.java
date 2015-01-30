@@ -14,6 +14,8 @@ public abstract class Database {
 	
 	private static Database m_Instance;
 	private static Connection m_Connection = null;
+	private LoginManager m_LoginManagerInstance;
+	private DocumentManager m_DocumentManagerInstance;
 	
 	public static Database getInstance() {
 		return m_Instance;

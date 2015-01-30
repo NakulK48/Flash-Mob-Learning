@@ -5,8 +5,14 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.User;
 import java.sql.SQLException;
 
 public abstract class LoginManager {
-	
-	public static LoginManager getInstance() {
+
+	private Database m_Database;
+
+	protected LoginManager(Database database) {
+		m_Database = database;
+	}
+
+	public static LoginManager getInstance() throws NotInitializedException {
 		return Database.getInstance().getLoginManager();
 	}
 	

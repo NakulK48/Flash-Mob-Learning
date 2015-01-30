@@ -1,6 +1,8 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Set;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.Tag;
@@ -10,27 +12,36 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.Tag;
  */
 public abstract class Database {
 	
-	private static Database instance;
-
-//	public static init() {
-//		
-//	}
-//	
-//	public static initTest() {
-//		
-//	}
+	private static Database m_Instance;
+	private static Connection m_Connection = null;
 	
 	public static Database getInstance() {
-		return instance;
+		return m_Instance;
 	}
-	
+
+	/** Initializes and tests the database connection, setting it up if necessary **/
+	public static void init() {
+
+	}
+
+	/** Creates all necessary tables if they do not exist. **/
+	private static void setup() {
+
+	}
+
+	/** Obtain database connection **/
+	protected abstract Connection getConnection() throws SQLException;
+
+	/** Obtain a new statement, ready for execution **/
+	protected abstract Statement getStatement() throws SQLException;
+
 	/** Shutdown the database */
 	public abstract void close();
 
 	/** Get the DocumentManager */
-	public abstract DocumentManager getDocumentManager();
+	public abstract DocumentManager getDocumentManager() throws NotInitializedException;
 
 	/** Get the LoginManager */
-	public abstract LoginManager getLoginManager();
+	public abstract LoginManager getLoginManager() throws NotInitializedException;
 	
 }

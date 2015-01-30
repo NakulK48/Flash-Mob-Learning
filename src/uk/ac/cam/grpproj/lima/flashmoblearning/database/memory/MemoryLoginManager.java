@@ -3,9 +3,9 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.database.memory;
 import java.util.HashMap;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.NoSuchObjectException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 
 public class MemoryLoginManager extends LoginManager {
 	

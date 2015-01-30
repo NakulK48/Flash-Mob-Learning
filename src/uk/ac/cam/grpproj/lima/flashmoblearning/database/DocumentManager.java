@@ -11,6 +11,9 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.Revision;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Tag;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
 import uk.ac.cam.grpproj.lima.flashmoblearning.WIPDocument;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
 /** Searches for documents in the database via various keys. Singleton. All database access for
  * documents is through this class, so we can change the schema here.

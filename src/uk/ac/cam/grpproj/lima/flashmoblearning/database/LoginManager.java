@@ -1,6 +1,9 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
 import java.sql.SQLException;
 

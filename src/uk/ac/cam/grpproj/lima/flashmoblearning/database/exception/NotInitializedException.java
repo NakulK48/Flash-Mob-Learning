@@ -1,4 +1,4 @@
-package uk.ac.cam.grpproj.lima.flashmoblearning.database;
+package uk.ac.cam.grpproj.lima.flashmoblearning.database.exception;
 
 import java.sql.SQLException;
 

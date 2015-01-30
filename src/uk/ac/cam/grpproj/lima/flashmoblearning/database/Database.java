@@ -3,9 +3,8 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Set;
 
-import uk.ac.cam.grpproj.lima.flashmoblearning.Tag;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
 /** Singleton class which opens the database connection, and deals with global config and Tags.
  * Most of the work is done by DocumentManager and LoginManager.

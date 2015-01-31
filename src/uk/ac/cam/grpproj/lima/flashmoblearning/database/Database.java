@@ -1,47 +1,48 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
-import java.util.Set;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-import uk.ac.cam.grpproj.lima.flashmoblearning.Tag;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
 /** Singleton class which opens the database connection, and deals with global config and Tags.
  * Most of the work is done by DocumentManager and LoginManager.
  */
 public abstract class Database {
 	
-	private static Database instance;
-
-//	public static init() {
-//		
-//	}
-//	
-//	public static initTest() {
-//		
-//	}
+	private static Database m_Instance;
+	private static Connection m_Connection = null;
+	private LoginManager m_LoginManagerInstance;
+	private DocumentManager m_DocumentManagerInstance;
 	
 	public static Database getInstance() {
-		return instance;
+		return m_Instance;
 	}
-	
+
+	/** Initializes and tests the database connection, setting it up if necessary **/
+	public static void init() {
+
+	}
+
+	/** Creates all necessary tables if they do not exist. **/
+	private static void setup() {
+
+	}
+
+	/** Obtain database connection **/
+	protected abstract Connection getConnection() throws SQLException;
+
+	/** Obtain a new statement, ready for execution **/
+	protected abstract Statement getStatement() throws SQLException;
+
 	/** Shutdown the database */
 	public abstract void close();
-	
-	/** Get the login banner */
-	public abstract String getLoginBanner();
-
-	/** Set the login banner */
-	public abstract void setLoginBanner(String banner);
-	
-	/** Get a unique ID for a document */
-	public abstract long createDocumentID();
-	
-	/** Get a unique ID for a user */
-	public abstract long createUserID();
 
 	/** Get the DocumentManager */
-	public abstract DocumentManager getDocumentManager();
+	public abstract DocumentManager getDocumentManager() throws NotInitializedException;
 
 	/** Get the LoginManager */
-	public abstract LoginManager getLoginManager();
+	public abstract LoginManager getLoginManager() throws NotInitializedException;
 	
 }

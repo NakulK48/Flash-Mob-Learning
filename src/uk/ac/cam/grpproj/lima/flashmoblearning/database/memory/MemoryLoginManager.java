@@ -3,9 +3,9 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.database.memory;
 import java.util.HashMap;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.NoSuchUserException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 
 public class MemoryLoginManager extends LoginManager {
 	
@@ -26,8 +26,8 @@ public class MemoryLoginManager extends LoginManager {
 	}
 
 	@Override
-	public synchronized void deleteUser(User u) throws NoSuchUserException {
-		if(usersByID.get(u.id) == null) throw new NoSuchUserException();
+	public synchronized void deleteUser(User u) throws NoSuchObjectException {
+		if(usersByID.get(u.id) == null) throw new NoSuchObjectException();
 		assert(usersByID.get(u.id) == u);
 		assert(usersByName.get(u.name) == u);
 		usersByID.remove(u.id);

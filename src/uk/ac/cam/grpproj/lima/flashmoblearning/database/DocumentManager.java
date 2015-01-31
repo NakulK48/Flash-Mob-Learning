@@ -79,7 +79,13 @@ public abstract class DocumentManager {
 
 	/** List all tags. */
 	public abstract Set<Tag> getTags() throws SQLException, NoSuchObjectException;
-
+	
+	/** List all tags which have documents (for browsing by tag). */
+	public abstract Set<Tag> getTagsNotEmpty() throws SQLException, NoSuchObjectException;
+	
+	/** List all tags which exist but have not been banned (for adding a tag). */
+	public abstract Set<Tag> getTagsNotBanned() throws SQLException, NoSuchObjectException;
+	
 	/** Get tag by name */
 	public abstract Tag getTag(String name) throws SQLException, NoSuchObjectException;
 

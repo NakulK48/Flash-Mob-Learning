@@ -55,6 +55,7 @@ public class User {
 		LoginManager.getInstance().modifyUser(this);
 	}
 	
+	/** Only called by LoginManager. See LoginManager.createUser(). */
 	public User(long id, String name, String epass) {
 		this.id = id;
 		this.name = name;

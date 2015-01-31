@@ -73,7 +73,93 @@ public class Database {
 	}
 
 	/** Creates all necessary tables if they do not exist. **/
-	private static void setup(Connection connection) {
+	private static void setup(Connection connection) throws SQLException {
+		String create_sql = "--\n" +
+				"-- Table structure for table `documents`\n" +
+				"--\n" +
+				"\n" +
+				"CREATE TABLE IF NOT EXISTS `documents` (\n" +
+				"  `id` int(11) NOT NULL,\n" +
+				"  `user_id` int(11) NOT NULL,\n" +
+				"  `type` int(11) NOT NULL,\n" +
+				"  `title` text NOT NULL,\n" +
+				"  `published_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
+				"  `featured_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
+				"  `update_time` timestamp NOT NULL,\n" +
+				"  `vote_count` int(11) NOT NULL DEFAULT '0',\n" +
+				"  PRIMARY KEY (`id`)\n" +
+				") ENGINE=InnoDB DEFAULT CHARSET=latin1;\n" +
+				"\n" +
+				"-- --------------------------------------------------------\n" +
+				"\n" +
+				"--\n" +
+				"-- Table structure for table `document_tags`\n" +
+				"--\n" +
+				"\n" +
+				"CREATE TABLE IF NOT EXISTS `document_tags` (\n" +
+				"  `id` int(11) NOT NULL,\n" +
+				"  `tag_id` int(11) NOT NULL,\n" +
+				"  `document_id` int(11) NOT NULL,\n" +
+				"  PRIMARY KEY (`id`)\n" +
+				") ENGINE=InnoDB DEFAULT CHARSET=latin1;\n" +
+				"\n" +
+				"-- --------------------------------------------------------\n" +
+				"\n" +
+				"--\n" +
+				"-- Table structure for table `revisions`\n" +
+				"--\n" +
+				"\n" +
+				"CREATE TABLE IF NOT EXISTS `revisions` (\n" +
+				"  `id` int(11) NOT NULL,\n" +
+				"  `document_id` int(11) NOT NULL,\n" +
+				"  `creation_time` timestamp NOT NULL,\n" +
+				"  `content` text NOT NULL,\n" +
+				"  PRIMARY KEY (`id`)\n" +
+				") ENGINE=InnoDB DEFAULT CHARSET=latin1;\n" +
+				"\n" +
+				"-- --------------------------------------------------------\n" +
+				"\n" +
+				"--\n" +
+				"-- Table structure for table `tags`\n" +
+				"--\n" +
+				"\n" +
+				"CREATE TABLE IF NOT EXISTS `tags` (\n" +
+				"  `id` int(11) NOT NULL,\n" +
+				"  `name` text NOT NULL,\n" +
+				"  `banned_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
+				"  `reference_count` int(11) NOT NULL DEFAULT '0',\n" +
+				"  PRIMARY KEY (`id`)\n" +
+				") ENGINE=InnoDB DEFAULT CHARSET=latin1;\n" +
+				"\n" +
+				"-- --------------------------------------------------------\n" +
+				"\n" +
+				"--\n" +
+				"-- Table structure for table `users`\n" +
+				"--\n" +
+				"\n" +
+				"CREATE TABLE IF NOT EXISTS `users` (\n" +
+				"  `id` int(11) NOT NULL,\n" +
+				"  `username` varchar(255) NOT NULL,\n" +
+				"  `password` varchar(255) NOT NULL,\n" +
+				"  `teacher_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
+				"  PRIMARY KEY (`id`)\n" +
+				") ENGINE=InnoDB DEFAULT CHARSET=latin1;\n" +
+				"\n" +
+				"-- --------------------------------------------------------\n" +
+				"\n" +
+				"--\n" +
+				"-- Table structure for table `votes`\n" +
+				"--\n" +
+				"\n" +
+				"CREATE TABLE IF NOT EXISTS `votes` (\n" +
+				"  `user_id` int(11) NOT NULL,\n" +
+				"  `document_id` int(11) NOT NULL,\n" +
+				"  PRIMARY KEY (`user_id`,`document_id`)\n" +
+				") ENGINE=InnoDB DEFAULT CHARSET=latin1;\n";
+
+
+		Statement statement = connection.createStatement();
+		statement.execute(create_sql);
 	}
 	
 }

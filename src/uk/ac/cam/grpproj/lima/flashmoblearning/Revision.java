@@ -6,9 +6,6 @@ import java.util.Date;
  * single database table. */
 public class Revision {
 	
-	/** This is a revision of a specific document. It will be deleted when the 
-	 * document is deleted. This makes housekeeping considerably easier. */
-	public final Document document;
 	/** Owned by a specific user */
 	public final User owner;
 	/** Creation time */
@@ -21,8 +18,7 @@ public class Revision {
 	// 2) Lazily fetching content. E.g. keep a weak link to the content.
 	// THIS AFFECTS DATABASE SCHEMA! But complexity, best to look at it after have working system.
 	
-	public Revision(User u, Date d, String c, Document doc) {
-		document = doc;
+	public Revision(User u, Date d, String c) {
 		owner = u;
 		creationTime = d;
 		content = c;
@@ -30,11 +26,6 @@ public class Revision {
 	
 	public String getContent() {
 		return content;
-	}
-
-	/** Create a new copy of this revision with the same content but a different owner */
-	public Revision copy(Document doc) {
-		return new Revision(doc.owner, creationTime, content, doc);
 	}
 
 }

@@ -64,7 +64,9 @@ public abstract class DocumentManager {
 	/** Delete a work-in-progress document. */
 	public abstract void deleteDocument(Document d) throws SQLException, NoSuchObjectException;
 
-	/** Called when a revision is added to a document */
+	/** Called when a revision is added to a document. Also saves the content 
+	 * of the revision, so <b>the caller must pin the content in memory</b> 
+	 * (e.g. by holding a reference to it as a String). */
 	public abstract void addRevision(Document d, Revision r) throws SQLException, NoSuchObjectException;
 
 	/** Called when a document is deleted or published */
@@ -107,5 +109,11 @@ public abstract class DocumentManager {
 	
 	/** Add a (positive) vote on a given document */
 	public abstract void addVote(User u, PublishedDocument d) throws SQLException, NoSuchObjectException;
+
+	/** Get the content of a Revision. This may be kept separately and fetched 
+	 * lazily, given its size, and given that we mostly don't need all the 
+	 * revisions for all the documents; in particular, we DON'T want to preload
+	 * every revision of every document when browsing the index! */
+	public abstract String getRevisionContent(Revision revision) throws SQLException, NoSuchObjectException;
 
 }

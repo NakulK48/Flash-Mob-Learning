@@ -10,7 +10,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitialized
 public class WIPDocument extends Document {
 	
 	/** Only called by PublishedDocument.fork() */
-	WIPDocument(PublishedDocument forked, User newOwner, Revision initialRevision) throws NotInitializedException, SQLException, NoSuchObjectException {
+	WIPDocument(PublishedDocument forked, User newOwner) throws NotInitializedException, SQLException, NoSuchObjectException {
 		super(forked.docType, newOwner, forked, forked.getTitle(), System.currentTimeMillis());
 	}
 

@@ -154,7 +154,7 @@ public class Document {
 		return true;
 	}
 
-	/** Called when a new revision is saved 
+	/** Called when a new revision is saved. CALLER MUST PIN THE CONTENT OF THE REVISION!
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */

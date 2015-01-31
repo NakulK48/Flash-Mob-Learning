@@ -38,9 +38,10 @@ public class PublishedDocument extends Document{
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
 	public WIPDocument fork(User newOwner) throws NotInitializedException, SQLException, NoSuchObjectException {
-		WIPDocument d = new WIPDocument(this, newOwner, getContentRevision().copy(this));
-		DocumentManager.getInstance().addRevision(this, d.getLastRevision());
+		WIPDocument d = new WIPDocument(this, newOwner);
+		Revision firstRev = getContentRevision().copy(d);
 		DocumentManager.getInstance().createDocument(d);
+		DocumentManager.getInstance().addRevision(d, firstRev);
 		return d;
 	}
 	

@@ -1,14 +1,7 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
-import java.lang.ref.SoftReference;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 

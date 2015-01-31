@@ -1,5 +1,6 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database.memory;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,6 +18,8 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.User;
 import uk.ac.cam.grpproj.lima.flashmoblearning.WIPDocument;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 
 public class MemoryDocumentManager extends DocumentManager {
 	
@@ -103,54 +106,6 @@ public class MemoryDocumentManager extends DocumentManager {
 	}
 
 	@Override
-	public void deleteUser(User u, QueryParam param) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public List<Revision> getRevisions(WIPDocument d, QueryParam param) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Revision getFinalRevision(PublishedDocument d, QueryParam param) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void deleteDocument(WIPDocument d) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void deleteDocument(PublishedDocument d) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void addRevision(WIPDocument d, Revision r) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void createDocument(WIPDocument d) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void createDocument(PublishedDocument d) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void updateDocument(Document d) {
 		// TODO Auto-generated method stub
 
@@ -190,6 +145,83 @@ public class MemoryDocumentManager extends DocumentManager {
 	public void addVote(User u, PublishedDocument d) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void deleteAllDocumentsByUser(User u, QueryParam param)
+			throws SQLException, NoSuchObjectException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public LinkedList<Revision> getRevisions(Document d, QueryParam param)
+			throws SQLException, NoSuchObjectException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteDocument(Document d) throws SQLException,
+			NoSuchObjectException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addRevision(Document d, Revision r) throws SQLException,
+			NoSuchObjectException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteRevision(List<Revision> r) throws SQLException,
+			NoSuchObjectException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createDocument(Document d) throws SQLException,
+			NoSuchObjectException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Set<Tag> getTagsNotEmpty() throws SQLException,
+			NoSuchObjectException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<Tag> getTagsNotBanned() throws SQLException,
+			NoSuchObjectException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Tag createTag(Tag tag) throws SQLException, NoSuchObjectException,
+			DuplicateNameException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteTagReferences(Tag tag) throws SQLException,
+			NoSuchObjectException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getRevisionContent(Revision revision) throws SQLException,
+			NoSuchObjectException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

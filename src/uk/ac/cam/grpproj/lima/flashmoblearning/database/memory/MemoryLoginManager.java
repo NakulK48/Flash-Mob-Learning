@@ -18,7 +18,9 @@ public class MemoryLoginManager extends LoginManager {
 	private final MemoryDatabase db;
 	private final HashMap<Long,User> usersByID;
 	private final HashMap<String,User> usersByName;
-
+	
+	private String loginBanner = "Test";
+	
 	@Override
 	public synchronized User getUser(String username) {
 		if(username == null) throw new NullPointerException();
@@ -49,5 +51,17 @@ public class MemoryLoginManager extends LoginManager {
 		// Do nothing.
 		return u;
 	}
+	
+	@Override
+	public synchronized String getLoginBanner() {
+		return loginBanner;
+	}
+
+	@Override
+	public synchronized void setLoginBanner(String banner) {
+		loginBanner = banner;
+	}
+
+
 
 }

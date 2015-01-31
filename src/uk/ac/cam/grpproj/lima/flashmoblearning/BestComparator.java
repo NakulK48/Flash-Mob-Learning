@@ -7,6 +7,16 @@ public class BestComparator implements Comparator<PublishedDocument>
 
 	@Override
 	public int compare(PublishedDocument o1, PublishedDocument o2) {
+		if (o1.getFeatured() && !o2.getFeatured())
+		{
+			return -1;
+		}
+		
+		else if (!o1.getFeatured() && o2.getFeatured())
+		{
+			return 1;
+		}
+		
 		long t1 = o1.creationTime;
 		long t2 = o2.creationTime;
 		
@@ -19,7 +29,7 @@ public class BestComparator implements Comparator<PublishedDocument>
 		int r1 = calculateRanking(a1, s1);
 		int r2 = calculateRanking(a2, s2);
 		
-		return (r1-r2);
+		return (r2-r1);
 	}
 	
 	public static int calculateRanking(long age, int score)

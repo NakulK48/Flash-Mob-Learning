@@ -1,70 +1,34 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.sql.SQLException;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
 /** A document that is still being worked on. Has a revision history. Has not been published. */
 public class WIPDocument extends Document {
 	
-	public WIPDocument(PublishedDocument forked, User newOwner, Revision initialRevision) {
+	/** Only called by PublishedDocument.fork() */
+	WIPDocument(PublishedDocument forked, User newOwner) throws NotInitializedException, SQLException, NoSuchObjectException {
 		super(forked.docType, newOwner, forked, forked.getTitle(), System.currentTimeMillis());
-		DocumentManager.getInstance().addRevision(this, initialRevision);
 	}
-	
-	private SoftReference<LinkedList<Revision>> revisionsRef;
 
-	public List<Revision> getRevisions() {
-		return Collections.unmodifiableList(new ArrayList<Revision>(innerGetRevisions()));
-	}
-	
-	/** Find all revisions */
-	private LinkedList<Revision> innerGetRevisions() {
-		synchronized(this) {
-			if(revisionsRef != null) {
-				LinkedList<Revision> r = revisionsRef.get();
-				if(r != null) {
-					return r;
-				} else {
-					revisionsRef = null;
-				}
-			}
-		}
-		LinkedList<Revision> revisions = DocumentManager.getInstance().getRevisions(this, QueryParam.UNSORTED);
-		synchronized(this) {
-			if(revisionsRef != null) {
-				LinkedList<Revision> r1 = revisionsRef.get();
-				if(r1 != null) return r1;
-			}
-			revisionsRef = new SoftReference<LinkedList<Revision>>(revisions);
-		}
-		return revisions;
-	}
-	
-	/** Called when a new revision is saved */
-	public void saveRevision(Revision r) {
-		synchronized(this) {
-			if(revisionsRef != null && revisionsRef.get() != null) {
-				revisionsRef.get().add(r);
-			}
-		}
-		DocumentManager.getInstance().addRevision(this, r);
+	/** Only called by DocumentManager */
+	public WIPDocument(DocumentType docType, User owner, Document parentDoc,
+			String title, long time) {
+		super(docType, owner, parentDoc, title, time);
 	}
 	
 	/** Publish as a PublishedDocument. Creates a new PublishedDocument using the final revision
-	 * and calls the database to store it. */
-	public PublishedDocument publish() {
-		return new PublishedDocument(this);
-	}
-
-	public Revision getLastRevision() {
-		// FIXME OPT Consider caching separately. Be careful with consistency between the two!
-		return innerGetRevisions().getLast();
+	 * and calls the database to store it. 
+	 * @throws NoSuchObjectException 
+	 * @throws SQLException 
+	 * @throws NotInitializedException */
+	public PublishedDocument publish() throws NotInitializedException, SQLException, NoSuchObjectException {
+		PublishedDocument d = new PublishedDocument(this);
+		DocumentManager.getInstance().createDocument(d);
+		return d;
 	}
 
 }

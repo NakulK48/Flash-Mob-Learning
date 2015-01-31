@@ -1,5 +1,11 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database.memory;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -13,13 +19,59 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
 
 public class MemoryDocumentManager extends DocumentManager {
-
+	
+	private final HashMap<User, Set<PublishedDocument>> publishedByUser = new HashMap<User, Set<PublishedDocument>>();
+	private final HashMap<User, Set<WIPDocument>> wipByUser = new HashMap<User, Set<WIPDocument>>();
+	private final HashMap<Tag, Set<PublishedDocument>> publishedByTag = new HashMap<Tag, Set<PublishedDocument>>();
+	private final HashSet<PublishedDocument> featured = new HashSet<PublishedDocument>();
+	private final HashSet<PublishedDocument> published = new HashSet<PublishedDocument>();
+	private final HashMap<PublishedDocument,Revision> publishedRevisions = new HashMap<PublishedDocument,Revision>();
+	private final HashMap<WIPDocument,LinkedList<Revision>> wipRevisions = new HashMap<WIPDocument,LinkedList<Revision>>();
+	private final HashMap<PublishedDocument, Long> likes = new HashMap<PublishedDocument, Long>();
+	
 	@Override
-	public List<PublishedDocument> getPublishedByUser(User u, QueryParam param) {
-		// TODO Auto-generated method stub
-		return null;
+	public synchronized List<PublishedDocument> getPublishedByUser(User u, QueryParam param) {
+		return sortDocs(publishedByUser.get(u), param);
 	}
 
+	private <T extends Document> List<T> sortDocs(Set<T> set, final QueryParam param) {
+		if(set == null) return null;
+		ArrayList<T> data = new ArrayList<T>(set);
+		if(param.sortField != QueryParam.SortField.NONE) {
+			Collections.sort(data, new Comparator<T>() {
+
+				@Override
+				public int compare(T arg0, T arg1) {
+					int ret;
+					switch(param.sortField) {
+					case TIME:
+						if(arg0.creationTime > arg1.creationTime)
+							ret = 1;
+						else if(arg0.creationTime < arg1.creationTime)
+							ret = -1;
+						else ret = 0;
+						break;
+					case POPULARITY:
+						int pop0 = getPopularity(arg0);
+						int pop1 = getPopularity(arg1);
+						if(pop0 > pop1) ret=1;
+						else if(pop0 < pop1) ret=-1;
+						else ret=0;
+						break;
+					default:
+					throw new UnsupportedOperationException();
+					}
+					if(param.sortOrder == QueryParam.SortOrder.DESCENDING) ret = -ret;
+					return ret;
+				}
+			});
+		}
+		if(param.limit > data.size()) {
+			data = new ArrayList<T> (data.subList(0, param.limit));
+		}
+		return data;
+	}
+	
 	@Override
 	public List<WIPDocument> getWorkInProgressByUser(User u, QueryParam param) {
 		// TODO Auto-generated method stub

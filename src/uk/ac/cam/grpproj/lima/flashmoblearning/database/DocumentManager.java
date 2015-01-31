@@ -64,7 +64,9 @@ public abstract class DocumentManager {
 	/** Delete a work-in-progress document. */
 	public abstract void deleteDocument(Document d) throws SQLException, NoSuchObjectException;
 
-	/** Called when a revision is added to a document */
+	/** Called when a revision is added to a document. Also saves the content 
+	 * of the revision, so <b>the caller must pin the content in memory</b> 
+	 * (e.g. by holding a reference to it as a String). */
 	public abstract void addRevision(Document d, Revision r) throws SQLException, NoSuchObjectException;
 
 	/** Called when a document is deleted or published */
@@ -79,23 +81,39 @@ public abstract class DocumentManager {
 
 	/** List all tags. */
 	public abstract Set<Tag> getTags() throws SQLException, NoSuchObjectException;
-
+	
+	/** List all tags which have documents (for browsing by tag). */
+	public abstract Set<Tag> getTagsNotEmpty() throws SQLException, NoSuchObjectException;
+	
+	/** List all tags which exist but have not been banned (for adding a tag). */
+	public abstract Set<Tag> getTagsNotBanned() throws SQLException, NoSuchObjectException;
+	
 	/** Get tag by name */
 	public abstract Tag getTag(String name) throws SQLException, NoSuchObjectException;
 
-	/** Create tag **/
-	public abstract void createTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException;
+	/** Create tag, or return an existing Tag of the same name, atomically. **/
+	public abstract Tag createTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException;
 
 	/** Update a document's tags (stored separately) */
 	public abstract void updateTags(Document d) throws SQLException, NoSuchObjectException;
 
-	/** Update a tag. I.e. it may go from banned to unbanned o vice versa. */
+	/** Update a tag. I.e. it may go from banned to unbanned or vice versa. */
 	public abstract void updateTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException;
 
 	/** Delete a tag. Database will delete references from all documents to this tag. */
 	public abstract void deleteTag(Tag tag) throws SQLException, NoSuchObjectException;
 
+	/** Delete all references from documents to a given tag. Will be called internally by
+	 * deleteTag() but also useful when a tag is banned. */
+	public abstract void deleteTagReferences(Tag tag) throws SQLException, NoSuchObjectException;
+	
 	/** Add a (positive) vote on a given document */
 	public abstract void addVote(User u, PublishedDocument d) throws SQLException, NoSuchObjectException;
+
+	/** Get the content of a Revision. This may be kept separately and fetched 
+	 * lazily, given its size, and given that we mostly don't need all the 
+	 * revisions for all the documents; in particular, we DON'T want to preload
+	 * every revision of every document when browsing the index! */
+	public abstract String getRevisionContent(Revision revision) throws SQLException, NoSuchObjectException;
 
 }

@@ -40,6 +40,9 @@ public class MemoryDocumentManager extends DocumentManager {
 	private <T extends Document> List<T> sortDocs(Set<T> set, final QueryParam param) {
 		if(set == null) return null;
 		ArrayList<T> data = new ArrayList<T>(set);
+		if(param.sortField.equals(QueryParam.SortField.POPULARITY) && 
+				data.size() > 0 && !(data.get(0) instanceof PublishedDocument))
+			throw new IllegalArgumentException("Cannot sort WIP on popularity!");
 		if(param.sortField != QueryParam.SortField.NONE) {
 			Collections.sort(data, new Comparator<T>() {
 
@@ -55,8 +58,8 @@ public class MemoryDocumentManager extends DocumentManager {
 						else ret = 0;
 						break;
 					case POPULARITY:
-						int pop0 = getPopularity(arg0);
-						int pop1 = getPopularity(arg1);
+						int pop0 = ((PublishedDocument)arg0).getScore();
+						int pop1 = ((PublishedDocument)arg1).getScore();
 						if(pop0 > pop1) ret=1;
 						else if(pop0 < pop1) ret=-1;
 						else ret=0;

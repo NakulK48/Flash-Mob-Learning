@@ -13,7 +13,7 @@ public class PublishedDocument extends Document{
 	/** Has the "featured" flag been set by the administrator? */
 	private boolean isFeatured;
 	private int score;
-	private int ranking;
+	private double ranking;
 	
 	public int getScore() {
 		return score;
@@ -75,13 +75,14 @@ public class PublishedDocument extends Document{
 	
 	public static int calculateRanking(long age, int score)
 	{
+		long ageHours = age/3600000;
 		return (int) (score * Math.exp(-8 * age * age));
 	}
 	
-	public int calculateRanking()
+	public double calculateRanking()
 	{
-		long age = System.currentTimeMillis() - creationTime;
-		this.ranking = (int) (score * Math.exp(-8 * age * age));
+		long age = (System.currentTimeMillis() - creationTime)/3600000;
+		this.ranking = (score * Math.exp(-8 * age * age));
 		return this.ranking;
 	}
 }

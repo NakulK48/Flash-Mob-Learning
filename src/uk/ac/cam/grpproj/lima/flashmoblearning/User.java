@@ -1,19 +1,40 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
+import java.sql.SQLException;
+
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
 /** Base of Student and Teacher. */
 public class User {
 	
-	/** User has a fixed numerical ID, even if their name is changed. */
-	public final long id;
-
 	/** Name of the user.
 	 * FIXME Consider ability (for teacher?) to change user names. */
 	public final String name;
 
+	/** User has a fixed numerical ID, even if their name is changed. This is 
+	 * set by the database when the document is first stored, and cannot be 
+	 * changed after that. */
+	private long id;
 	private String encryptedPassword;
 	
+	/** Called by database */
+	public synchronized long getID() {
+		return id;
+	}
+	
+	/** Called by the database when a document is first stored */
+	public synchronized void setID(long newID) throws IDAlreadySetException {
+		if(this.id == -1) {
+			this.id = newID;
+		} else {
+			if(id != newID) // OK to set to existing ID
+				throw new IDAlreadySetException();
+		}
+	}
+
 	/** Try to log in.
 	 * @return True if the password is correct. */
 	public synchronized boolean checkPassword(String password) {
@@ -21,8 +42,12 @@ public class User {
 		return password.equals(encryptedPassword);
 	}
 	
-	/** Set password */
-	public void setPassword(String newPassword) {
+	/** Set password 
+	 * @throws DuplicateNameException 
+	 * @throws NoSuchObjectException 
+	 * @throws SQLException 
+	 * @throws NotInitializedException */
+	public void setPassword(String newPassword) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
 		// FIXME SECURITY: Hash passwords with a salt, use MessageDigest.isEqual etc.
 		synchronized(this) {
 			if(this.encryptedPassword.equals(newPassword)) return;

@@ -83,8 +83,8 @@ public abstract class DocumentManager {
 	/** Get tag by name */
 	public abstract Tag getTag(String name) throws SQLException, NoSuchObjectException;
 
-	/** Create tag **/
-	public abstract void createTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException;
+	/** Create tag, or return an existing Tag of the same name, atomically. **/
+	public abstract Tag createTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException;
 
 	/** Update a document's tags (stored separately) */
 	public abstract void updateTags(Document d) throws SQLException, NoSuchObjectException;

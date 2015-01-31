@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.Hub"%>
+    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*, java.util.LinkedList, System"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -24,25 +24,30 @@
 <body>
 <%
 	Hub hub = new Hub();
+	SortType st = SortType.BEST;
+	hub.sort(st);
+	
+	LinkedList<PublishedDocument> subs = hub.submissions;
 	
 %>
 <table>
 	<tr>
-		<td class='heading' id='score'>Score</td>
-		<td class='heading' id='title'>Title</td>
-		<td class='heading' id='submitter'>Submitter</td>
-		<td class='heading' id='date'>Age</td>
+		<td class='heading' id='scoreHeading'>Score</td>
+		<td class='heading' id='titleHeading'>Title</td>
+		<td class='heading' id='submitterHeading'>Submitter</td>
+		<td class='heading' id='dateHeading'>Submitted</td>
 	</tr>
 	<%
-		for (int i = 0; i < 5; i++)
+		for (PublishedDocument pd : subs)
 		{
+			long ageInHours = (System.currentTimeMillis() - pd.creationTime)/3600000;
 			String entry = 
 			"<tr>" + 
-			"<td>"+i+"</td>" + //score
-			"<td>Bob</td>" + //title
-			"<td>Bob</td>" + //submitter
-			"<td>Bob</td>" + //age
-			"</tr>";
+			"<td>" + pd.getScore()	+ "</td>" + //score
+			"<td>" + pd.getTitle() 	+ "</td>" + //title
+			"<td>" + pd.owner 		+ "</td>" + //submitter
+			"<td>" + ageInHours + " hours ago" + "</td>" + //age
+			"</tr>"; 
 			out.println(entry);
 		}
 	%>

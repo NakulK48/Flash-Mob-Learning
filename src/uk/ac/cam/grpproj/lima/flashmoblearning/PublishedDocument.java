@@ -13,15 +13,9 @@ public class PublishedDocument extends Document{
 	/** Has the "featured" flag been set by the administrator? */
 	private boolean isFeatured;
 	private int score;
-	private long publishTime;
 	
 	public int getScore() {
 		return score;
-	}
-	
-	public long getPublishTime()
-	{
-		return publishTime;
 	}
 
 	public void setScore(int score) {

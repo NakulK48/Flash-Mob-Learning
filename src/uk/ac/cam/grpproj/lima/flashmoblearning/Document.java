@@ -3,6 +3,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
 import java.lang.ref.SoftReference;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -142,14 +143,23 @@ public class Document {
 			}
 			revisionsRef = new SoftReference<LinkedList<Revision>>(revisions);
 		}
+		assert(revisionsBelongToMe(revisions));
 		return revisions;
 	}
 	
+	private boolean revisionsBelongToMe(Collection<Revision> revisions) {
+		for(Revision r : revisions) {
+			if(r.document != this) return false;
+		}
+		return true;
+	}
+
 	/** Called when a new revision is saved 
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
 	public void saveRevision(Revision r) throws NotInitializedException, SQLException, NoSuchObjectException {
+		assert(r.document == this);
 		synchronized(this) {
 			if(revisionsRef != null && revisionsRef.get() != null) {
 				revisionsRef.get().add(r);

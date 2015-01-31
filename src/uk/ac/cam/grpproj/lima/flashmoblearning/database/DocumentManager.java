@@ -64,10 +64,10 @@ public abstract class DocumentManager {
 	/** Delete a work-in-progress document. */
 	public abstract void deleteDocument(Document d) throws SQLException, NoSuchObjectException;
 
-	/** Called when a revision is added to a document. Also saves the content 
-	 * of the revision, so <b>the caller must pin the content in memory</b> 
-	 * (e.g. by holding a reference to it as a String). */
-	public abstract void addRevision(Document d, Revision r) throws SQLException, NoSuchObjectException;
+	/** Called when a revision is added to a document.
+	 * @param payload The actual content of the revision, which is not stored 
+	 * in the Revision object. */
+	public abstract void addRevision(Document d, Revision r, String payload) throws SQLException, NoSuchObjectException;
 
 	/** Called when a document is deleted or published */
 	public abstract void deleteRevision(List<Revision> r) throws SQLException, NoSuchObjectException;

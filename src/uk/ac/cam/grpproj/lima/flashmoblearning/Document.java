@@ -115,7 +115,7 @@ public class Document {
 	}
 	
 	private SoftReference<LinkedList<Revision>> revisionsRef;
-
+	
 	public List<Revision> getRevisions() throws NotInitializedException, SQLException, NoSuchObjectException {
 		return Collections.unmodifiableList(new ArrayList<Revision>(innerGetRevisions()));
 	}
@@ -154,18 +154,20 @@ public class Document {
 		return true;
 	}
 
-	/** Called when a new revision is saved. CALLER MUST PIN THE CONTENT OF THE REVISION!
+	/** Called when a new revision is saved.
+	 * @param r Metadata for the revision
+	 * @param content Content of the revision
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public void saveRevision(Revision r) throws NotInitializedException, SQLException, NoSuchObjectException {
+	public void saveRevision(Revision r, String content) throws NotInitializedException, SQLException, NoSuchObjectException {
 		assert(r.document == this);
 		synchronized(this) {
 			if(revisionsRef != null && revisionsRef.get() != null) {
 				revisionsRef.get().add(r);
 			}
 		}
-		DocumentManager.getInstance().addRevision(this, r);
+		DocumentManager.getInstance().addRevision(this, r, content);
 	}
 	
 	public Revision getLastRevision() throws NotInitializedException, SQLException, NoSuchObjectException {

@@ -95,7 +95,7 @@ public abstract class DocumentManager {
 	/** Update a document's tags (stored separately) */
 	public abstract void updateTags(Document d) throws SQLException, NoSuchObjectException;
 
-	/** Update a tag. I.e. it may go from banned to unbanned o vice versa. */
+	/** Update a tag. I.e. it may go from banned to unbanned or vice versa. */
 	public abstract void updateTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException;
 
 	/** Delete a tag. Database will delete references from all documents to this tag. */

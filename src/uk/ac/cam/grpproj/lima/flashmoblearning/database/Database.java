@@ -17,8 +17,8 @@ public class Database {
 	private LoginManager m_LoginManagerInstance;
 	private DocumentManager m_DocumentManagerInstance;
 
-	private static final String c_Username = "root";
-	private static final String c_Password = "";
+	private static final String c_Username = "flashmoblearning";
+	private static final String c_Password = "flashmoblearning";
 	private static final String c_JDBCURL = "jdbc:mysql://localhost/flashmoblearning";
 	
 	public static Database getInstance() {
@@ -28,7 +28,6 @@ public class Database {
 	/** Initializes and tests the database connection, setting it up if necessary **/
 	public static void init() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
-		System.out.println(c_JDBCURL + "?user=" + c_Username + "&password" + c_Password);
 		Connection connection = DriverManager.getConnection(c_JDBCURL + "?user=" + c_Username + "&password=" + c_Password);
 		setup(connection);
 		m_Instance = new Database(connection);

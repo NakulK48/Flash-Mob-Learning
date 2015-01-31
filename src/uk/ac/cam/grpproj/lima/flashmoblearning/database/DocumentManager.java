@@ -101,6 +101,10 @@ public abstract class DocumentManager {
 	/** Delete a tag. Database will delete references from all documents to this tag. */
 	public abstract void deleteTag(Tag tag) throws SQLException, NoSuchObjectException;
 
+	/** Delete all references from documents to a given tag. Will be called internally by
+	 * deleteTag() but also useful when a tag is banned. */
+	public abstract void deleteTagReferences(Tag tag) throws SQLException, NoSuchObjectException;
+	
 	/** Add a (positive) vote on a given document */
 	public abstract void addVote(User u, PublishedDocument d) throws SQLException, NoSuchObjectException;
 

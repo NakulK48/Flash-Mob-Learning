@@ -42,6 +42,8 @@ public class Tag {
 			banned = b;
 		}
 		DocumentManager.getInstance().updateTag(this);
+		if(b)
+			DocumentManager.getInstance().deleteTagReferences(this);
 	}
 
 	@Override

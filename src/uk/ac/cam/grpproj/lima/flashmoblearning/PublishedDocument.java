@@ -13,9 +13,16 @@ public class PublishedDocument extends Document{
 	/** Has the "featured" flag been set by the administrator? */
 	private boolean isFeatured;
 	
+	/** Only called by WIPDocument.publish() */
 	PublishedDocument(WIPDocument original) {
 		super(original.docType, original.owner, original.parentDoc, original.getTitle(), System.currentTimeMillis());
 		isFeatured = false;
+	}
+	
+	/** Only called by DocumentManager */
+	public PublishedDocument(DocumentType docType, User owner, Document parentDoc,
+			String title, long time) {
+		super(docType, owner, parentDoc, title, time);
 	}
 	
 	/** Get the one and only revision 

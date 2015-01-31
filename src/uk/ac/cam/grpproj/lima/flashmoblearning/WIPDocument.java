@@ -2,6 +2,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
 
 import java.sql.SQLException;
 
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
@@ -20,9 +21,14 @@ public class WIPDocument extends Document {
 	}
 	
 	/** Publish as a PublishedDocument. Creates a new PublishedDocument using the final revision
-	 * and calls the database to store it. */
-	public PublishedDocument publish() {
-		return new PublishedDocument(this);
+	 * and calls the database to store it. 
+	 * @throws NoSuchObjectException 
+	 * @throws SQLException 
+	 * @throws NotInitializedException */
+	public PublishedDocument publish() throws NotInitializedException, SQLException, NoSuchObjectException {
+		PublishedDocument d = new PublishedDocument(this);
+		DocumentManager.getInstance().createDocument(d);
+		return d;
 	}
 
 }

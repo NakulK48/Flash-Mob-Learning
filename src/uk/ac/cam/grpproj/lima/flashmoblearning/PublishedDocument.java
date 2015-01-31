@@ -13,7 +13,7 @@ public class PublishedDocument extends Document{
 	/** Has the "featured" flag been set by the administrator? */
 	private boolean isFeatured;
 	
-	public PublishedDocument(WIPDocument original) {
+	PublishedDocument(WIPDocument original) {
 		super(original.docType, original.owner, original.parentDoc, original.getTitle(), System.currentTimeMillis());
 		isFeatured = false;
 	}

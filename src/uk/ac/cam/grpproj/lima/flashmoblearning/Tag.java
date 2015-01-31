@@ -1,6 +1,11 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
+import java.sql.SQLException;
+
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
 public class Tag {
 	
@@ -9,6 +14,14 @@ public class Tag {
 	
 	private boolean banned;
 	
+	/** Create a tag and store it to the database */
+	public static Tag create(String name) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
+		Tag t = new Tag(name);
+		DocumentManager.getInstance().createTag(t);
+		return t;
+	}
+	
+	/** SHOULD ONLY BE CALLED BY DATABASE! */
 	public Tag(String n) {
 		name = n;
 		if(n == null) throw new NullPointerException(); // Fail early.
@@ -19,8 +32,12 @@ public class Tag {
 		return banned;
 	}
 	
-	/** Ban or unban the tag */
-	public void setBanned(boolean b) {
+	/** Ban or unban the tag 
+	 * @throws DuplicateNameException 
+	 * @throws NoSuchObjectException 
+	 * @throws SQLException 
+	 * @throws NotInitializedException */
+	public void setBanned(boolean b) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
 		synchronized(this) {
 			if(banned == b) return;
 			banned = b;

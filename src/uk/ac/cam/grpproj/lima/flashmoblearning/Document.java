@@ -1,12 +1,10 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
-import java.lang.ref.SoftReference;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 

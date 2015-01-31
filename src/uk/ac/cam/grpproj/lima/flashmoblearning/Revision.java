@@ -1,6 +1,5 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
-import java.lang.ref.SoftReference;
 import java.sql.SQLException;
 import java.util.Date;
 

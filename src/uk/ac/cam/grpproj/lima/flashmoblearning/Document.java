@@ -114,35 +114,18 @@ public class Document {
 		DocumentManager.getInstance().updateDocument(this);
 	}
 	
-	private SoftReference<LinkedList<Revision>> revisionsRef;
-	
-	public List<Revision> getRevisions() throws NotInitializedException, SQLException, NoSuchObjectException {
-		return Collections.unmodifiableList(new ArrayList<Revision>(innerGetRevisions()));
+	public List<Revision> getRevisions(QueryParam param) throws NotInitializedException, SQLException, NoSuchObjectException {
+		List<Revision> r = Collections.unmodifiableList(new ArrayList<Revision>(innerGetRevisions(param)));
+		return r;
 	}
 	
 	/** Find all revisions 
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	private LinkedList<Revision> innerGetRevisions() throws NotInitializedException, SQLException, NoSuchObjectException {
-		synchronized(this) {
-			if(revisionsRef != null) {
-				LinkedList<Revision> r = revisionsRef.get();
-				if(r != null) {
-					return r;
-				} else {
-					revisionsRef = null;
-				}
-			}
-		}
-		LinkedList<Revision> revisions = DocumentManager.getInstance().getRevisions(this, QueryParam.UNSORTED);
-		synchronized(this) {
-			if(revisionsRef != null) {
-				LinkedList<Revision> r1 = revisionsRef.get();
-				if(r1 != null) return r1;
-			}
-			revisionsRef = new SoftReference<LinkedList<Revision>>(revisions);
-		}
+	private List<Revision> innerGetRevisions(QueryParam param) throws NotInitializedException, SQLException, NoSuchObjectException {
+		List<Revision> revisions =
+				DocumentManager.getInstance().getRevisions(this, param);
 		assert(revisionsBelongToMe(revisions));
 		return revisions;
 	}
@@ -162,17 +145,14 @@ public class Document {
 	 * @throws NotInitializedException */
 	public void saveRevision(Revision r, String content) throws NotInitializedException, SQLException, NoSuchObjectException {
 		assert(r.document == this);
-		synchronized(this) {
-			if(revisionsRef != null && revisionsRef.get() != null) {
-				revisionsRef.get().add(r);
-			}
-		}
 		DocumentManager.getInstance().addRevision(this, r, content);
 	}
 	
+	private static final QueryParam LAST_REVISION_QUERY = 
+			new QueryParam(1, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+	
 	public Revision getLastRevision() throws NotInitializedException, SQLException, NoSuchObjectException {
-		// FIXME OPT Consider caching separately. Be careful with consistency between the two!
-		return innerGetRevisions().getLast();
+		return getRevisions(LAST_REVISION_QUERY).get(0);
 	}
 
 }

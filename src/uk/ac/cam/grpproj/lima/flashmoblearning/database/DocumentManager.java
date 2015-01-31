@@ -107,7 +107,8 @@ public abstract class DocumentManager {
 	 * deleteTag() but also useful when a tag is banned. */
 	public abstract void deleteTagReferences(Tag tag) throws SQLException, NoSuchObjectException;
 	
-	/** Add a (positive) vote on a given document */
+	/** Add a (positive) vote on a given document. Updates the total vote count and score
+	 * on the document (by statically calling PublishedDocument.getScore(votes,...). */
 	public abstract void addVote(User u, PublishedDocument d) throws SQLException, NoSuchObjectException;
 
 	/** Get the content of a Revision. This may be kept separately and fetched 

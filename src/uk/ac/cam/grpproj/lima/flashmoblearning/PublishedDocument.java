@@ -80,4 +80,8 @@ public class PublishedDocument extends Document{
 		}
 		DocumentManager.getInstance().updateDocument(this);
 	}
+	
+	public void castVote(User u) throws NotInitializedException, SQLException, NoSuchObjectException {
+		DocumentManager.getInstance().addVote(u, this);
+	}
 }

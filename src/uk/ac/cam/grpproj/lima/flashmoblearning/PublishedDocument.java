@@ -13,6 +13,11 @@ public class PublishedDocument extends Document{
 	/** Has the "featured" flag been set by the administrator? */
 	private boolean isFeatured;
 	private int score;
+	private int votes;
+
+	public int getVotes() {
+		return votes;
+	}
 	
 	public int getScore() {
 		return score;
@@ -30,8 +35,10 @@ public class PublishedDocument extends Document{
 	
 	/** Only called by DocumentManager */
 	public PublishedDocument(DocumentType docType, User owner, Document parentDoc,
-			String title, long time) {
+			String title, long time, int votes, int score) {
 		super(docType, owner, parentDoc, title, time);
+		this.votes = votes;
+		this.score = score;
 	}
 	
 	/** Get the one and only revision 

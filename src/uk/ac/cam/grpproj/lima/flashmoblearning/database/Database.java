@@ -123,6 +123,14 @@ public class Database {
 				"  PRIMARY KEY (`user_id`,`document_id`)\n" +
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;\n";
 
+		String create_settings = "CREATE TABLE IF NOT EXISTS `settings` (\n" +
+				"  `setting_name` varchar(255) NOT NULL,\n" +
+				"  `setting_value` text NOT NULL,\n" +
+				"  UNIQUE KEY `setting_name` (`setting_name`)\n" +
+				") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+
+		String create_login_banner = "INSERT IGNORE INTO `flashmoblearning`.`settings` (`setting_name`, `setting_value`) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";
+
 		Statement statement = connection.createStatement();
 		statement.execute(create_documents);
 		statement.execute(create_document_tags);
@@ -130,6 +138,8 @@ public class Database {
 		statement.execute(create_tags);
 		statement.execute(create_users);
 		statement.execute(create_votes);
+		statement.execute(create_settings);
+		statement.execute(create_login_banner);
 	}
 	
 }

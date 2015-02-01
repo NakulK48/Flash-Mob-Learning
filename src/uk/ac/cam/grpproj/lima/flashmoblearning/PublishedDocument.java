@@ -13,14 +13,14 @@ public class PublishedDocument extends Document{
 	
 	/** Has the "featured" flag been set by the administrator? */
 	private boolean isFeatured;
-	private int score;
+	private int votes;
 	
-	public int getScore() {
-		return score;
+	public int getVotes() {
+		return votes;
 	}
 
-	public void setScore(int score) {
-		this.score = score;
+	public void setVotes(int votes) {
+		this.votes = votes;
 	}
 
 	/** Only called by WIPDocument.publish() */
@@ -34,9 +34,9 @@ public class PublishedDocument extends Document{
 	 * @param votes The number of votes for the document when it was fetched from the database.
 	 * @param score The score stored in the database for the document. Might be updated later. */
 	public PublishedDocument(long id, DocumentType docType, User owner, Document parentDoc,
-			String title, long time, int score) {
+			String title, long time, int votes) {
 		super(docType, owner, parentDoc, title, time);
-		this.score = score;
+		this.votes = votes;
 		this.id = id;
 	}
 	
@@ -77,15 +77,16 @@ public class PublishedDocument extends Document{
 		DocumentManager.getInstance().updateDocument(this);
 	}
 	
-	public static double calculateRanking(long age, int score)
+	public static double calculateScore(long age, int votes)
 	{
 		age /= 3600000;
-		return (score * Math.exp(-8 * age * age));
+		return (votes * Math.exp(-8 * age * age));
 	}
 	
-	public double calculateRanking()
+	/** Calculate the document's score */
+	public double calculateScore()
 	{
 		double age = (System.currentTimeMillis() - creationTime)/3600000;
-		return (score * Math.exp(-8 * age * age));
+		return (votes * Math.exp(-8 * age * age));
 	}
 }

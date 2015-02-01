@@ -15,6 +15,9 @@ public class PublishedDocument extends Document{
 	private boolean isFeatured;
 	/** Looked up by the database on creation. Not updated in updateDocument(). */
 	private int votes;
+	/** FIXME will be cached by the database and passed in, updated on a vote 
+	 * being cast and periodically. For now it's computed in the constructor. */
+	private double score;
 	
 	public int getVotes() {
 		return votes;
@@ -23,11 +26,17 @@ public class PublishedDocument extends Document{
 	public void setVotes(int votes) {
 		this.votes = votes;
 	}
+	
+	public double getScore() {
+		return score;
+	}
 
 	/** Only called by WIPDocument.publish() */
 	PublishedDocument(WIPDocument original) {
 		super(original.docType, original.owner, original.parentDoc, original.getTitle(), System.currentTimeMillis());
 		isFeatured = false;
+		// FIXME
+		score = calculateScore();
 	}
 	
 
@@ -39,6 +48,8 @@ public class PublishedDocument extends Document{
 		super(docType, owner, parentDoc, title, time);
 		this.votes = votes;
 		this.id = id;
+		// FIXME
+		score = calculateScore();
 	}
 	
 	/** Get the one and only revision 

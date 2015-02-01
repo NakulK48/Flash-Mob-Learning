@@ -15,7 +15,7 @@
 	SortType st = SortType.BEST;
 	hub.sort(st);
 	
-	LinkedList<PublishedDocument> subs = hub.submissions; */
+	LinkedList<PublishedDocument> subs = hub.submissions; 
 	
 %>
 <table>

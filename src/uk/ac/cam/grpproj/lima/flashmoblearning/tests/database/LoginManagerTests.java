@@ -82,11 +82,14 @@ public class LoginManagerTests {
     @Test
     public void testModifyUserPassword() throws Exception {
         User u = LoginManager.getInstance().getUser(c_TestUsername);
-        u.setPassword(c_TestPassword);
+        // Use reflection to modify encryptedPassword.
+        Field field = User.class.getDeclaredField("encryptedPassword");
+        field.setAccessible(true);
+        field.set(u, c_TestPassword + "_new");
         LoginManager.getInstance().modifyUser(u);
 
         User u2 = LoginManager.getInstance().getUser(c_TestUsername);
-        Assert.assertEquals(true, u2.checkPassword(c_TestPassword));
+        Assert.assertEquals("Password changed", field.get(u2), c_TestPassword + "_new");
     }
 
     @Test

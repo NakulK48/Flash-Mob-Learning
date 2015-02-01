@@ -11,11 +11,11 @@
 </head>
 <body>
 <%
- 	Hub hub = new Hub();
+/*  	Hub hub = new Hub();
 	SortType st = SortType.BEST;
 	hub.sort(st);
 	
-	LinkedList<PublishedDocument> subs = hub.submissions; 
+	LinkedList<PublishedDocument> subs = hub.submissions;  */
 	
 %>
 <table>
@@ -25,8 +25,16 @@
 		<td class='heading' id='ageHeading'></td>
 	</tr>
 	<%
-  	for (PublishedDocument pd : subs)
+/*   	
+		int sofar = 0; //how many submissions have been printed on the page?
+	
+		for (PublishedDocument pd : subs)
 		{
+			if (sofar >= 25)
+			{
+				break;
+			}
+			
 			String ageString;
 			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
 			if (ageInHours < 1) ageString = "Less than an hour ago";
@@ -39,29 +47,31 @@
 			
 			String entry = 
 			"<tr class='upperRow'>" + 
-			"<td class='upvote'> UV </td>" + //upvote
+			"<td id='upvote" + Long.toString(pd.getID()) + "' class='upvote'><button>Upvote</button></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='../preview.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href='../preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
-			"<td class='score'>" + pd.getScore()	+ "</td>" + //score
+			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
 			"<td class='submitter'> <a href='../userpage.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.name 		+ "</a></td>" + //submitter
 			"<td></td>" +
 			"</tr>"; 
 			
 			out.println(entry);
+			
+			sofar++;
 		} 
-		
+		 */
 		String entry = 
 		"<tr class='upperRow'>" + 
-		"<td class='upvote'>O</td>" + //upvote
+		"<td class='upvote'><button>Upvote</button></td>" + //upvote
 		"<td class='title'>" + "Spider climbing up screen" 	+ "</td>" + //title
 		"<td class='age'>" + "4" + " hours ago" + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
-		"<td class='score'>" + "11"	+ "</td>" + //score
+		"<td class='votes'>" + "11"	+ "</td>" + //score
 		"<td class='submitter'>" + "George Bush" 		+ "</td>" + //submitter
 		"<td></td>" +
 		"</tr>"; 
@@ -75,7 +85,7 @@
 		"<td class='age'>" + "Less than an hour ago" + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
-		"<td class='score'>" + "18"	+ "</td>" + //score
+		"<td class='votes'>" + "18"	+ "</td>" + //score
 		"<td class='submitter'>" + "Bill Clinton" 		+ "</td>" + //submitter
 		"<td></td>" +
 		"</tr>"; 
@@ -89,7 +99,7 @@
 		"<td class='age'>" + "2 days ago" + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
-		"<td class='score'>" + "48"	+ "</td>" + //score
+		"<td class='votes'>" + "48"	+ "</td>" + //score
 		"<td class='submitter'>" + "Ronald Reagan" 		+ "</td>" + //submitter
 		"<td></td>" +
 		"</tr>"; 

@@ -36,6 +36,7 @@ public class Database {
 	private Database(Connection connection) throws SQLException {
 		m_Connection = connection;
 		m_LoginManagerInstance = new LoginManager(this);
+		m_DocumentManagerInstance = new DocumentManager(this);
 	}
 
 	/** Obtain database connection **/
@@ -84,13 +85,18 @@ public class Database {
 				"  `featured_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
 				"  `update_time` timestamp NOT NULL,\n" +
 				"  `vote_count` int(11) NOT NULL DEFAULT '0',\n" +
-				"  PRIMARY KEY (`id`)\n" +
+				"  PRIMARY KEY (`id`),\n" +
+				"  KEY `user_id` (`user_id`),\n" +
+				"  CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE\n" +
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;\n";
 
 		String create_document_tags = "CREATE TABLE IF NOT EXISTS `document_tags` (\n" +
 				"  `tag_id` bigint(20) NOT NULL,\n" +
 				"  `document_id` bigint(20) NOT NULL,\n" +
-				"  PRIMARY KEY (`tag_id`, `document_id`)\n" +
+				"  PRIMARY KEY (`tag_id`, `document_id`),\n" +
+				"  KEY `document_id` (`document_id`),\n" +
+				"  CONSTRAINT `document_tags_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE,\n" +
+				"  CONSTRAINT `document_tags_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE\n" +
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
 
 		String create_revisions = "CREATE TABLE IF NOT EXISTS `revisions` (\n" +
@@ -98,7 +104,9 @@ public class Database {
 				"  `document_id` bigint(20) NOT NULL,\n" +
 				"  `update_time` timestamp NOT NULL,\n" +
 				"  `content` text NOT NULL,\n" +
-				"  PRIMARY KEY (`id`)\n" +
+				"  PRIMARY KEY (`id`),\n" +
+				"  KEY `document_id` (`document_id`),\n" +
+				"  CONSTRAINT `revisions_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE\n" +
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
 
 		String create_tags = "CREATE TABLE IF NOT EXISTS `tags` (\n" +
@@ -120,7 +128,10 @@ public class Database {
 		String create_votes = "CREATE TABLE IF NOT EXISTS `votes` (\n" +
 				"  `user_id` bigint(20) NOT NULL,\n" +
 				"  `document_id` bigint(20) NOT NULL,\n" +
-				"  PRIMARY KEY (`user_id`,`document_id`)\n" +
+				"  PRIMARY KEY (`user_id`,`document_id`),\n" +
+				"  KEY `document_id` (`document_id`)\n," +
+				"  CONSTRAINT `votes_ibfk_2` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE,\n" +
+				"  CONSTRAINT `votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE\n" +
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;\n";
 
 		String create_settings = "CREATE TABLE IF NOT EXISTS `settings` (\n" +
@@ -132,6 +143,7 @@ public class Database {
 		String create_login_banner = "INSERT IGNORE INTO `flashmoblearning`.`settings` (`setting_name`, `setting_value`) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";
 
 		Statement statement = connection.createStatement();
+		statement.execute("SET FOREIGN_KEY_CHECKS=0");
 		statement.execute(create_documents);
 		statement.execute(create_document_tags);
 		statement.execute(create_revisions);
@@ -140,6 +152,7 @@ public class Database {
 		statement.execute(create_votes);
 		statement.execute(create_settings);
 		statement.execute(create_login_banner);
+		statement.execute("SET FOREIGN_KEY_CHECKS=1");
 	}
 	
 }

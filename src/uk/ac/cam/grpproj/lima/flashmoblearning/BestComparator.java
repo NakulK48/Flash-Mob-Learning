@@ -26,15 +26,15 @@ public class BestComparator implements Comparator<PublishedDocument>
 		int s1 = o1.getScore();
 		int s2 = o2.getScore();
 		
-		int r1 = calculateRanking(a1, s1);
-		int r2 = calculateRanking(a2, s2);
+		double r1 = calculateRanking(a1, s1);
+		double r2 = calculateRanking(a2, s2);
 		
-		return (r2-r1);
+		return (int) (r2-r1);
 	}
 	
-	public static int calculateRanking(long age, int score)
+	public static double calculateRanking(long age, int score)
 	{
-		return (int) (score * Math.exp(-8 * age * age));
+		return (score * Math.exp(-8 * age * age));
 	}
 
 }

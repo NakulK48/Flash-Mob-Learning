@@ -81,4 +81,16 @@ public class PublishedDocument extends Document{
 		}
 		DocumentManager.getInstance().updateDocument(this);
 	}
+	
+	public static double calculateRanking(long age, int score)
+	{
+		age /= 3600000;
+		return (score * Math.exp(-8 * age * age));
+	}
+	
+	public double calculateRanking()
+	{
+		double age = (System.currentTimeMillis() - creationTime)/3600000;
+		return (score * Math.exp(-8 * age * age));
+	}
 }

@@ -100,7 +100,7 @@ public class LoginManagerTests {
         LoginManager.getInstance().modifyUser(u);
 
         User u2 = LoginManager.getInstance().getUser(c_TestUsername);
-        Assert.assertEquals("Password changed", field.get(u2), c_TestPassword + "_new");
+        Assert.assertEquals("Password changed", c_TestPassword + "_new", field.get(u2));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class LoginManagerTests {
         // Perform the actual test.
         String test_banner = "This is a test banner.";
         LoginManager.getInstance().setLoginBanner(test_banner);
-        Assert.assertEquals(test_banner, LoginManager.getInstance().getLoginBanner());
+        Assert.assertEquals("Test banner updated.", test_banner, LoginManager.getInstance().getLoginBanner());
 
         // Restore the original banner (if any)
         LoginManager.getInstance().setLoginBanner(original);

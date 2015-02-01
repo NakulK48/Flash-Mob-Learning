@@ -153,77 +153,76 @@ public class DocumentManagerTests {
 
     @After
     public void tearDown() throws Exception {
-        LoginManager.getInstance().deleteUser(m_TestUser);
         Database.getInstance().close();
     }
 
     @Test
     public void testGetPublishedByUser() throws Exception {
         List<PublishedDocument> published = DocumentManager.getInstance().getPublishedByUser(m_TestUser, QueryParam.UNSORTED);
-        Assert.assertEquals("Expect 2 published documents", published.size(), 2);
+        Assert.assertEquals("Expect 2 published documents", 2, published.size());
         List<String> titles = Arrays.asList(new String[]{ published.get(0).getTitle(), published.get(1).getTitle() });
 
-        Assert.assertEquals("Expect a published title", titles.contains(c_TestDocumentTitle + " (PUBLISHED)"), true);
-        Assert.assertEquals("Expect a featured title", titles.contains(c_TestDocumentTitle + " (FEATURED)"), true);
+        Assert.assertEquals("Expect a published title", true, titles.contains(c_TestDocumentTitle + " (PUBLISHED)"));
+        Assert.assertEquals("Expect a featured title", true, titles.contains(c_TestDocumentTitle + " (FEATURED)"));
     }
 
     @Test
     public void testGetWorkInProgressByUser() throws Exception {
         List<WIPDocument> wip = DocumentManager.getInstance().getWorkInProgressByUser(m_TestUser, QueryParam.UNSORTED);
-        Assert.assertEquals("Expect 1 WIP document", wip.size(), 1);
-        Assert.assertEquals("Expect correct WIP title", wip.get(0).getTitle(), c_TestDocumentTitle + " (WIP)");
+        Assert.assertEquals("Expect 1 WIP document", 1, wip.size());
+        Assert.assertEquals("Expect correct WIP title", c_TestDocumentTitle + " (WIP)", wip.get(0).getTitle());
     }
 
     @Test
     public void testGetPublishedByTag() throws Exception {
         Tag tag = DocumentManager.getInstance().getTag(c_TestTagTitle + " (USED)");
         List<PublishedDocument> published = DocumentManager.getInstance().getPublishedByTag(tag, QueryParam.UNSORTED);
-        Assert.assertEquals("Expect 2 published documents", published.size(), 2);
+        Assert.assertEquals("Expect 2 published documents", 2, published.size());
         List<String> titles = Arrays.asList(new String[]{ published.get(0).getTitle(), published.get(1).getTitle() });
 
-        Assert.assertEquals("Expect a published title", titles.contains(c_TestDocumentTitle + " (PUBLISHED)"), true);
-        Assert.assertEquals("Expect a featured title", titles.contains(c_TestDocumentTitle + " (FEATURED)"), true);
+        Assert.assertEquals("Expect a published title", true, titles.contains(c_TestDocumentTitle + " (PUBLISHED)"));
+        Assert.assertEquals("Expect a featured title", true, titles.contains(c_TestDocumentTitle + " (FEATURED)"));
 
     }
 
     @Test
     public void testGetFeatured() throws Exception {
         List<PublishedDocument> published = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED);
-        Assert.assertEquals("Expect 2 featured documents", published.size(), 2);
-        Assert.assertEquals("Expect correct featured title", published.get(0).getTitle(), c_TestDocumentTitle + " (FEATURED)");
+        Assert.assertEquals("Expect 2 featured documents", 2, published.size());
+        Assert.assertEquals("Expect correct featured title", c_TestDocumentTitle + " (FEATURED)", published.get(0).getTitle());
     }
 
     @Test
     public void testGetFeaturedByTag() throws Exception {
         Tag tag = DocumentManager.getInstance().getTag(c_TestTagTitle + " (USED)");
         List<PublishedDocument> published = DocumentManager.getInstance().getFeaturedByTag(tag, QueryParam.UNSORTED);
-        Assert.assertEquals("Expect 1 featured document", published.size(), 1);
-        Assert.assertEquals("Expect correct featured title", published.get(0).getTitle(), c_TestDocumentTitle + " (FEATURED)");
+        Assert.assertEquals("Expect 1 featured document", 1, published.size());
+        Assert.assertEquals("Expect correct featured title", c_TestDocumentTitle + " (FEATURED)", published.get(0).getTitle());
     }
 
     @Test
     public void testGetPublished() throws Exception {
         List<PublishedDocument> published = DocumentManager.getInstance().getPublished(QueryParam.UNSORTED);
-        Assert.assertEquals("Expect 4 published documents", published.size(), 4);
+        Assert.assertEquals("Expect 4 published documents", 4, published.size());
     }
 
     @Test
     public void testDeleteAllDocumentsByUser() throws Exception {
-        DocumentManager.getInstance().deleteAllDocumentsByUser(m_TestUser2, QueryParam.UNSORTED);
-        Assert.assertEquals("Expect no documents for user after deletion", DocumentManager.getInstance().getPublishedByUser(m_TestUser2, QueryParam.UNSORTED).size(), 0);
+        DocumentManager.getInstance().deleteAllDocumentsByUser(m_TestUser2);
+        Assert.assertEquals("Expect no documents for user after deletion", 0, DocumentManager.getInstance().getPublishedByUser(m_TestUser2, QueryParam.UNSORTED).size());
     }
 
     @Test
     public void testGetRevisions() throws Exception {
         List<Revision> revisions = DocumentManager.getInstance().getRevisions(m_WIP_Document, QueryParam.UNSORTED);
-        Assert.assertEquals("Expect 3 revisions", revisions.size(), 3);
+        Assert.assertEquals("Expect 3 revisions", 3, revisions.size());
     }
 
     @Test
     public void testDeleteDocument() throws Exception {
         DocumentManager.getInstance().deleteDocument(m_WIP_Document);
         List<WIPDocument> wip = DocumentManager.getInstance().getWorkInProgressByUser(m_TestUser, QueryParam.UNSORTED);
-        Assert.assertEquals("Expect no WIP documents", wip.size(), 0);
+        Assert.assertEquals("Expect no WIP documents", 0, wip.size());
     }
 
     @Test
@@ -231,8 +230,8 @@ public class DocumentManagerTests {
         // We know that createRevision calls our addRevision, since Revision's constructor is hidden.
         Revision revision = Revision.createRevision(m_WIP_Document, new Date(), c_TestRevisionContent + " (DYNAMIC)");
         List<Revision> revisions = DocumentManager.getInstance().getRevisions(m_WIP_Document, QueryParam.UNSORTED);
-        Assert.assertEquals("Expect 4th added revision", revisions.size(), 4);
-        Assert.assertEquals("Expect correct revision content", DocumentManager.getInstance().getRevisionContent(revisions.get(3)), c_TestRevisionContent + " (DYNAMIC)");
+        Assert.assertEquals("Expect 4th added revision", 4, revisions.size());
+        Assert.assertEquals("Expect correct revision content", c_TestRevisionContent + " (DYNAMIC)", DocumentManager.getInstance().getRevisionContent(revisions.get(3)));
     }
 
     @Test
@@ -240,16 +239,16 @@ public class DocumentManagerTests {
         Revision revision = Revision.createRevision(m_WIP_Document, new Date(), c_TestRevisionContent + " (DYNAMIC)");
         DocumentManager.getInstance().deleteRevision(Arrays.asList(new Revision[] { revision }));
         List<Revision> revisions = DocumentManager.getInstance().getRevisions(m_WIP_Document, QueryParam.UNSORTED);
-        Assert.assertEquals("Expect unchanged number of revisions", revisions.size(), 3);
+        Assert.assertEquals("Expect unchanged number of revisions", 3, revisions.size());
     }
 
     @Test
     public void testCreateDocument() throws Exception {
         Document newDocument = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, null, c_TestDocumentTitle + " (WIP2)", 0);
         DocumentManager.getInstance().createDocument(newDocument);
-        Assert.assertNotSame("ID should be set", newDocument.getID(), -1);
+        Assert.assertNotSame("ID should be set", -1, newDocument.getID());
         List<WIPDocument> wip = DocumentManager.getInstance().getWorkInProgressByUser(m_TestUser, QueryParam.UNSORTED);
-        Assert.assertEquals("Expect new WIP document (total: 2)", wip.size(), 2);
+        Assert.assertEquals("Expect new WIP document (total: 2)", 2, wip.size());
     }
 
     @Test
@@ -258,32 +257,32 @@ public class DocumentManagerTests {
         DocumentManager.getInstance().updateDocument(m_WIP_Document);
 
         List<WIPDocument> retrieved = DocumentManager.getInstance().getWorkInProgressByUser(m_TestUser, QueryParam.UNSORTED);
-        Assert.assertEquals("Expected retrieved document with amended title", retrieved.get(0).getTitle(), c_TestDocumentTitle + " (DYNAMIC)");
+        Assert.assertEquals("Expected retrieved document with amended title", c_TestDocumentTitle + " (DYNAMIC)", retrieved.get(0).getTitle());
     }
 
     @Test
     public void testGetTags() throws Exception {
         Set<Tag> tags = DocumentManager.getInstance().getTags();
-        Assert.assertEquals("Expecting 3 tags", tags.size(), 3);
+        Assert.assertEquals("Expecting 3 tags", 3, tags.size());
     }
 
     @Test
     public void testGetTagsNotEmpty() throws Exception {
         Tag[] tags = (Tag[]) DocumentManager.getInstance().getTagsNotEmpty().toArray();
-        Assert.assertEquals("Expecting 1 tag", tags.length, 1);
-        Assert.assertEquals("Expecting used tag", tags[0].name, c_TestTagTitle + " (USED)");
+        Assert.assertEquals("Expecting 1 tag", 1, tags.length);
+        Assert.assertEquals("Expecting used tag", c_TestTagTitle + " (USED)", tags[0].name);
     }
 
     @Test
     public void testGetTagsNotBanned() throws Exception {
         Tag[] tags = (Tag[]) DocumentManager.getInstance().getTagsNotBanned().toArray();
-        Assert.assertEquals("Expecting 2 tags", tags.length, 2);
+        Assert.assertEquals("Expecting 2 tags", 2, tags.length);
     }
 
     @Test
     public void testGetTag() throws Exception {
         Tag tag = DocumentManager.getInstance().getTag(c_TestTagTitle + " (USED)");
-        Assert.assertEquals("Expecting used tag", tag.name, c_TestTagTitle + " (USED)");
+        Assert.assertEquals("Expecting used tag", c_TestTagTitle + " (USED)", tag.name);
     }
 
     @Test
@@ -292,7 +291,7 @@ public class DocumentManagerTests {
         DocumentManager.getInstance().createTag(tag);
 
         Tag retrieved = DocumentManager.getInstance().getTag(c_TestTagTitle + " (DYNAMIC)");
-        Assert.assertEquals("Expecting dynamic tag in database", retrieved.name, c_TestTagTitle + " (DYNAMIC)");
+        Assert.assertEquals("Expecting dynamic tag in database", c_TestTagTitle + " (DYNAMIC)", retrieved.name);
     }
 
     @Test
@@ -301,10 +300,10 @@ public class DocumentManagerTests {
         DocumentManager.getInstance().updateTags(m_WIP_Document);
 
         Tag[] tags = (Tag[]) DocumentManager.getInstance().getTagsNotEmpty().toArray();
-        Assert.assertEquals("Expecting 2 used tags", tags.length, 2);
+        Assert.assertEquals("Expecting 2 used tags", 2,  tags.length);
 
         List<WIPDocument> retrieved = DocumentManager.getInstance().getWorkInProgressByUser(m_TestUser, QueryParam.UNSORTED);
-        Assert.assertEquals("Expected retrieved document with tag", retrieved.get(0).getTags().size(), 1);
+        Assert.assertEquals("Expected retrieved document with tag", 1, retrieved.get(0).getTags().size());
     }
 
     @Test
@@ -314,7 +313,7 @@ public class DocumentManagerTests {
         DocumentManager.getInstance().updateTag(banned);
 
         Tag retrieved = DocumentManager.getInstance().getTag(c_TestTagTitle + " (BANNED)");
-        Assert.assertEquals("Expecting unbanned tag in database", retrieved.getBanned(), false);
+        Assert.assertEquals("Expecting unbanned tag in database", false, retrieved.getBanned());
     }
 
     @Test
@@ -323,13 +322,13 @@ public class DocumentManagerTests {
         DocumentManager.getInstance().deleteTag(used);
 
         Set<Tag> tags = DocumentManager.getInstance().getTags();
-        Assert.assertEquals("Expecting 2 tags", tags.size(), 2);
+        Assert.assertEquals("Expecting 2 tags", 2, tags.size());
 
         Tag[] nonEmptyTags = (Tag[]) DocumentManager.getInstance().getTagsNotEmpty().toArray();
-        Assert.assertEquals("Expecting no used tags", nonEmptyTags.length, 0);
+        Assert.assertEquals("Expecting no used tags", 0, nonEmptyTags.length);
 
         PublishedDocument featured = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0);
-        Assert.assertEquals("Featured document should no longer have tag", featured.getTags().size(), 0);
+        Assert.assertEquals("Featured document should no longer have tag", 0, featured.getTags().size());
     }
 
     @Test
@@ -338,13 +337,13 @@ public class DocumentManagerTests {
         DocumentManager.getInstance().deleteTagReferences(used);
 
         Set<Tag> tags = DocumentManager.getInstance().getTags();
-        Assert.assertEquals("Expecting 3 tags", tags.size(), 3);
+        Assert.assertEquals("Expecting 3 tags", 3, tags.size());
 
         Tag[] nonEmptyTags = (Tag[]) DocumentManager.getInstance().getTagsNotEmpty().toArray();
-        Assert.assertEquals("Expecting no used tags", nonEmptyTags.length, 0);
+        Assert.assertEquals("Expecting no used tags", 0, nonEmptyTags.length);
 
         PublishedDocument featured = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0);
-        Assert.assertEquals("Featured document should no longer have tag", featured.getTags().size(), 0);
+        Assert.assertEquals("Featured document should no longer have tag", 0, featured.getTags().size());
     }
 
     @Test
@@ -352,6 +351,6 @@ public class DocumentManagerTests {
         DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0));
 
         PublishedDocument featured = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0);
-        Assert.assertEquals("Featured document has 1 vote", featured.getVotes(), 1);
+        Assert.assertEquals("Featured document has 1 vote", 1, featured.getVotes());
     }
 }

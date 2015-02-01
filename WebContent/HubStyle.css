@@ -1,0 +1,37 @@
+@CHARSET "ISO-8859-1";
+
+table
+{
+	width:100%;
+	border-collapse:collapse;
+}
+
+.heading
+{
+	width:100px;
+	font-size:14pt;
+	color:navy;
+	text-align:center;
+}
+
+#upvoteScoreHeading
+{
+	width:10%;
+}
+
+#titleSubmitterHeading
+{
+	width:75%;
+}
+
+
+#ageHeading
+{
+	width:15%;
+}
+
+tr.lowerRow td
+{
+	border-bottom:1px solid black;
+}
+

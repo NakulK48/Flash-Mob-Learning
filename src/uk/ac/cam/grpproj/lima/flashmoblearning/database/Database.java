@@ -88,10 +88,9 @@ public class Database {
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;\n";
 
 		String create_document_tags = "CREATE TABLE IF NOT EXISTS `document_tags` (\n" +
-				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n" +
 				"  `tag_id` bigint(20) NOT NULL,\n" +
 				"  `document_id` bigint(20) NOT NULL,\n" +
-				"  PRIMARY KEY (`id`)\n" +
+				"  PRIMARY KEY (`tag_id`, `document_id`)\n" +
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
 
 		String create_revisions = "CREATE TABLE IF NOT EXISTS `revisions` (\n" +

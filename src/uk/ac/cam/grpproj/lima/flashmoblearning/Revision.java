@@ -13,24 +13,21 @@ public class Revision {
 	/** This is a revision of a specific document. It will be deleted when the 
 	 * document is deleted. This makes housekeeping considerably easier. */
 	public final Document document;
-	/** Owned by a specific user */
-	public final User owner;
 	/** Creation time */
 	public final Date creationTime;
+	private final long id;
 	
 	/** Create a Revision with a given content and store it to the database. */
-	public static Revision createRevision(User u, Date d, Document doc, String payload) throws NotInitializedException, SQLException, NoSuchObjectException {
-		Revision r = new Revision(u, d, doc);
+	public static Revision createRevision(Document doc, Date d, String payload) throws NotInitializedException, SQLException, NoSuchObjectException {
 		// Store the revision record AND the content.
-		DocumentManager.getInstance().addRevision(doc, r, payload);
-		return r;
+		return DocumentManager.getInstance().addRevision(doc, d, payload);
 	}
 	
 	/** To be used carefully! */
-	private Revision(User u, Date d, Document doc) {
-		document = doc;
-		owner = u;
-		creationTime = d;
+	public Revision(long id, Date d, Document doc) {
+		this.id = id;
+		this.document = doc;
+		this.creationTime = d;
 	}
 	
 	public String getContent() throws SQLException, NoSuchObjectException {
@@ -44,7 +41,13 @@ public class Revision {
 	 * @throws NotInitializedException */
 	public Revision copy(Document doc) throws NotInitializedException, SQLException, NoSuchObjectException {
 		String fetched = getContent();
-		return createRevision(doc.owner, creationTime, doc, fetched);
+		return createRevision(doc, creationTime, fetched);
 	}
+
+	public User getOwner() {
+		return document.owner;
+	}
+
+	public long getID() { return id; }
 
 }

@@ -54,6 +54,10 @@ public class User {
 		}
 		LoginManager.getInstance().modifyUser(this);
 	}
+
+	public String getEncryptedPassword() {
+		return encryptedPassword;
+	}
 	
 	/** Only called by LoginManager. See LoginManager.createUser(). */
 	public User(long id, String name, String epass) {

@@ -1,6 +1,7 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
@@ -28,10 +29,20 @@ public class PublishedDocument extends Document{
 		isFeatured = false;
 	}
 	
+
 	/** Only called by DocumentManager */
 	public PublishedDocument(DocumentType docType, User owner, Document parentDoc,
 			String title, long time) {
 		super(docType, owner, parentDoc, title, time);
+	/** Only called by DocumentManager.
+	 * @param votes The number of votes for the document when it was fetched from the database.
+	 * @param score The score stored in the database for the document. Might be updated later. */
+	public PublishedDocument(long id, DocumentType docType, User owner, Document parentDoc,
+			String title, long time, int votes, int score) {
+		super(docType, owner, parentDoc, title, time);
+		this.votes = votes;
+		this.score = score;
+		this.id = id;
 	}
 	
 	/** Get the one and only revision 
@@ -46,12 +57,11 @@ public class PublishedDocument extends Document{
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public WIPDocument fork(User newOwner) throws NotInitializedException, SQLException, NoSuchObjectException {
+	public WIPDocument fork(User newOwner) throws NotInitializedException, SQLException, NoSuchObjectException, IDAlreadySetException {
 		WIPDocument d = new WIPDocument(this, newOwner);
 		String content = this.getLastRevision().getContent();
-		Revision firstRev = getContentRevision().copy(d);
 		DocumentManager.getInstance().createDocument(d);
-		DocumentManager.getInstance().addRevision(d, firstRev, content);
+		Revision.createRevision(d, new Date(), content);
 		return d;
 	}
 	

@@ -15,9 +15,10 @@ public class WIPDocument extends Document {
 	}
 
 	/** Only called by DocumentManager */
-	public WIPDocument(DocumentType docType, User owner, Document parentDoc,
+	public WIPDocument(long id, DocumentType docType, User owner, Document parentDoc,
 			String title, long time) {
 		super(docType, owner, parentDoc, title, time);
+		this.id = id;
 	}
 	
 	/** Publish as a PublishedDocument. Creates a new PublishedDocument using the final revision
@@ -25,7 +26,7 @@ public class WIPDocument extends Document {
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public PublishedDocument publish() throws NotInitializedException, SQLException, NoSuchObjectException {
+	public PublishedDocument publish() throws NotInitializedException, SQLException, NoSuchObjectException, IDAlreadySetException {
 		PublishedDocument d = new PublishedDocument(this);
 		DocumentManager.getInstance().createDocument(d);
 		return d;

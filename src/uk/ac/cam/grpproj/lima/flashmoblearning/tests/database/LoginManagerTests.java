@@ -27,16 +27,16 @@ public class LoginManagerTests {
         m_Connection = Database.getInstance().getConnection();
 
         // Create a test user
-        m_Statement.executeUpdate("DELETE FROM users WHERE username = 'loginmanager_test'");
+        m_Statement.executeUpdate("DELETE FROM users WHERE username = '" + c_TestUsername + "'");
         PreparedStatement ps = m_Connection.prepareStatement("INSERT INTO users (`username`, `password`, `teacher_flag`) VALUES (?, ?, 0)");
         ps.setString(1, c_TestUsername);
-        ps.setString(2, "test_password");
+        ps.setString(2, c_TestPassword);
         ps.executeUpdate();
     }
 
     @After
     public void tearDown() throws Exception {
-        Database.getInstance().getStatement().executeUpdate("DELETE FROM users WHERE username = 'loginmanager_test'");
+        Database.getInstance().getStatement().executeUpdate("DELETE FROM users WHERE username = '" + c_TestUsername + "'");
         Database.getInstance().close();
     }
 

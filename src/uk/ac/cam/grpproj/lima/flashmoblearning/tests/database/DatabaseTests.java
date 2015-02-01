@@ -11,7 +11,6 @@ public class DatabaseTests {
     @org.junit.Before
     public void setUp() throws Exception {
         Database.init();
-
     }
 
     @org.junit.After

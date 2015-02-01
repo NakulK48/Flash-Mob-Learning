@@ -35,6 +35,19 @@ public class LoginManager {
 		else
 			return new Student(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
 	}
+
+	/** Get a user by user id */
+	public User getUser(long id) throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM users WHERE id = ?");
+		ps.setLong(1, id);
+		ResultSet rs = ps.executeQuery();
+
+		if(!rs.next()) throw new NoSuchObjectException();
+		if(rs.getBoolean("teacher_flag"))
+			return new Teacher(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
+		else
+			return new Student(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
+	}
 	
 	/** Delete a user by username */
 	public void deleteUser(User user) throws SQLException, NoSuchObjectException {

@@ -13,6 +13,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectEx
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Connection;
 
@@ -20,6 +21,7 @@ public class LoginManagerTests {
 
     private static final String c_TestUsername = "loginmanager_test";
     private static final String c_TestPassword = "test_password";
+    private int m_UserID;
     private Statement m_Statement;
     private Connection m_Connection;
 
@@ -31,10 +33,13 @@ public class LoginManagerTests {
 
         // Create a test user
         m_Statement.executeUpdate("DELETE FROM users WHERE username = '" + c_TestUsername + "'");
-        PreparedStatement ps = m_Connection.prepareStatement("INSERT INTO users (`username`, `password`, `teacher_flag`) VALUES (?, ?, 0)");
+        PreparedStatement ps = m_Connection.prepareStatement("INSERT INTO users (`username`, `password`, `teacher_flag`) VALUES (?, ?, 0)", Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, c_TestUsername);
         ps.setString(2, c_TestPassword);
         ps.executeUpdate();
+
+        ResultSet rs = ps.getGeneratedKeys(); rs.next();
+        m_UserID = rs.getInt(1);
     }
 
     @After
@@ -53,6 +58,12 @@ public class LoginManagerTests {
     // Tests both the fact that we can get the user, and that the user in setup has been created.
     public void testGetUser() throws Exception {
         Student student = (Student) LoginManager.getInstance().getUser(c_TestUsername);
+        Assert.assertEquals("User retrieved", c_TestUsername, student.name);
+    }
+
+    @Test
+    public void testGetUserById() throws Exception {
+        Student student = (Student) LoginManager.getInstance().getUser(m_UserID);
         Assert.assertEquals("User retrieved", c_TestUsername, student.name);
     }
 

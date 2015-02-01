@@ -15,8 +15,8 @@ import java.sql.Connection;
 
 public class LoginManagerTests {
 
-    public static final String c_TestUsername = "loginmanager_test";
-    public static final String c_TestPassword = "test_password";
+    private static final String c_TestUsername = "loginmanager_test";
+    private static final String c_TestPassword = "test_password";
     private Statement m_Statement;
     private Connection m_Connection;
 

@@ -13,6 +13,7 @@ public class PublishedDocument extends Document{
 	
 	/** Has the "featured" flag been set by the administrator? */
 	private boolean isFeatured;
+	/** Looked up by the database on creation. Not updated in updateDocument(). */
 	private int votes;
 	
 	public int getVotes() {

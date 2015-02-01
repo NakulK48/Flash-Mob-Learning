@@ -183,19 +183,18 @@ public class DocumentManager {
 		d.setID(rs.getLong(1));
 	}
 
-	/** Update a document's metadata (not revisions). **/
+	/** Update a document's metadata (not revisions). Not including votes and count. **/
 	/** If a document's status changes from unpublished to published, all revisions but the latest is truncated **/
 	public void updateDocument(Document d) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
-				("UPDATE documents SET user_id = ?, type = ?, title = ?, published_flag = ?, featured_flag = ?, update_time = ?, vote_count = ? where id = ?");
+				("UPDATE documents SET user_id = ?, type = ?, title = ?, published_flag = ?, featured_flag = ?, update_time = ? where id = ?");
 		ps.setLong(1, d.owner.getID());
 		ps.setInt(2, d.docType.getId());
 		ps.setString(3, d.getTitle());
 		ps.setBoolean(4, d instanceof PublishedDocument);
 		ps.setBoolean(5, d instanceof PublishedDocument && ((PublishedDocument)d).getFeatured());
 		ps.setTimestamp(6, new Timestamp(d.creationTime));
-		ps.setInt(7, d instanceof PublishedDocument ? ((PublishedDocument)d).getVotes() : 0);
-		ps.setLong(8, d.getID());
+		ps.setLong(7, d.getID());
 
 		int affected_rows = ps.executeUpdate();
 		if(affected_rows < 1) throw new NoSuchObjectException("document " + d.getID());

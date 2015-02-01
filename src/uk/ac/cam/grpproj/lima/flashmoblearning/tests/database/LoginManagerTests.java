@@ -4,11 +4,14 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import uk.ac.cam.grpproj.lima.flashmoblearning.Student;
+import uk.ac.cam.grpproj.lima.flashmoblearning.Teacher;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.Database;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Connection;
@@ -49,8 +52,17 @@ public class LoginManagerTests {
     @Test
     // Tests both the fact that we can get the user, and that the user in setup has been created.
     public void testGetUser() throws Exception {
-        User user = LoginManager.getInstance().getUser(c_TestUsername);
-        Assert.assertEquals("User retrieved", c_TestUsername, user.name);
+        Student student = (Student) LoginManager.getInstance().getUser(c_TestUsername);
+        Assert.assertEquals("User retrieved", c_TestUsername, student.name);
+    }
+
+    @Test
+    public void testUpdateTeacher() throws Exception {
+        User u = LoginManager.getInstance().getUser(c_TestUsername);
+        Teacher t = new Teacher(u.getID(), u.name, u.getEncryptedPassword());
+        LoginManager.getInstance().modifyUser(t);
+
+        Teacher u2 = (Teacher) LoginManager.getInstance().getUser(c_TestUsername);
     }
 
     @Test(expected=NoSuchObjectException.class)

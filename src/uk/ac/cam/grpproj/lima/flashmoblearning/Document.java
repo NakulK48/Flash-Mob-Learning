@@ -32,7 +32,7 @@ public class Document {
 	/** Every work-in-progress document has a unique ID which never changes.
 	 * This must be set by the database when the document is first stored. It cannot be changed
 	 * after that point. */
-	private long id;
+	protected long id;
 	/** Title of the document. Mutable. */
 	private String title;
 	

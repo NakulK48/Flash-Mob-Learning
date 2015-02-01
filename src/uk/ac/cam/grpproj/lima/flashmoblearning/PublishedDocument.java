@@ -36,11 +36,12 @@ public class PublishedDocument extends Document{
 	/** Only called by DocumentManager.
 	 * @param votes The number of votes for the document when it was fetched from the database.
 	 * @param score The score stored in the database for the document. Might be updated later. */
-	public PublishedDocument(DocumentType docType, User owner, Document parentDoc,
+	public PublishedDocument(long id, DocumentType docType, User owner, Document parentDoc,
 			String title, long time, int votes, int score) {
 		super(docType, owner, parentDoc, title, time);
 		this.votes = votes;
 		this.score = score;
+		this.id = id;
 	}
 	
 	/** Get the one and only revision 

@@ -1,12 +1,9 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
-import com.mysql.jdbc.Statement;
 import uk.ac.cam.grpproj.lima.flashmoblearning.*;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
@@ -192,7 +189,7 @@ public class DocumentManager {
 		ps.setInt(2, d.docType.getId());
 		ps.setString(3, d.getTitle());
 		ps.setBoolean(4, d instanceof PublishedDocument);
-		ps.setBoolean(5, d instanceof PublishedDocument && ((PublishedDocument)d).getFeatured());
+		ps.setBoolean(5, d instanceof PublishedDocument && ((PublishedDocument) d).getFeatured());
 		ps.setTimestamp(6, new Timestamp(d.creationTime));
 		ps.setLong(7, d.getID());
 

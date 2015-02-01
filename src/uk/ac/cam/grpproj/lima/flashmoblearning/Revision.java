@@ -18,9 +18,9 @@ public class Revision {
 	private final long id;
 	
 	/** Create a Revision with a given content and store it to the database. */
-	public static Revision createRevision(Date d, Document doc, String payload) throws NotInitializedException, SQLException, NoSuchObjectException {
+	public static Revision createRevision(Document doc, Date d, String payload) throws NotInitializedException, SQLException, NoSuchObjectException {
 		// Store the revision record AND the content.
-		return DocumentManager.getInstance().addRevision(doc, payload);
+		return DocumentManager.getInstance().addRevision(doc, d, payload);
 	}
 	
 	/** To be used carefully! */
@@ -41,7 +41,7 @@ public class Revision {
 	 * @throws NotInitializedException */
 	public Revision copy(Document doc) throws NotInitializedException, SQLException, NoSuchObjectException {
 		String fetched = getContent();
-		return createRevision(creationTime, doc, fetched);
+		return createRevision(doc, creationTime, fetched);
 	}
 
 	public User getOwner() {

@@ -1,6 +1,7 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
@@ -59,9 +60,8 @@ public class PublishedDocument extends Document{
 	public WIPDocument fork(User newOwner) throws NotInitializedException, SQLException, NoSuchObjectException {
 		WIPDocument d = new WIPDocument(this, newOwner);
 		String content = this.getLastRevision().getContent();
-		Revision firstRev = getContentRevision().copy(d);
 		DocumentManager.getInstance().createDocument(d);
-		DocumentManager.getInstance().addRevision(d, firstRev, content);
+		Revision.createRevision(d, new Date(), content);
 		return d;
 	}
 	

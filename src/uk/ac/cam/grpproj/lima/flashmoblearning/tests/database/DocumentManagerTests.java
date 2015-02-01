@@ -153,6 +153,8 @@ public class DocumentManagerTests {
 
     @After
     public void tearDown() throws Exception {
+        LoginManager.getInstance().deleteUser(m_TestUser);
+        LoginManager.getInstance().deleteUser(m_TestUser2);
         Database.getInstance().close();
     }
 

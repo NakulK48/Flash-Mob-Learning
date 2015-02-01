@@ -29,7 +29,7 @@ public class LoginManager {
 		ps.setString(1, username);
 		ResultSet rs = ps.executeQuery();
 
-		if(!rs.next()) throw new NoSuchObjectException();
+		if(!rs.next()) throw new NoSuchObjectException("user " + username);
 		if(rs.getBoolean("teacher_flag"))
 			return new Teacher(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
 		else
@@ -42,7 +42,7 @@ public class LoginManager {
 		ps.setLong(1, id);
 		ResultSet rs = ps.executeQuery();
 
-		if(!rs.next()) throw new NoSuchObjectException();
+		if(!rs.next()) throw new NoSuchObjectException("user " + id);
 		if(rs.getBoolean("teacher_flag"))
 			return new Teacher(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
 		else
@@ -55,7 +55,7 @@ public class LoginManager {
 		ps.setLong(1, user.getID());
 
 		int affected_rows = ps.executeUpdate();
-		if(affected_rows < 1) throw new NoSuchObjectException();
+		if(affected_rows < 1) throw new NoSuchObjectException("user " + user.getID());
 	}
 	
 	/** Create a user */
@@ -89,7 +89,7 @@ public class LoginManager {
 		ps.setLong(4, u.getID());
 
 		int affected_rows = ps.executeUpdate();
-		if(affected_rows < 1) throw new NoSuchObjectException();
+		if(affected_rows < 1) throw new NoSuchObjectException("user " + u.getID());
 	}
 
 	/** Get the login banner */

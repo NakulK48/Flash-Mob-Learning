@@ -75,7 +75,7 @@ public class Database {
 	/** Creates all necessary tables if they do not exist. **/
 	private static void setup(Connection connection) throws SQLException {
 		String create_documents = "CREATE TABLE IF NOT EXISTS `documents` (\n" +
-				"  `id` int(11) NOT NULL,\n" +
+				"  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
 				"  `user_id` int(11) NOT NULL,\n" +
 				"  `type` int(11) NOT NULL,\n" +
 				"  `title` text NOT NULL,\n" +
@@ -87,14 +87,14 @@ public class Database {
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;\n";
 
 		String create_document_tags = "CREATE TABLE IF NOT EXISTS `document_tags` (\n" +
-				"  `id` int(11) NOT NULL,\n" +
+				"  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
 				"  `tag_id` int(11) NOT NULL,\n" +
 				"  `document_id` int(11) NOT NULL,\n" +
 				"  PRIMARY KEY (`id`)\n" +
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
 
 		String create_revisions = "CREATE TABLE IF NOT EXISTS `revisions` (\n" +
-				"  `id` int(11) NOT NULL,\n" +
+				"  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
 				"  `document_id` int(11) NOT NULL,\n" +
 				"  `creation_time` timestamp NOT NULL,\n" +
 				"  `content` text NOT NULL,\n" +
@@ -102,7 +102,7 @@ public class Database {
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
 
 		String create_tags = "CREATE TABLE IF NOT EXISTS `tags` (\n" +
-				"  `id` int(11) NOT NULL,\n" +
+				"  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
 				"  `name` text NOT NULL,\n" +
 				"  `banned_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
 				"  `reference_count` int(11) NOT NULL DEFAULT '0',\n" +
@@ -110,7 +110,7 @@ public class Database {
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;";
 
 		String create_users	 = "CREATE TABLE IF NOT EXISTS `users` (\n" +
-				"  `id` int(11) NOT NULL,\n" +
+				"  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
 				"  `username` varchar(255) NOT NULL,\n" +
 				"  `password` varchar(255) NOT NULL,\n" +
 				"  `teacher_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +

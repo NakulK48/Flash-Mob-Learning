@@ -11,7 +11,7 @@
 </head>
 <body>
 <%
-/* 	Hub hub = new Hub();
+ 	Hub hub = new Hub();
 	SortType st = SortType.BEST;
 	hub.sort(st);
 	
@@ -25,7 +25,7 @@
 		<td class='heading' id='ageHeading'></td>
 	</tr>
 	<%
- /* 	for (PublishedDocument pd : subs)
+  	for (PublishedDocument pd : subs)
 		{
 			String ageString;
 			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
@@ -42,7 +42,7 @@
 			"<td class='upvote'> UV </td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='../preview.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.title 		+ "</a></td>" + //title
+			"<td class='title'> <a href='../preview.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
@@ -52,7 +52,7 @@
 			"</tr>"; 
 			
 			out.println(entry);
-		} */
+		} 
 		
 		String entry = 
 		"<tr class='upperRow'>" + 

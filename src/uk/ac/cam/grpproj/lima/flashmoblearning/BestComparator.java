@@ -34,6 +34,7 @@ public class BestComparator implements Comparator<PublishedDocument>
 	
 	public static double calculateRanking(long age, int score)
 	{
+		age /= 3600000;
 		return (score * Math.exp(-8 * age * age));
 	}
 

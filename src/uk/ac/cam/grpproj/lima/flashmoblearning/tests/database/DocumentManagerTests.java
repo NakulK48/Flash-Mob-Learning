@@ -23,7 +23,7 @@ public class DocumentManagerTests {
     private Connection m_Connection;
     private User m_TestUser;
     private User m_TestUser2;
-    private WIPDocument m_WIP_Document = new WIPDocument(DocumentType.PLAINTEXT, m_TestUser, null, c_TestDocumentTitle + " (WIP)", 0);
+    private WIPDocument m_WIP_Document = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, null, c_TestDocumentTitle + " (WIP)", 0);
 
     private static final String c_TestDocumentTitle = "Test Document";
     private static final String c_TestRevisionContent = "Test Revision";
@@ -229,7 +229,7 @@ public class DocumentManagerTests {
     @Test
     public void testAddAndGetRevision() throws Exception {
         // We know that createRevision calls our addRevision, since Revision's constructor is hidden.
-        Revision revision = Revision.createRevision(m_TestUser, new Date(), m_WIP_Document, c_TestRevisionContent + " (DYNAMIC)");
+        Revision revision = Revision.createRevision(m_WIP_Document, new Date(), c_TestRevisionContent + " (DYNAMIC)");
         List<Revision> revisions = DocumentManager.getInstance().getRevisions(m_WIP_Document, QueryParam.UNSORTED);
         Assert.assertEquals("Expect 4th added revision", revisions.size(), 4);
         Assert.assertEquals("Expect correct revision content", DocumentManager.getInstance().getRevisionContent(revisions.get(3)), c_TestRevisionContent + " (DYNAMIC)");
@@ -237,7 +237,7 @@ public class DocumentManagerTests {
 
     @Test
     public void testDeleteRevision() throws Exception {
-        Revision revision = Revision.createRevision(m_TestUser, new Date(), m_WIP_Document, c_TestRevisionContent + " (DYNAMIC)");
+        Revision revision = Revision.createRevision(m_WIP_Document, new Date(), c_TestRevisionContent + " (DYNAMIC)");
         DocumentManager.getInstance().deleteRevision(Arrays.asList(new Revision[] { revision }));
         List<Revision> revisions = DocumentManager.getInstance().getRevisions(m_WIP_Document, QueryParam.UNSORTED);
         Assert.assertEquals("Expect unchanged number of revisions", revisions.size(), 3);
@@ -245,7 +245,7 @@ public class DocumentManagerTests {
 
     @Test
     public void testCreateDocument() throws Exception {
-        Document newDocument = new WIPDocument(DocumentType.PLAINTEXT, m_TestUser, null, c_TestDocumentTitle + " (WIP2)", 0);
+        Document newDocument = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, null, c_TestDocumentTitle + " (WIP2)", 0);
         DocumentManager.getInstance().createDocument(newDocument);
         Assert.assertNotSame("ID should be set", newDocument.getID(), -1);
         List<WIPDocument> wip = DocumentManager.getInstance().getWorkInProgressByUser(m_TestUser, QueryParam.UNSORTED);

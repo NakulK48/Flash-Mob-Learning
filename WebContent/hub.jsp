@@ -24,14 +24,23 @@
 		<td class='heading' id='ageHeading'></td>
 	</tr>
 	<%
-/* 		for (PublishedDocument pd : subs)
+/*  		for (PublishedDocument pd : subs)
 		{
-			long ageInHours = (System.currentTimeMillis() - pd.creationTime)/3600000;
+			String ageString;
+			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
+			if (ageInHours < 1) ageString = "Less than an hour ago";
+			else if (ageInHours < 24) ageString = ageInHours + " hours ago";
+			else
+			{
+				int ageInDays = ageInHours / 24;
+				ageString = ageInDays + " days ago";
+			}
+			
 			String entry = 
 			"<tr class='upperRow'>" + 
 			"<td class='upvote'> UV </td>" + //upvote
 			"<td class='title'>" + pd.getTitle() 	+ "</td>" + //title
-			"<td class='age'>" + ageInHours + " hours ago" + "</td>" + //age
+			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
 			"<td class='score'>" + pd.getScore()	+ "</td>" + //score
@@ -40,7 +49,7 @@
 			"</tr>"; 
 			
 			out.println(entry);
-		} */
+		}  */
 		
 		String entry = 
 		"<tr class='upperRow'>" + 
@@ -50,11 +59,39 @@
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
 		"<td class='score'>" + "11"	+ "</td>" + //score
-		"<td class='submitter'>" + "Mike Smith" 		+ "</td>" + //submitter
+		"<td class='submitter'>" + "George Bush" 		+ "</td>" + //submitter
 		"<td></td>" +
 		"</tr>"; 
 		
 		out.println(entry);
+		
+		String entry2 = 
+		"<tr class='upperRow'>" + 
+		"<td class='upvote'>O</td>" + //upvote
+		"<td class='title'>" + "Mosquito flying around screen" 	+ "</td>" + //title
+		"<td class='age'>" + "Less than an hour ago" + "</td>" + //age
+		"</tr>" + 
+		"<tr class='lowerRow'>" +
+		"<td class='score'>" + "18"	+ "</td>" + //score
+		"<td class='submitter'>" + "Bill Clinton" 		+ "</td>" + //submitter
+		"<td></td>" +
+		"</tr>"; 
+		
+		out.println(entry2);
+		
+		String entry3 = 
+		"<tr class='upperRow'>" + 
+		"<td class='upvote'>O</td>" + //upvote
+		"<td class='title'>" + "Cicada receiving tax cuts" 	+ "</td>" + //title
+		"<td class='age'>" + "2 days ago" + "</td>" + //age
+		"</tr>" + 
+		"<tr class='lowerRow'>" +
+		"<td class='score'>" + "48"	+ "</td>" + //score
+		"<td class='submitter'>" + "Ronald Reagan" 		+ "</td>" + //submitter
+		"<td></td>" +
+		"</tr>"; 
+		
+		out.println(entry3);
 	%>
 	
 	

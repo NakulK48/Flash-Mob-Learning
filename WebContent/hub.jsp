@@ -32,6 +32,7 @@
 %>
 <table>
 	<tr>
+		<td class='heading' id='upvoteHeading'></td>
 		<td class='heading' id='scoreHeading'>Score</td>
 		<td class='heading' id='titleHeading'>Title</td>
 		<td class='heading' id='submitterHeading'>Submitter</td>
@@ -43,10 +44,11 @@
 			long ageInHours = (System.currentTimeMillis() - pd.creationTime)/3600000;
 			String entry = 
 			"<tr>" + 
-			"<td>" + pd.getScore()	+ "</td>" + //score
-			"<td>" + pd.getTitle() 	+ "</td>" + //title
-			"<td>" + pd.owner 		+ "</td>" + //submitter
-			"<td>" + ageInHours + " hours ago" + "</td>" + //age
+			"<td class='upvote'> UV </td>" + //upvote
+			"<td class='score'>" + pd.getScore()	+ "</td>" + //score
+			"<td class='title'>" + pd.getTitle() 	+ "</td>" + //title
+			"<td class='submitter'>" + pd.owner 		+ "</td>" + //submitter
+			"<td class='date'>" + ageInHours + " hours ago" + "</td>" + //age
 			"</tr>"; 
 			out.println(entry);
 		}

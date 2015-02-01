@@ -13,7 +13,6 @@ public class PublishedDocument extends Document{
 	/** Has the "featured" flag been set by the administrator? */
 	private boolean isFeatured;
 	private int score;
-	private int ranking;
 	
 	public int getScore() {
 		return score;
@@ -71,17 +70,5 @@ public class PublishedDocument extends Document{
 			isFeatured = set;
 		}
 		DocumentManager.getInstance().updateDocument(this);
-	}
-	
-	public static int calculateRanking(long age, int score)
-	{
-		return (int) (score * Math.exp(-8 * age * age));
-	}
-	
-	public int calculateRanking()
-	{
-		long age = System.currentTimeMillis() - creationTime;
-		this.ranking = (int) (score * Math.exp(-8 * age * age));
-		return this.ranking;
 	}
 }

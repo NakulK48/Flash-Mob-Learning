@@ -11,6 +11,10 @@ public class Tag {
 	
 	/** Tag name */
 	public final String name;
+	/** Every tag has a unique ID which never changes.
+	 * This must be set by the database when the document is first stored. It cannot be changed
+	 * after that point. */
+	private long id;
 	
 	private boolean banned;
 	
@@ -18,6 +22,21 @@ public class Tag {
 	public static Tag create(String name) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
 		Tag t = new Tag(name);
 		return DocumentManager.getInstance().createTag(t);
+	}
+
+	/** Called by database */
+	public synchronized long getID() {
+		return id;
+	}
+
+	/** Called by the database when a tag is first stored */
+	public synchronized void setID(long newID) throws IDAlreadySetException {
+		if(this.id == -1) {
+			this.id = newID;
+		} else {
+			if(id != newID) // OK to set to existing ID
+				throw new IDAlreadySetException();
+		}
 	}
 	
 	/** SHOULD ONLY BE CALLED BY DATABASE! */

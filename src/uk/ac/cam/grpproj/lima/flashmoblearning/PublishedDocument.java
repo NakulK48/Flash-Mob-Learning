@@ -57,7 +57,7 @@ public class PublishedDocument extends Document{
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public WIPDocument fork(User newOwner) throws NotInitializedException, SQLException, NoSuchObjectException {
+	public WIPDocument fork(User newOwner) throws NotInitializedException, SQLException, NoSuchObjectException, IDAlreadySetException {
 		WIPDocument d = new WIPDocument(this, newOwner);
 		String content = this.getLastRevision().getContent();
 		DocumentManager.getInstance().createDocument(d);

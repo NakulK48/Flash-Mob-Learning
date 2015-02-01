@@ -26,7 +26,7 @@ public class WIPDocument extends Document {
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public PublishedDocument publish() throws NotInitializedException, SQLException, NoSuchObjectException {
+	public PublishedDocument publish() throws NotInitializedException, SQLException, NoSuchObjectException, IDAlreadySetException {
 		PublishedDocument d = new PublishedDocument(this);
 		DocumentManager.getInstance().createDocument(d);
 		return d;

@@ -13,8 +13,6 @@ public class Revision {
 	/** This is a revision of a specific document. It will be deleted when the 
 	 * document is deleted. This makes housekeeping considerably easier. */
 	public final Document document;
-	/** Owned by a specific user */
-	public final User owner;
 	/** Creation time */
 	public final Date creationTime;
 	
@@ -29,7 +27,6 @@ public class Revision {
 	/** To be used carefully! */
 	private Revision(User u, Date d, Document doc) {
 		document = doc;
-		owner = u;
 		creationTime = d;
 	}
 	
@@ -45,6 +42,10 @@ public class Revision {
 	public Revision copy(Document doc) throws NotInitializedException, SQLException, NoSuchObjectException {
 		String fetched = getContent();
 		return createRevision(doc.owner, creationTime, doc, fetched);
+	}
+
+	public User getOwner() {
+		return document.owner;
 	}
 
 }

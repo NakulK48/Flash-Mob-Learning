@@ -27,13 +27,23 @@ public class Document {
 	/** Every work-in-progress document has a unique ID which never changes.
 	 * This must be set by the database when the document is first stored. It cannot be changed
 	 * after that point. */
-	protected long id;
+	private long id;
 	/** Title of the document. Mutable. */
 	private String title;
 	
-	public Document(DocumentType docType, User owner, Document parentDoc,
+	/** Create a Document.
+	 * @param id If loaded from the database, this is a (non-negative) ID for 
+	 * the document. If it hasn't been stored yet this should be -1.
+	 * @param docType Document type e.g. Skulpt.
+	 * @param owner All documents are owned by a single user.
+	 * @param parentDoc Parent document this was forked or published from. Can 
+	 * be null.
+	 * @param title Title of the document. Can change.
+	 * @param time Creation time.
+	 */
+	public Document(long id, DocumentType docType, User owner, Document parentDoc,
 			String title, long time) {
-		id = -1;
+		this.id = id;
 		this.docType = docType;
 		this.owner = owner;
 		this.parentDoc = parentDoc;

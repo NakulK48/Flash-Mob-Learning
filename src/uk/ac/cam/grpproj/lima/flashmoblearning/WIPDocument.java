@@ -11,14 +11,13 @@ public class WIPDocument extends Document {
 	
 	/** Only called by PublishedDocument.fork() */
 	WIPDocument(PublishedDocument forked, User newOwner) throws NotInitializedException, SQLException, NoSuchObjectException {
-		super(forked.docType, newOwner, forked, forked.getTitle(), System.currentTimeMillis());
+		super(-1, forked.docType, newOwner, forked, forked.getTitle(), System.currentTimeMillis());
 	}
 
 	/** Only called by DocumentManager */
 	public WIPDocument(long id, DocumentType docType, User owner, Document parentDoc,
 			String title, long time) {
-		super(docType, owner, parentDoc, title, time);
-		this.id = id;
+		super(id, docType, owner, parentDoc, title, time);
 	}
 	
 	/** Publish as a PublishedDocument. Creates a new PublishedDocument using the final revision

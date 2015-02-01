@@ -33,7 +33,7 @@ public class PublishedDocument extends Document{
 
 	/** Only called by WIPDocument.publish() */
 	PublishedDocument(WIPDocument original) {
-		super(original.docType, original.owner, original.parentDoc, original.getTitle(), System.currentTimeMillis());
+		super(-1, original.docType, original.owner, original.parentDoc, original.getTitle(), System.currentTimeMillis());
 		isFeatured = false;
 		// FIXME
 		score = calculateScore();
@@ -45,9 +45,8 @@ public class PublishedDocument extends Document{
 	 * @param score The score stored in the database for the document. Might be updated later. */
 	public PublishedDocument(long id, DocumentType docType, User owner, Document parentDoc,
 			String title, long time, int votes) {
-		super(docType, owner, parentDoc, title, time);
+		super(id, docType, owner, parentDoc, title, time);
 		this.votes = votes;
-		this.id = id;
 		// FIXME
 		score = calculateScore();
 	}

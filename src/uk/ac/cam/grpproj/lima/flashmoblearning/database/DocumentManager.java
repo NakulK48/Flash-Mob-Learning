@@ -36,7 +36,7 @@ public class DocumentManager {
 
 		while(rs.next())
 			ret.add(new PublishedDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
-					null, rs.getString("title"), rs.getTimestamp("update_time").getTime(), rs.getInt("vote_count"), 0));
+					null, rs.getString("title"), rs.getTimestamp("update_time").getTime(), rs.getInt("vote_count")));
 
 		return ret;
 	}

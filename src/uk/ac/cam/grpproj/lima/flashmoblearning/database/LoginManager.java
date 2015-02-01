@@ -28,7 +28,7 @@ public class LoginManager {
 		ResultSet rs = ps.executeQuery();
 
 		if(!rs.next()) throw new NoSuchObjectException();
-		return new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"));
+		return new User(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
 	}
 	
 	/** Delete a user by username */

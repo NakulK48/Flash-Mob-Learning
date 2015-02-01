@@ -26,9 +26,13 @@ public class WIPDocument extends Document {
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public PublishedDocument publish() throws NotInitializedException, SQLException, NoSuchObjectException, IDAlreadySetException {
+	public PublishedDocument publish() throws NotInitializedException, SQLException, NoSuchObjectException {
 		PublishedDocument d = new PublishedDocument(this);
-		DocumentManager.getInstance().createDocument(d);
+		try {
+			DocumentManager.getInstance().createDocument(d);
+		} catch (IDAlreadySetException e) {
+			throw new IllegalStateException("ID already set but just created?!");
+		}
 		return d;
 	}
 

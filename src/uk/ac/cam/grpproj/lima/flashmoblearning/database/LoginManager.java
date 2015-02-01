@@ -1,5 +1,7 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
+import uk.ac.cam.grpproj.lima.flashmoblearning.Student;
+import uk.ac.cam.grpproj.lima.flashmoblearning.Teacher;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
@@ -28,7 +30,10 @@ public class LoginManager {
 		ResultSet rs = ps.executeQuery();
 
 		if(!rs.next()) throw new NoSuchObjectException();
-		return new User(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
+		if(rs.getBoolean("teacher_flag"))
+			return new Teacher(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
+		else
+			return new Student(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
 	}
 	
 	/** Delete a user by username */
@@ -63,12 +68,11 @@ public class LoginManager {
 	}
 	
 	/** Modify a user, index by userId. */
-	// TODO: Teacher flag!
 	public void modifyUser(User u) throws SQLException, NoSuchObjectException, DuplicateNameException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("UPDATE users SET username = ?, password = ?, teacher_flag = ? WHERE id = ? LIMIT 1");
 		ps.setString(1, u.name);
 		ps.setString(2, u.getEncryptedPassword());
-		ps.setBoolean(3, false); // TODO
+		ps.setBoolean(3, u instanceof Teacher); // TODO
 		ps.setLong(4, u.getID());
 
 		int affected_rows = ps.executeUpdate();

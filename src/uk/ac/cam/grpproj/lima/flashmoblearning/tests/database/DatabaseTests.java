@@ -6,11 +6,12 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.Database;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class DatabaseTest {
+public class DatabaseTests {
 
     @org.junit.Before
     public void setUp() throws Exception {
         Database.init();
+
     }
 
     @org.junit.After

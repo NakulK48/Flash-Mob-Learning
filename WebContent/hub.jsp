@@ -46,7 +46,7 @@
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
-			"<td class='score'>" + pd.getScore()	+ "</td>" + //score
+			"<td class='votes'>" + pd.getVotes()	+ "</td>" + //score
 			"<td class='submitter'> <a href='../userpage.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.name 		+ "</a></td>" + //submitter
 			"<td></td>" +
 			"</tr>"; 
@@ -61,7 +61,7 @@
 		"<td class='age'>" + "4" + " hours ago" + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
-		"<td class='score'>" + "11"	+ "</td>" + //score
+		"<td class='votes'>" + "11"	+ "</td>" + //score
 		"<td class='submitter'>" + "George Bush" 		+ "</td>" + //submitter
 		"<td></td>" +
 		"</tr>"; 
@@ -75,7 +75,7 @@
 		"<td class='age'>" + "Less than an hour ago" + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
-		"<td class='score'>" + "18"	+ "</td>" + //score
+		"<td class='votes'>" + "18"	+ "</td>" + //score
 		"<td class='submitter'>" + "Bill Clinton" 		+ "</td>" + //submitter
 		"<td></td>" +
 		"</tr>"; 
@@ -89,7 +89,7 @@
 		"<td class='age'>" + "2 days ago" + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
-		"<td class='score'>" + "48"	+ "</td>" + //score
+		"<td class='votes'>" + "48"	+ "</td>" + //score
 		"<td class='submitter'>" + "Ronald Reagan" 		+ "</td>" + //submitter
 		"<td></td>" +
 		"</tr>"; 

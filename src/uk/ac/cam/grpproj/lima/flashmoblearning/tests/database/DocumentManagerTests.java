@@ -90,7 +90,7 @@ public class DocumentManagerTests {
          */
 
         // Insert WIP revisions
-        ps = m_Connection.prepareStatement("INSERT INTO revisions (`document_id`, `creation_time`, `content`) VALUES (?, NOW(), ?)");
+        ps = m_Connection.prepareStatement("INSERT INTO revisions (`document_id`, `update_time`, `content`) VALUES (?, NOW(), ?)");
         ps.setLong(1, m_WIP_Document.getID());
         ps.setString(2, c_TestRevisionContent + " (WIP)");
         ps.executeUpdate(); // revision 1

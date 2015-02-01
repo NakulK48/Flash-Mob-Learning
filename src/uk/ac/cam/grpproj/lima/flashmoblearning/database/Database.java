@@ -96,7 +96,7 @@ public class Database {
 		String create_revisions = "CREATE TABLE IF NOT EXISTS `revisions` (\n" +
 				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n" +
 				"  `document_id` bigint(20) NOT NULL,\n" +
-				"  `creation_time` timestamp NOT NULL,\n" +
+				"  `update_time` timestamp NOT NULL,\n" +
 				"  `content` text NOT NULL,\n" +
 				"  PRIMARY KEY (`id`)\n" +
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1;";

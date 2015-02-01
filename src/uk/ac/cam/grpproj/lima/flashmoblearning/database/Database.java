@@ -35,6 +35,7 @@ public class Database {
 
 	private Database(Connection connection) throws SQLException {
 		m_Connection = connection;
+		m_LoginManagerInstance = new LoginManager(this);
 	}
 
 	/** Obtain database connection **/

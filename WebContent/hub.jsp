@@ -25,6 +25,14 @@
 		<td class='heading' id='ageHeading'></td>
 	</tr>
 	<%
+		String upvoted = request.getParameter("upvote");
+		if (upvoted != null)
+		{
+			long documentToUpvote = Long.parseLong(upvoted);
+			//TODO: query DB to find the document with this ID
+			//TODO: increase its votes by 1
+		}
+			
 /*   	
 		int sofar = 0; //how many submissions have been printed on the page?
 	
@@ -47,7 +55,7 @@
 			
 			String entry = 
 			"<tr class='upperRow'>" + 
-			"<td id='upvote" + Long.toString(pd.getID()) + "' class='upvote'><button>Upvote</button></td>" + //upvote
+			"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >Upvote</button></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
 			"<td class='title'> <a href='../preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
@@ -66,7 +74,7 @@
 		 */
 		String entry = 
 		"<tr class='upperRow'>" + 
-		"<td class='upvote'><button>Upvote</button></td>" + //upvote
+		"<td class='upvote'><form method='post' action='hub.jsp'><button name='upvote12345'>Upvote</button></form></td>" + //upvote
 		"<td class='title'>" + "Spider climbing up screen" 	+ "</td>" + //title
 		"<td class='age'>" + "4" + " hours ago" + "</td>" + //age
 		"</tr>" + 

@@ -145,7 +145,7 @@ public class Document {
 	}
 	
 	private static final QueryParam LAST_REVISION_QUERY = 
-			new QueryParam(1, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+			new QueryParam(1, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	
 	public Revision getLastRevision() throws NotInitializedException, SQLException, NoSuchObjectException {
 		return getRevisions(LAST_REVISION_QUERY).get(0);

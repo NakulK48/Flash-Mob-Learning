@@ -76,17 +76,9 @@ public class DocumentManager {
 		return ret;
 	}
 
-	private String getQueryWithParam(String sql, QueryParam param) {
-		if(param.sortField == QueryParam.SortField.TIME) {
-			sql += " ORDER BY update_time " + (param.sortOrder == QueryParam.SortOrder.ASCENDING ? "ASCENDING" : "DESCENDING");
-		}
-		if(param.limit > 0) sql += " LIMIT " + param.limit;
-		return sql;
-	}
-	
 	/** Get the documents a user has published */
 	public List<PublishedDocument> getPublishedByUser(User u, QueryParam param) throws SQLException, NoSuchObjectException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement(getQueryWithParam("SELECT * FROM documents WHERE user_id = ? AND published_flag = true", param));
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE user_id = ? AND published_flag = true"));
 		ps.setLong(1, u.getID());
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, u);
@@ -94,7 +86,7 @@ public class DocumentManager {
 
 	/** Get the documents a user is working on */
 	public List<WIPDocument> getWorkInProgressByUser(User u, QueryParam param) throws SQLException, NoSuchObjectException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement(getQueryWithParam("SELECT * FROM documents WHERE user_id = ? AND published_flag = false", param));
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE user_id = ? AND published_flag = false"));
 		ps.setLong(1, u.getID());
 		ResultSet rs = ps.executeQuery();
 		return getWIPDocumentsFromResultSet(rs, u);
@@ -103,7 +95,7 @@ public class DocumentManager {
 	/** Get documents by tag */
 	public List<PublishedDocument> getPublishedByTag(Tag t, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(
-				getQueryWithParam("SELECT * FROM documents LEFT JOIN document_tags ON (documents.id = document_tags.document_id) WHERE document_tags.tag_id = ? AND documents.published_flag = true", param));
+				param.updateQuery("SELECT * FROM documents LEFT JOIN document_tags ON (documents.id = document_tags.document_id) WHERE document_tags.tag_id = ? AND documents.published_flag = true"));
 		ps.setLong(1, t.getID());
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
@@ -111,7 +103,7 @@ public class DocumentManager {
 	
 	/** Search for published documents by title */
 	public List<PublishedDocument> getPublishedByTitle(String title, QueryParam param) throws SQLException, NoSuchObjectException { 
-		PreparedStatement ps = m_Database.getConnection().prepareStatement(getQueryWithParam("SELECT * FROM documents WHERE LOWER(title) LIKE ? AND published_flag = true", param));
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE LOWER(title) LIKE ? AND published_flag = true"));
 		ps.setString(1, "%" + title.toLowerCase() + "%");
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
@@ -119,7 +111,7 @@ public class DocumentManager {
 
 	/** Get featured documents */
 	public List<PublishedDocument> getFeatured(QueryParam param) throws SQLException, NoSuchObjectException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement(getQueryWithParam("SELECT * FROM documents WHERE featured_flag = true", param));
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE featured_flag = true"));
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}
@@ -127,7 +119,7 @@ public class DocumentManager {
 	/** Get all featured documents by tag */
 	public List<PublishedDocument> getFeaturedByTag(Tag t, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(
-				getQueryWithParam("SELECT * FROM documents LEFT JOIN document_tags ON (documents.id = document_tags.document_id) WHERE document_tags.tag_id = ? AND documents.featured_flag = true", param));
+				param.updateQuery("SELECT * FROM documents LEFT JOIN document_tags ON (documents.id = document_tags.document_id) WHERE document_tags.tag_id = ? AND documents.featured_flag = true"));
 		ps.setLong(1, t.getID());
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
@@ -135,7 +127,7 @@ public class DocumentManager {
 
 	/** Get all documents published. Should then be sorted by the ResultList. */
 	public List<PublishedDocument> getPublished(QueryParam param) throws SQLException, NoSuchObjectException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement(getQueryWithParam("SELECT * FROM documents WHERE published_flag = true", param));
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE published_flag = true"));
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}
@@ -149,7 +141,7 @@ public class DocumentManager {
 
 	/** Get all revisions of a given document; published documents will have a single revision */
 	public LinkedList<Revision> getRevisions(Document d, QueryParam param) throws SQLException, NoSuchObjectException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement(getQueryWithParam("SELECT id, document_id, update_time FROM revisions WHERE document_id = ?", param));
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT id, document_id, update_time FROM revisions WHERE document_id = ?"));
 		ps.setLong(1, d.getID());
 		ResultSet rs = ps.executeQuery();
 		return getRevisionsFromResultSet(rs, d);

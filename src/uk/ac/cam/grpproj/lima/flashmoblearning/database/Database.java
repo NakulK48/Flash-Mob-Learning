@@ -29,7 +29,7 @@ public class Database {
 	}
 	
 	public static void initTest() throws ClassNotFoundException, SQLException, IOException {
-    	if(Boolean.getBoolean("useMysql")) {
+    	if(Boolean.getBoolean("testsUseMysql")) {
     		init();
     	} else {
     		initTemp();

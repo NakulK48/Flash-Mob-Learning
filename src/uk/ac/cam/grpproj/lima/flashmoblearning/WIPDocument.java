@@ -29,7 +29,7 @@ public class WIPDocument extends Document {
 		PublishedDocument d = new PublishedDocument(this);
 		try {
 			DocumentManager.getInstance().createDocument(d);
-			DocumentManager.getInstance().setParentDoc(d, getParentDoc());
+			DocumentManager.getInstance().setParentDocument(d, getParentDocument());
 		} catch (IDAlreadySetException e) {
 			throw new IllegalStateException("ID already set but just created?!");
 		}

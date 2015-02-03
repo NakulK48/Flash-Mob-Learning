@@ -33,8 +33,6 @@ public class Document {
 	 * the document. If it hasn't been stored yet this should be -1.
 	 * @param docType Document type e.g. Skulpt.
 	 * @param owner All documents are owned by a single user.
-	 * @param parentDoc Parent document this was forked or published from. Can 
-	 * be null.
 	 * @param title Title of the document. Can change.
 	 * @param time Creation time.
 	 */
@@ -153,8 +151,12 @@ public class Document {
 		return getRevisions(LAST_REVISION_QUERY).get(0);
 	}
 	
-	public Document getParentDoc() throws SQLException, NoSuchObjectException {
-		return DocumentManager.getInstance().getParentDoc(this);
+	public Document getParentDocument() throws SQLException, NoSuchObjectException {
+		return DocumentManager.getInstance().getParentDocument(this);
+	}
+
+	public void setParentDocument(Document parent) throws SQLException, NoSuchObjectException {
+		DocumentManager.getInstance().setParentDocument(this, parent);
 	}
 
 }

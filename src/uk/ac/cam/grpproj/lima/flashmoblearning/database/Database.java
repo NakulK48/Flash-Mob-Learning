@@ -32,7 +32,7 @@ public class Database {
 		Class.forName("org.hsqldb.jdbcDriver");
 		File tmpFile = File.createTempFile("flashmoblearning", ".test.db");
 		tmpFile.deleteOnExit();
-		init("jdbc:hsqldb:"+tmpFile,"SA","");
+		init("jdbc:hsqldb:"+tmpFile+";sql.syntax_mys=true","SA","");
 	}
 	
 	/** Initializes and tests the database connection, setting it up if necessary.

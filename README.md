@@ -10,4 +10,4 @@ Mario Testino
 REQUIREMENTS:
 
 jars/mysql-java-connector.jar - database for production (FIXME eventually we will allow passing in an arbitrary JDBC URL)
-jars/hsqldb.jar - database for testing
+jars/hsqldb.jar - database for testing (at least version 2.2 for MySQL compatibility mode!)

@@ -147,7 +147,6 @@ public class Database {
 		String create_login_banner = "INSERT INTO `settings` (`setting_name`, `setting_value`) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";
 
 		Statement statement = connection.createStatement();
-		statement.execute("SET FOREIGN_KEY_CHECKS=0");
 		statement.execute(create_documents);
 		statement.execute(create_document_tags);
 		statement.execute(create_revisions);
@@ -160,7 +159,6 @@ public class Database {
 		if(!statement.executeQuery(check_login_banner).next())
 			statement.execute(create_login_banner);
 		
-		statement.execute("SET FOREIGN_KEY_CHECKS=1");
 		// Create foreign keys - will throw an exception if they already exist, which can be ignored.
 		for(String create_fk : create_fks) {
 			try {

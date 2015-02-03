@@ -9,6 +9,7 @@
 <body>
 <%
 	String searchQuery = request.getParameter("query");
+	if (searchQuery == null) searchQuery = "";
 	String searchDomain = request.getParameter("domain"); //tag, document or user.
 	if (searchDomain == null) searchDomain = "documents";
 	if (!searchDomain.equals("documents") && !searchDomain.equals("tags") && !searchDomain.equals("users") ) searchDomain = "documents";
@@ -22,7 +23,7 @@
 	<br>
 	
 <%
-	if (searchQuery == null || searchQuery.length() == 0) out.println("Please enter a search query.");
+	if (searchQuery == null || searchQuery.length() == 0) out.println("<p class='error'>Whoops! We need something to search for.</p>");
 	
 	else
 	{

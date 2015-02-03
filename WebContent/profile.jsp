@@ -15,9 +15,11 @@
 	}
 	catch (NumberFormatException e)
 	{
-		out.println("Invalid user.");
+		out.println("<p class='error'>This user doesn't seem to exist!</p>");
 		return;
 	}
+	
+	//TODO: Get user from User database. Print error if not found.
 	
 	String sortType = request.getParameter("sort");
 	if (sortType == null ) sortType = "new";
@@ -36,7 +38,7 @@
 <h1><% //username %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
 <%
-	//output list of documents: votes, title, age
+	//TODO: output list of documents: upvote button, votes, title, age
 %>
 
 

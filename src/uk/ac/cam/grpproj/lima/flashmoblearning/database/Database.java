@@ -27,7 +27,15 @@ public class Database {
 	public static Database getInstance() {
 		return m_Instance;
 	}
-
+	
+	public static void initTest() throws ClassNotFoundException, SQLException, IOException {
+    	if(Boolean.getBoolean("testsUseMysql")) {
+    		init();
+    	} else {
+    		initTemp();
+    	}
+	}
+	
 	public static void initTemp() throws ClassNotFoundException, SQLException, IOException {
 		Class.forName("org.hsqldb.jdbcDriver");
 		File tmpFile = File.createTempFile("flashmoblearning", ".test.db");
@@ -223,5 +231,5 @@ public class Database {
 			}
 		}
 	}
-	
+
 }

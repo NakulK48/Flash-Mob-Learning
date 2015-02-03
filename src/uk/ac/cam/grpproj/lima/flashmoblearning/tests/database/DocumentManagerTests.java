@@ -35,12 +35,12 @@ public class DocumentManagerTests {
         m_Statement = Database.getInstance().getStatement();
         m_Connection = Database.getInstance().getConnection();
 
-        m_TestUser = LoginManager.getInstance().createUser("test_user", "test_password");
+        m_TestUser = LoginManager.getInstance().createUser("test_user", "test_password", false);
 
         // Each document is duplicated and assigned to test user 2.
         // The idea is that these documents should NOT be returned when asking for testuser1's documents.
         // This ensures a more comprehensive test.
-        m_TestUser2 = LoginManager.getInstance().createUser("test_user2", "test_password2");
+        m_TestUser2 = LoginManager.getInstance().createUser("test_user2", "test_password2", false);
 
         m_WIP_Document = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, c_TestDocumentTitle + " (WIP)", 0);
 

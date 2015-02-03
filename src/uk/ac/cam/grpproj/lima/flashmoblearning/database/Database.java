@@ -6,7 +6,10 @@ import java.sql.*;
 import java.util.Arrays;
 import java.util.List;
 
+import uk.ac.cam.grpproj.lima.flashmoblearning.User;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.IllegalDatabaseStateException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
 /** Singleton class which opens the database connection, and deals with global config and Tags.
@@ -26,6 +29,37 @@ public class Database {
 	
 	public static Database getInstance() {
 		return m_Instance;
+	}
+	
+	public synchronized static void realInit() throws ClassNotFoundException, SQLException, IOException {
+		boolean needOneTimeInit = 
+				Boolean.getBoolean("useMysql") ? init() : initLocal();
+				if(needOneTimeInit) oneTimeInit();
+	}
+	
+	private static final String DEFAULT_TEACHER_PASSWORD = "password";
+	
+	private static void oneTimeInit() throws SQLException {
+		LoginManager lm = LoginManager.getInstance();
+		try {
+			User teacher = lm.createUser("Teacher", "", true);
+			teacher.setPassword(DEFAULT_TEACHER_PASSWORD);
+			lm.modifyUser(teacher);
+		} catch (DuplicateNameException e) {
+			throw new IllegalStateException("Duplicate name in spite of empty database?!", e);
+		} catch (NoSuchObjectException e) {
+			throw new IllegalStateException("Impossible setting up database: "+e, e);
+		}
+	}
+	
+	/** Create a database in a file. Will not be deleted on shutdown. Doesn't
+	 * require setting up mysql so convenient for testing higher level
+	 * functionality.
+	 */
+	public static boolean initLocal() throws ClassNotFoundException, SQLException, IOException {
+		Class.forName("org.hsqldb.jdbcDriver");
+		File f = new File(System.getProperty("user.home"),".flashmoblearning.hdb");
+		return init("jdbc:hsqldb:"+f+";sql.syntax_mys=true","SA","");
 	}
 	
 	/** Setup a database for a unit test. */

@@ -11,13 +11,13 @@ public class WIPDocument extends Document {
 	
 	/** Only called by PublishedDocument.fork() */
 	WIPDocument(PublishedDocument forked, User newOwner) throws NotInitializedException, SQLException, NoSuchObjectException {
-		super(-1, forked.docType, newOwner, forked, forked.getTitle(), System.currentTimeMillis());
+		super(-1, forked.docType, newOwner, forked.getTitle(), System.currentTimeMillis());
 	}
 
 	/** Only called by DocumentManager */
-	public WIPDocument(long id, DocumentType docType, User owner, Document parentDoc,
+	public WIPDocument(long id, DocumentType docType, User owner, 
 			String title, long time) {
-		super(id, docType, owner, parentDoc, title, time);
+		super(id, docType, owner, title, time);
 	}
 	
 	/** Publish as a PublishedDocument. Creates a new PublishedDocument using the final revision
@@ -29,6 +29,7 @@ public class WIPDocument extends Document {
 		PublishedDocument d = new PublishedDocument(this);
 		try {
 			DocumentManager.getInstance().createDocument(d);
+			DocumentManager.getInstance().setParentDoc(d, getParentDoc());
 		} catch (IDAlreadySetException e) {
 			throw new IllegalStateException("ID already set but just created?!");
 		}

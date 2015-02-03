@@ -15,9 +15,6 @@ public class Document {
 	public final DocumentType docType;
 	/** Every document has an immutable Owner */
 	public final User owner;
-	/** The parent Document this was forked from or null if this 
-	 * document was created from scratch. */
-	public final Document parentDoc;
 	/** Time and date of creation of the document */
 	public final long creationTime;
 
@@ -41,12 +38,11 @@ public class Document {
 	 * @param title Title of the document. Can change.
 	 * @param time Creation time.
 	 */
-	public Document(long id, DocumentType docType, User owner, Document parentDoc,
+	public Document(long id, DocumentType docType, User owner,
 			String title, long time) {
 		this.id = id;
 		this.docType = docType;
 		this.owner = owner;
-		this.parentDoc = parentDoc;
 		this.tags = new HashSet<Tag>();
 		this.title = title;
 		this.creationTime = time;
@@ -155,6 +151,10 @@ public class Document {
 	
 	public Revision getLastRevision() throws NotInitializedException, SQLException, NoSuchObjectException {
 		return getRevisions(LAST_REVISION_QUERY).get(0);
+	}
+	
+	public Document getParentDoc() throws NotInitializedException {
+		return DocumentManager.getInstance().getParentDoc(this);
 	}
 
 }

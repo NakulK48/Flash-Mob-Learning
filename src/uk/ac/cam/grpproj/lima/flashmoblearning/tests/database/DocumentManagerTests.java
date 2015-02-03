@@ -42,7 +42,7 @@ public class DocumentManagerTests {
         // This ensures a more comprehensive test.
         m_TestUser2 = LoginManager.getInstance().createUser("test_user2", "test_password2");
 
-        m_WIP_Document = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, null, c_TestDocumentTitle + " (WIP)", 0);
+        m_WIP_Document = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, c_TestDocumentTitle + " (WIP)", 0);
 
         /**
          * DOCUMENTS
@@ -255,7 +255,7 @@ public class DocumentManagerTests {
 
     @Test
     public void testCreateDocument() throws Exception {
-        Document newDocument = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, null, c_TestDocumentTitle + " (WIP2)", 0);
+        Document newDocument = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, c_TestDocumentTitle + " (WIP2)", 0);
         DocumentManager.getInstance().createDocument(newDocument);
         Assert.assertNotSame("ID should be set", -1, newDocument.getID());
         List<WIPDocument> wip = DocumentManager.getInstance().getWorkInProgressByUser(m_TestUser, QueryParam.UNSORTED);

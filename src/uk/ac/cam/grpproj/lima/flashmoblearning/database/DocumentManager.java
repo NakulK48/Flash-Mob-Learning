@@ -36,7 +36,7 @@ public class DocumentManager {
 
 		while(rs.next())
 			ret.add(new PublishedDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
-					null, rs.getString("title"), rs.getTimestamp("update_time").getTime(), rs.getInt("vote_count")));
+					rs.getString("title"), rs.getTimestamp("update_time").getTime(), rs.getInt("vote_count")));
 
 		return ret;
 	}
@@ -46,7 +46,7 @@ public class DocumentManager {
 
 		while(rs.next())
 			ret.add(new WIPDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
-					null, rs.getString("title"), rs.getTimestamp("update_time").getTime()));
+					rs.getString("title"), rs.getTimestamp("update_time").getTime()));
 
 		return ret;
 	}
@@ -248,6 +248,18 @@ public class DocumentManager {
 
 		if(!rs.next()) throw new NoSuchObjectException("revision " + revision.getID());
 		return rs.getString("content");
+	}
+
+	/** Get the parent document for a given Document. Null if there is no parent. */
+	public Document getParentDoc(Document document) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/** Set the parent document for a given document. */
+	public void setParentDoc(Document d, Document parentDoc) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

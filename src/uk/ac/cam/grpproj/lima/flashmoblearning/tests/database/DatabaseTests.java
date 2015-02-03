@@ -13,11 +13,7 @@ public class DatabaseTests {
 
     @org.junit.Before
     public void setUp() throws Exception {
-    	if(Boolean.getBoolean("useMysql")) {
-    		Database.init();
-    	} else {
-    		Database.initTemp();
-    	}
+    	Database.initTest();
     }
 
     @org.junit.After

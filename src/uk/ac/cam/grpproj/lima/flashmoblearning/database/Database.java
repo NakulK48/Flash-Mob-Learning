@@ -86,17 +86,14 @@ public class Database {
 				"  `update_time` timestamp NOT NULL,\n" +
 				"  `vote_count` int(11) NOT NULL DEFAULT '0',\n" +
 				"  PRIMARY KEY (`id`),\n" +
-				"  KEY `user_id` (`user_id`),\n" +
-				"  CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE\n" +
+				"  KEY `user_id` (`user_id`)\n" +
 				")\n";
 
 		String create_document_tags = "CREATE TABLE IF NOT EXISTS `document_tags` (\n" +
 				"  `tag_id` bigint(20) NOT NULL,\n" +
 				"  `document_id` bigint(20) NOT NULL,\n" +
 				"  PRIMARY KEY (`tag_id`, `document_id`),\n" +
-				"  KEY `document_id` (`document_id`),\n" +
-				"  CONSTRAINT `document_tags_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE,\n" +
-				"  CONSTRAINT `document_tags_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE\n" +
+				"  KEY `document_id` (`document_id`)\n" +
 				")";
 
 		String create_revisions = "CREATE TABLE IF NOT EXISTS `revisions` (\n" +
@@ -105,8 +102,7 @@ public class Database {
 				"  `update_time` timestamp NOT NULL,\n" +
 				"  `content` text NOT NULL,\n" +
 				"  PRIMARY KEY (`id`),\n" +
-				"  KEY `document_id` (`document_id`),\n" +
-				"  CONSTRAINT `revisions_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE\n" +
+				"  KEY `document_id` (`document_id`)\n" +
 				")";
 
 		String create_tags = "CREATE TABLE IF NOT EXISTS `tags` (\n" +
@@ -130,9 +126,7 @@ public class Database {
 				"  `user_id` bigint(20) NOT NULL,\n" +
 				"  `document_id` bigint(20) NOT NULL,\n" +
 				"  PRIMARY KEY (`user_id`,`document_id`),\n" +
-				"  KEY `document_id` (`document_id`)\n," +
-				"  CONSTRAINT `votes_ibfk_2` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE,\n" +
-				"  CONSTRAINT `votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE\n" +
+				"  KEY `document_id` (`document_id`)\n" +
 				")\n";
 
 		String create_settings = "CREATE TABLE IF NOT EXISTS `settings` (\n" +
@@ -140,6 +134,14 @@ public class Database {
 				"  `setting_value` text NOT NULL,\n" +
 				"  UNIQUE KEY `setting_name` (`setting_name`)\n" +
 				")";
+		
+		String[] create_fks = new String[]
+				{"ALTER TABLE `documents` ADD CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE",
+				 "ALTER TABLE `document_tags` ADD CONSTRAINT `document_tags_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE",
+				 "ALTER TABLE `document_tags` ADD CONSTRAINT `document_tags_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
+				 "ALTER TABLE `revisions` ADD CONSTRAINT `revisions_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
+				 "ALTER TABLE `votes` ADD CONSTRAINT `votes_ibfk_2` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
+				 "ALTER TABLE `votes` ADD CONSTRAINT `votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE"};		
 
 		String check_login_banner = "SELECT * FROM `settings` WHERE `setting_name` = 'login_banner'";
 		String create_login_banner = "INSERT INTO `settings` (`setting_name`, `setting_value`) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";
@@ -153,11 +155,18 @@ public class Database {
 		statement.execute(create_users);
 		statement.execute(create_votes);
 		statement.execute(create_settings);
-		
+
+		// Checks and creates login banner if it does not exist. 
 		if(!statement.executeQuery(check_login_banner).next())
 			statement.execute(create_login_banner);
 		
 		statement.execute("SET FOREIGN_KEY_CHECKS=1");
+		// Create foreign keys - will throw an exception if they already exist, which can be ignored.
+		for(String create_fk : create_fks) {
+			try {
+				statement.execute(create_fk);
+			} catch (SQLException e) {}
+		}
 	}
 	
 }

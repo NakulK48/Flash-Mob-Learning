@@ -239,7 +239,9 @@ public class Database {
 		DatabaseMetaData databaseMetaData = connection.getMetaData();
 		ResultSet rs = databaseMetaData.getTables(null, null, "%", null);
 		while(rs.next()) {
-			table_count += tables.contains(rs.getString("TABLE_NAME")) ? 1 : 0;
+			String tnam = rs.getString("TABLE_NAME");
+			if(tables.contains(tnam) || tables.contains(tnam.toLowerCase()))
+				table_count++;
 		}
 
 

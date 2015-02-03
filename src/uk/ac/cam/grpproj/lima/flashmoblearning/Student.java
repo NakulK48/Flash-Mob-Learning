@@ -4,6 +4,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
  * important. */
 public class Student extends User {
 
+	/** Only called by LoginManager. */
 	public Student(long id, String name, String epass) {
 		super(id, name, epass);
 	}

@@ -95,6 +95,13 @@ public class Database {
 				"  PRIMARY KEY (`tag_id`, `document_id`),\n" +
 				"  KEY `document_id` (`document_id`)\n" +
 				")";
+		
+		String create_document_parents = "CREATE TABLE IF NOT EXISTS `document_parents` (\n" +
+				"  `document_id` bigint(20) NOT NULL,\n" +
+				"  `parent_document_id` bigint(20) NOT NULL,\n" +
+				"  PRIMARY KEY (`document_id`),\n" +
+				"  KEY `parent_document_id` (`parent_document_id`)\n" +
+				")";
 
 		String create_revisions = "CREATE TABLE IF NOT EXISTS `revisions` (\n" +
 				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n" +
@@ -139,6 +146,8 @@ public class Database {
 				{"ALTER TABLE `documents` ADD CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE",
 				 "ALTER TABLE `document_tags` ADD CONSTRAINT `document_tags_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE",
 				 "ALTER TABLE `document_tags` ADD CONSTRAINT `document_tags_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
+				 "ALTER TABLE `document_parents` ADD CONSTRAINT `document_parents_ibfk_2` FOREIGN KEY (`parent_document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
+				 "ALTER TABLE `document_parents` ADD CONSTRAINT `document_parents_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
 				 "ALTER TABLE `revisions` ADD CONSTRAINT `revisions_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
 				 "ALTER TABLE `votes` ADD CONSTRAINT `votes_ibfk_2` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
 				 "ALTER TABLE `votes` ADD CONSTRAINT `votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE"};		

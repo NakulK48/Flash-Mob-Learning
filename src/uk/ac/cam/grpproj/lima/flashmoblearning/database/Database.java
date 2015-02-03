@@ -94,8 +94,8 @@ public class Database {
 	/** Creates all necessary tables if they do not exist. **/
 	private static void setup(Connection connection) throws SQLException {
 		String create_documents = "CREATE TABLE documents (\n" +
-				"  id bigint(20) NOT NULL AUTO_INCREMENT,\n" +
-				"  user_id bigint(20) NOT NULL,\n" +
+				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
+				"  user_id bigint NOT NULL,\n" +
 				"  type int(11) NOT NULL,\n" +
 				"  title text NOT NULL,\n" +
 				"  published_flag tinyint(1) NOT NULL DEFAULT '0',\n" +
@@ -107,22 +107,22 @@ public class Database {
 				")\n";
 
 		String create_document_tags = "CREATE TABLE document_tags (\n" +
-				"  tag_id bigint(20) NOT NULL,\n" +
-				"  document_id bigint(20) NOT NULL,\n" +
+				"  tag_id bigint NOT NULL,\n" +
+				"  document_id bigint NOT NULL,\n" +
 				"  PRIMARY KEY (tag_id, document_id),\n" +
 				"  KEY document_id (document_id)\n" +
 				")";
 		
 		String create_document_parents = "CREATE TABLE document_parents (\n" +
-				"  document_id bigint(20) NOT NULL,\n" +
-				"  parent_document_id bigint(20) NOT NULL,\n" +
+				"  document_id bigint NOT NULL,\n" +
+				"  parent_document_id bigint NOT NULL,\n" +
 				"  PRIMARY KEY (document_id),\n" +
 				"  KEY parent_document_id (parent_document_id)\n" +
 				")";
 
 		String create_revisions = "CREATE TABLE revisions (\n" +
-				"  id bigint(20) NOT NULL AUTO_INCREMENT,\n" +
-				"  document_id bigint(20) NOT NULL,\n" +
+				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
+				"  document_id bigint NOT NULL,\n" +
 				"  update_time timestamp NOT NULL,\n" +
 				"  content text NOT NULL,\n" +
 				"  PRIMARY KEY (id),\n" +
@@ -130,7 +130,7 @@ public class Database {
 				")";
 
 		String create_tags = "CREATE TABLE tags (\n" +
-				"  id bigint(20) NOT NULL AUTO_INCREMENT,\n" +
+				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
 				"  name text NOT NULL,\n" +
 				"  banned_flag tinyint(1) NOT NULL DEFAULT '0',\n" +
 				"  reference_count int(11) NOT NULL DEFAULT '0',\n" +
@@ -138,7 +138,7 @@ public class Database {
 				")";
 
 		String create_users	 = "CREATE TABLE users (\n" +
-				"  id bigint(20) NOT NULL AUTO_INCREMENT,\n" +
+				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
 				"  username varchar(255) NOT NULL,\n" +
 				"  password varchar(255) NOT NULL,\n" +
 				"  teacher_flag tinyint(1) NOT NULL DEFAULT '0',\n" +
@@ -147,8 +147,8 @@ public class Database {
 				")";
 
 		String create_votes = "CREATE TABLE votes (\n" +
-				"  user_id bigint(20) NOT NULL,\n" +
-				"  document_id bigint(20) NOT NULL,\n" +
+				"  user_id bigint NOT NULL,\n" +
+				"  document_id bigint NOT NULL,\n" +
 				"  PRIMARY KEY (user_id,document_id),\n" +
 				"  KEY document_id (document_id)\n" +
 				")\n";

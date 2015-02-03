@@ -10,7 +10,11 @@ public class DatabaseTests {
 
     @org.junit.Before
     public void setUp() throws Exception {
-        Database.init();
+    	if(Boolean.getBoolean("useMysql")) {
+    		Database.init();
+    	} else {
+    		Database.initTemp();
+    	}
     }
 
     @org.junit.After

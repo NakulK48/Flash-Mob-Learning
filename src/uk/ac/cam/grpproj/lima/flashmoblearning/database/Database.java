@@ -28,6 +28,7 @@ public class Database {
 		return m_Instance;
 	}
 	
+	/** Setup a database for a unit test. */
 	public static void initTest() throws ClassNotFoundException, SQLException, IOException {
     	if(Boolean.getBoolean("testsUseMysql")) {
     		init();
@@ -36,6 +37,8 @@ public class Database {
     	}
 	}
 	
+	/** Setup a temporary hsqldb database, in a tempfile, initially empty, will
+	 * be deleted on shutdown. */
 	public static void initTemp() throws ClassNotFoundException, SQLException, IOException {
 		Class.forName("org.hsqldb.jdbcDriver");
 		File tmpFile = File.createTempFile("flashmoblearning", ".test.db");
@@ -43,7 +46,8 @@ public class Database {
 		init("jdbc:hsqldb:"+tmpFile+";sql.syntax_mys=true","SA","");
 	}
 	
-	/** Initializes and tests the database connection, setting it up if necessary.
+	/** Initializes and tests a MySQL database connection, setting up the 
+	 * database if necessary, and exiting if it is incorrectly setup.
 	 * REQUIREMENTS: An external mysql server with username and password as above,
 	 * a database called flashmoblearning and appropriate permissions. **/
 	public static void init() throws ClassNotFoundException, SQLException {

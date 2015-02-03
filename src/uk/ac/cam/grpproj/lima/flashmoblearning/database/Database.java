@@ -1,5 +1,7 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -26,16 +28,32 @@ public class Database {
 		return m_Instance;
 	}
 
+	public static void initTemp() throws ClassNotFoundException, SQLException, IOException {
+		File tmpFile = File.createTempFile("flashmoblearning", ".test.db");
+		tmpFile.deleteOnExit();
+		init("jdbc:hsqldb:"+tmpFile,"SA","");
+	}
+	
 	/** Initializes and tests the database connection, setting it up if necessary.
 	 * REQUIREMENTS: An external mysql server with username and password as above,
 	 * a database called flashmoblearning and appropriate permissions. **/
 	public static void init() throws ClassNotFoundException, SQLException {
+		// FIXME MYSQL: Can we pass in password here and avoid url hack?
+		init(c_JDBCURL + "?user=" + c_Username + "&password=" + c_Password, null, null);
+	}
+
+	/** Portable setup from an arbitrary JDBC URL */
+	public static void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection connection = DriverManager.getConnection(c_JDBCURL + "?user=" + c_Username + "&password=" + c_Password);
+		Connection connection;
+		if(username != null)
+			connection = DriverManager.getConnection(databaseURL, username, password);
+		else
+			connection = DriverManager.getConnection(databaseURL);
 		setup(connection);
 		m_Instance = new Database(connection);
 	}
-
+	
 	private Database(Connection connection) throws SQLException {
 		m_Connection = connection;
 		m_LoginManagerInstance = new LoginManager(this);

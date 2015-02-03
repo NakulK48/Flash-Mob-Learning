@@ -103,21 +103,18 @@ public class Database {
 				"  update_time timestamp NOT NULL,\n" +
 				"  vote_count int NOT NULL DEFAULT '0',\n" +
 				"  PRIMARY KEY (id),\n" +
-				"  KEY user_id (user_id)\n" +
 				")\n";
 
 		String create_document_tags = "CREATE TABLE document_tags (\n" +
 				"  tag_id bigint NOT NULL,\n" +
 				"  document_id bigint NOT NULL,\n" +
 				"  PRIMARY KEY (tag_id, document_id),\n" +
-				"  KEY document_id (document_id)\n" +
 				")";
 		
 		String create_document_parents = "CREATE TABLE document_parents (\n" +
 				"  document_id bigint NOT NULL,\n" +
 				"  parent_document_id bigint NOT NULL,\n" +
 				"  PRIMARY KEY (document_id),\n" +
-				"  KEY parent_document_id (parent_document_id)\n" +
 				")";
 
 		String create_revisions = "CREATE TABLE revisions (\n" +
@@ -126,7 +123,6 @@ public class Database {
 				"  update_time timestamp NOT NULL,\n" +
 				"  content text NOT NULL,\n" +
 				"  PRIMARY KEY (id),\n" +
-				"  KEY document_id (document_id)\n" +
 				")";
 
 		String create_tags = "CREATE TABLE tags (\n" +
@@ -142,7 +138,6 @@ public class Database {
 				"  username varchar(255) NOT NULL,\n" +
 				"  password varchar(255) NOT NULL,\n" +
 				"  teacher_flag tinyint NOT NULL DEFAULT '0',\n" +
-				"  UNIQUE KEY username (username),\n" +
 				"  PRIMARY KEY (id)\n" +
 				")";
 
@@ -150,14 +145,22 @@ public class Database {
 				"  user_id bigint NOT NULL,\n" +
 				"  document_id bigint NOT NULL,\n" +
 				"  PRIMARY KEY (user_id,document_id),\n" +
-				"  KEY document_id (document_id)\n" +
 				")\n";
 
 		String create_settings = "CREATE TABLE settings (\n" +
 				"  setting_name varchar(255) NOT NULL,\n" +
 				"  setting_value text NOT NULL,\n" +
-				"  UNIQUE KEY setting_name (setting_name)\n" +
 				")";
+		
+		String[] create_indexes = new String[] 
+				{ "CREATE INDEX documents_user_id on documents(user_id)",
+				  "CREATE INDEX document_tags_document_id on document_tags(document_id)",
+				  "CREATE INDEX document_parents_parent on document_parents(parent_document_id)",
+				  "CREATE INDEX revisions_document_id on revisions(document_id)",
+				  "CREATE UNIQUE INDEX users_username on users(username)",
+				  "CREATE INDEX votes_document_id on votes(document_id)",
+				  "CREATE UNIQUE INDEX setting_name on settings(setting_name)"
+				};
 		
 		String[] create_fks = new String[]
 				{"ALTER TABLE documents ADD CONSTRAINT documents_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE",
@@ -205,6 +208,13 @@ public class Database {
 		if (!statement.executeQuery(check_login_banner).next())
 			statement.execute(create_login_banner);
 
+		// Create indexes - will throw an exception if they already exist, which can be ignored.
+		for (String create_index : create_indexes) {
+			try {
+				statement.execute(create_index);
+			} catch (SQLException e) {
+			}
+		}
 		// Create foreign keys - will throw an exception if they already exist, which can be ignored.
 		for (String create_fk : create_fks) {
 			try {

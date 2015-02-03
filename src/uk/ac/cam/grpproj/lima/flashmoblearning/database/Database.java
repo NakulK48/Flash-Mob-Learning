@@ -29,6 +29,7 @@ public class Database {
 	}
 
 	public static void initTemp() throws ClassNotFoundException, SQLException, IOException {
+		Class.forName("org.hsqldb.jdbcDriver");
 		File tmpFile = File.createTempFile("flashmoblearning", ".test.db");
 		tmpFile.deleteOnExit();
 		init("jdbc:hsqldb:"+tmpFile,"SA","");

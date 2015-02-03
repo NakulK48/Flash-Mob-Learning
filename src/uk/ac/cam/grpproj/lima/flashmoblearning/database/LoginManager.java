@@ -10,6 +10,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitialized
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class LoginManager {
 
@@ -105,5 +106,11 @@ public class LoginManager {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("UPDATE settings SET setting_value = ? WHERE setting_name = 'login_banner' LIMIT 1");
 		ps.setString(1, banner);
 		ps.executeUpdate();
+	}
+
+	/** List all users */
+	public List<User> getUsers(QueryParam param) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

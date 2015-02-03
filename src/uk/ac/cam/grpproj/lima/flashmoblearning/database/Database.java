@@ -50,16 +50,17 @@ public class Database {
 	 * database if necessary, and exiting if it is incorrectly setup.
 	 * REQUIREMENTS: An external mysql server with username and password as above,
 	 * a database called flashmoblearning and appropriate permissions. **/
-	public static void init() throws ClassNotFoundException, SQLException {
+	public static boolean init() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
-		init(c_JDBCURL, c_Username, c_Password);
+		return init(c_JDBCURL, c_Username, c_Password);
 	}
 
 	/** Portable setup from an arbitrary JDBC URL */
-	public static void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
+	public static boolean init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
 		Connection connection = DriverManager.getConnection(databaseURL, username, password);
-		setup(connection);
+		boolean ret = setup(connection);
 		m_Instance = new Database(connection);
+		return ret;
 	}
 	
 	private Database(Connection connection) throws SQLException {
@@ -103,8 +104,10 @@ public class Database {
 			throw new NotInitializedException();
 	}
 
-	/** Creates all necessary tables if they do not exist. **/
-	private static void setup(Connection connection) throws SQLException {
+	/** Creates all necessary tables if they do not exist.
+	 * @return True if we created tables. **/
+	private static boolean setup(Connection connection) throws SQLException {
+		boolean ret = false;
 		String create_documents = "CREATE TABLE documents (\n" +
 				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
 				"  user_id bigint NOT NULL,\n" +
@@ -214,6 +217,7 @@ public class Database {
 			statement.execute(create_users);
 			statement.execute(create_votes);
 			statement.execute(create_settings);
+			ret = true;
 		}
 
 		// Checks and creates login banner if it does not exist.
@@ -234,6 +238,7 @@ public class Database {
 			} catch (SQLException e) {
 			}
 		}
+		return ret;
 	}
 
 }

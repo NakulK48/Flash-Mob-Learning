@@ -153,7 +153,7 @@ public class Document {
 		return getRevisions(LAST_REVISION_QUERY).get(0);
 	}
 	
-	public Document getParentDoc() throws NotInitializedException {
+	public Document getParentDoc() throws SQLException, NoSuchObjectException {
 		return DocumentManager.getInstance().getParentDoc(this);
 	}
 

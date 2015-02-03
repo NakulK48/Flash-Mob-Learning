@@ -11,6 +11,7 @@
 	String searchQuery = request.getParameter("query");
 	String searchDomain = request.getParameter("domain"); //tag, document or user.
 	if (searchDomain == null) searchDomain = "documents";
+	if (searchDomain != "documents" && searchDomain != "tags" && searchDomain != "users" ) searchDomain = "documents";
 %>
 
 	<div id="searchTypesHolder">
@@ -28,7 +29,23 @@
 		out.println("<p id='query'>Searching " + searchDomain + " for '" + searchQuery + "'</p>");
 	}
 
+	if (searchDomain == "documents")
+	{
+		
+	}
+	
+	else if (searchDomain == "users")
+	{
+		
+	}
+	
+	else if (searchDomain == "tags")
+	{
+		
+	}
 %>
+
+
 
 </body>
 </html>

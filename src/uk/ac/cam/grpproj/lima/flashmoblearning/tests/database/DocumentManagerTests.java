@@ -23,7 +23,7 @@ public class DocumentManagerTests {
     private Connection m_Connection;
     private User m_TestUser;
     private User m_TestUser2;
-    private WIPDocument m_WIP_Document = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, null, c_TestDocumentTitle + " (WIP)", 0);
+    private WIPDocument m_WIP_Document;
 
     private static final String c_TestDocumentTitle = "Test Document";
     private static final String c_TestRevisionContent = "Test Revision";
@@ -41,6 +41,8 @@ public class DocumentManagerTests {
         // The idea is that these documents should NOT be returned when asking for testuser1's documents.
         // This ensures a more comprehensive test.
         m_TestUser2 = LoginManager.getInstance().createUser("test_user2", "test_password2");
+
+        m_WIP_Document = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, null, c_TestDocumentTitle + " (WIP)", 0);
 
         /**
          * DOCUMENTS

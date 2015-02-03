@@ -48,7 +48,7 @@ public class DocumentManagerTests {
 
         // Insert WIP document
         PreparedStatement ps = m_Connection.prepareStatement("INSERT INTO " +
-                "documents (`user_id`, `type`, `title`, `published_flag`, `featured_flag`, `update_time`, `vote_count`) VALUES (?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS);
+                "documents (user_id, type, title, published_flag, featured_flag, update_time, vote_count) VALUES (?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS);
         ps.setLong(1, m_TestUser.getID());
         ps.setInt(2, 0);
         ps.setString(3, c_TestDocumentTitle + " (WIP)");
@@ -90,7 +90,7 @@ public class DocumentManagerTests {
          */
 
         // Insert WIP revisions
-        ps = m_Connection.prepareStatement("INSERT INTO revisions (`document_id`, `update_time`, `content`) VALUES (?, NOW(), ?)");
+        ps = m_Connection.prepareStatement("INSERT INTO revisions (document_id, update_time, content) VALUES (?, NOW(), ?)");
         ps.setLong(1, m_WIP_Document.getID());
         ps.setString(2, c_TestRevisionContent + " (WIP)");
         ps.executeUpdate(); // revision 1
@@ -112,7 +112,7 @@ public class DocumentManagerTests {
          */
 
         // Insert unused tag
-        ps = m_Connection.prepareStatement("INSERT INTO tags (`name`, `banned_flag`, `reference_count`) VALUES (?, ?, ?)",  Statement.RETURN_GENERATED_KEYS);
+        ps = m_Connection.prepareStatement("INSERT INTO tags (name, banned_flag, reference_count) VALUES (?, ?, ?)",  Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, c_TestTagTitle + " (UNUSED)");
         ps.setInt(2, 0);
         ps.setInt(3, 0);
@@ -132,7 +132,7 @@ public class DocumentManagerTests {
         ps.executeUpdate();
 
         // Insert tag <-> document pair for published
-        ps = m_Connection.prepareStatement("INSERT INTO document_tags (`tag_id`, `document_id`) VALUES (?, ?)");
+        ps = m_Connection.prepareStatement("INSERT INTO document_tags (tag_id, document_id) VALUES (?, ?)");
         ps.setInt(1, usedtag_ID);
         ps.setInt(2, published_ID);
         ps.executeUpdate();
@@ -146,7 +146,7 @@ public class DocumentManagerTests {
          */
 
         // Add a vote for our published document
-        ps = m_Connection.prepareStatement("INSERT INTO votes (`user_id`, `document_id`) VALUES (?, ?)");
+        ps = m_Connection.prepareStatement("INSERT INTO votes (user_id, document_id) VALUES (?, ?)");
         ps.setLong(1, m_TestUser.getID());
         ps.setLong(2, published_ID);
     }

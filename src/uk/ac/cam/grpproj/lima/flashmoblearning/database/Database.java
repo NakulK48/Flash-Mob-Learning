@@ -93,84 +93,84 @@ public class Database {
 
 	/** Creates all necessary tables if they do not exist. **/
 	private static void setup(Connection connection) throws SQLException {
-		String create_documents = "CREATE TABLE `documents` (\n" +
-				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n" +
-				"  `user_id` bigint(20) NOT NULL,\n" +
-				"  `type` int(11) NOT NULL,\n" +
-				"  `title` text NOT NULL,\n" +
-				"  `published_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
-				"  `featured_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
-				"  `update_time` timestamp NOT NULL,\n" +
-				"  `vote_count` int(11) NOT NULL DEFAULT '0',\n" +
-				"  PRIMARY KEY (`id`),\n" +
-				"  KEY `user_id` (`user_id`)\n" +
+		String create_documents = "CREATE TABLE documents (\n" +
+				"  id bigint(20) NOT NULL AUTO_INCREMENT,\n" +
+				"  user_id bigint(20) NOT NULL,\n" +
+				"  type int(11) NOT NULL,\n" +
+				"  title text NOT NULL,\n" +
+				"  published_flag tinyint(1) NOT NULL DEFAULT '0',\n" +
+				"  featured_flag tinyint(1) NOT NULL DEFAULT '0',\n" +
+				"  update_time timestamp NOT NULL,\n" +
+				"  vote_count int(11) NOT NULL DEFAULT '0',\n" +
+				"  PRIMARY KEY (id),\n" +
+				"  KEY user_id (user_id)\n" +
 				")\n";
 
-		String create_document_tags = "CREATE TABLE `document_tags` (\n" +
-				"  `tag_id` bigint(20) NOT NULL,\n" +
-				"  `document_id` bigint(20) NOT NULL,\n" +
-				"  PRIMARY KEY (`tag_id`, `document_id`),\n" +
-				"  KEY `document_id` (`document_id`)\n" +
+		String create_document_tags = "CREATE TABLE document_tags (\n" +
+				"  tag_id bigint(20) NOT NULL,\n" +
+				"  document_id bigint(20) NOT NULL,\n" +
+				"  PRIMARY KEY (tag_id, document_id),\n" +
+				"  KEY document_id (document_id)\n" +
 				")";
 		
-		String create_document_parents = "CREATE TABLE `document_parents` (\n" +
-				"  `document_id` bigint(20) NOT NULL,\n" +
-				"  `parent_document_id` bigint(20) NOT NULL,\n" +
-				"  PRIMARY KEY (`document_id`),\n" +
-				"  KEY `parent_document_id` (`parent_document_id`)\n" +
+		String create_document_parents = "CREATE TABLE document_parents (\n" +
+				"  document_id bigint(20) NOT NULL,\n" +
+				"  parent_document_id bigint(20) NOT NULL,\n" +
+				"  PRIMARY KEY (document_id),\n" +
+				"  KEY parent_document_id (parent_document_id)\n" +
 				")";
 
-		String create_revisions = "CREATE TABLE `revisions` (\n" +
-				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n" +
-				"  `document_id` bigint(20) NOT NULL,\n" +
-				"  `update_time` timestamp NOT NULL,\n" +
-				"  `content` text NOT NULL,\n" +
-				"  PRIMARY KEY (`id`),\n" +
-				"  KEY `document_id` (`document_id`)\n" +
+		String create_revisions = "CREATE TABLE revisions (\n" +
+				"  id bigint(20) NOT NULL AUTO_INCREMENT,\n" +
+				"  document_id bigint(20) NOT NULL,\n" +
+				"  update_time timestamp NOT NULL,\n" +
+				"  content text NOT NULL,\n" +
+				"  PRIMARY KEY (id),\n" +
+				"  KEY document_id (document_id)\n" +
 				")";
 
-		String create_tags = "CREATE TABLE `tags` (\n" +
-				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n" +
-				"  `name` text NOT NULL,\n" +
-				"  `banned_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
-				"  `reference_count` int(11) NOT NULL DEFAULT '0',\n" +
-				"  PRIMARY KEY (`id`)\n" +
+		String create_tags = "CREATE TABLE tags (\n" +
+				"  id bigint(20) NOT NULL AUTO_INCREMENT,\n" +
+				"  name text NOT NULL,\n" +
+				"  banned_flag tinyint(1) NOT NULL DEFAULT '0',\n" +
+				"  reference_count int(11) NOT NULL DEFAULT '0',\n" +
+				"  PRIMARY KEY (id)\n" +
 				")";
 
-		String create_users	 = "CREATE TABLE `users` (\n" +
-				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n" +
-				"  `username` varchar(255) NOT NULL,\n" +
-				"  `password` varchar(255) NOT NULL,\n" +
-				"  `teacher_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
-				"  UNIQUE KEY `username` (`username`),\n" +
-				"  PRIMARY KEY (`id`)\n" +
+		String create_users	 = "CREATE TABLE users (\n" +
+				"  id bigint(20) NOT NULL AUTO_INCREMENT,\n" +
+				"  username varchar(255) NOT NULL,\n" +
+				"  password varchar(255) NOT NULL,\n" +
+				"  teacher_flag tinyint(1) NOT NULL DEFAULT '0',\n" +
+				"  UNIQUE KEY username (username),\n" +
+				"  PRIMARY KEY (id)\n" +
 				")";
 
-		String create_votes = "CREATE TABLE `votes` (\n" +
-				"  `user_id` bigint(20) NOT NULL,\n" +
-				"  `document_id` bigint(20) NOT NULL,\n" +
-				"  PRIMARY KEY (`user_id`,`document_id`),\n" +
-				"  KEY `document_id` (`document_id`)\n" +
+		String create_votes = "CREATE TABLE votes (\n" +
+				"  user_id bigint(20) NOT NULL,\n" +
+				"  document_id bigint(20) NOT NULL,\n" +
+				"  PRIMARY KEY (user_id,document_id),\n" +
+				"  KEY document_id (document_id)\n" +
 				")\n";
 
-		String create_settings = "CREATE TABLE `settings` (\n" +
-				"  `setting_name` varchar(255) NOT NULL,\n" +
-				"  `setting_value` text NOT NULL,\n" +
-				"  UNIQUE KEY `setting_name` (`setting_name`)\n" +
+		String create_settings = "CREATE TABLE settings (\n" +
+				"  setting_name varchar(255) NOT NULL,\n" +
+				"  setting_value text NOT NULL,\n" +
+				"  UNIQUE KEY setting_name (setting_name)\n" +
 				")";
 		
 		String[] create_fks = new String[]
-				{"ALTER TABLE `documents` ADD CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE",
-				 "ALTER TABLE `document_tags` ADD CONSTRAINT `document_tags_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE",
-				 "ALTER TABLE `document_tags` ADD CONSTRAINT `document_tags_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
-				 "ALTER TABLE `document_parents` ADD CONSTRAINT `document_parents_ibfk_2` FOREIGN KEY (`parent_document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
-				 "ALTER TABLE `document_parents` ADD CONSTRAINT `document_parents_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
-				 "ALTER TABLE `revisions` ADD CONSTRAINT `revisions_ibfk_1` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
-				 "ALTER TABLE `votes` ADD CONSTRAINT `votes_ibfk_2` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE",
-				 "ALTER TABLE `votes` ADD CONSTRAINT `votes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE"};		
+				{"ALTER TABLE documents ADD CONSTRAINT documents_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE",
+				 "ALTER TABLE document_tags ADD CONSTRAINT document_tags_ibfk_2 FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE",
+				 "ALTER TABLE document_tags ADD CONSTRAINT document_tags_ibfk_1 FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE",
+				 "ALTER TABLE document_parents ADD CONSTRAINT document_parents_ibfk_2 FOREIGN KEY (parent_document_id) REFERENCES documents (id) ON DELETE CASCADE",
+				 "ALTER TABLE document_parents ADD CONSTRAINT document_parents_ibfk_1 FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE",
+				 "ALTER TABLE revisions ADD CONSTRAINT revisions_ibfk_1 FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE",
+				 "ALTER TABLE votes ADD CONSTRAINT votes_ibfk_2 FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE",
+				 "ALTER TABLE votes ADD CONSTRAINT votes_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE"};		
 
-		String check_login_banner = "SELECT * FROM `settings` WHERE `setting_name` = 'login_banner'";
-		String create_login_banner = "INSERT INTO `settings` (`setting_name`, `setting_value`) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";
+		String check_login_banner = "SELECT * FROM settings WHERE setting_name = 'login_banner'";
+		String create_login_banner = "INSERT INTO settings (setting_name, setting_value) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";
 
 		// Check if tables exist
 		int table_count = 0;

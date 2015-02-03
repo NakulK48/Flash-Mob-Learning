@@ -33,7 +33,7 @@ public class LoginManagerTests {
 
         // Create a test user
         m_Statement.executeUpdate("DELETE FROM users WHERE username = '" + c_TestUsername + "'");
-        PreparedStatement ps = m_Connection.prepareStatement("INSERT INTO users (`username`, `password`, `teacher_flag`) VALUES (?, ?, 0)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement ps = m_Connection.prepareStatement("INSERT INTO users (username, password, teacher_flag) VALUES (?, ?, 0)", Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, c_TestUsername);
         ps.setString(2, c_TestPassword);
         ps.executeUpdate();

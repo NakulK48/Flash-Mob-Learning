@@ -152,7 +152,7 @@ public class DocumentManager {
 	 * @param payload The actual content of the revision, which is not stored 
 	 * in the Revision object. */
 	public Revision addRevision(Document doc, Date d, String payload) throws SQLException, NoSuchObjectException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO revisions (`document_id`, `update_time`, `content`) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO revisions (document_id, update_time, content) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 		ps.setLong(1, doc.getID());
 		ps.setTimestamp(2, new Timestamp(d.getTime()));
 		ps.setString(3, payload);
@@ -175,7 +175,7 @@ public class DocumentManager {
 	/** Add a new document, either with no revisions or with a single revision based on another Document. */
 	public void createDocument(Document d) throws SQLException, IDAlreadySetException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
-				("INSERT INTO documents (`user_id`, `type`, `title`, `published_flag`, `featured_flag`, `update_time`, `vote_count`) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+				("INSERT INTO documents (user_id, type, title, published_flag, featured_flag, update_time, vote_count) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 		ps.setLong(1, d.owner.getID());
 		ps.setInt(2, d.docType.getId());
 		ps.setString(3, d.getTitle());

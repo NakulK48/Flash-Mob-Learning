@@ -60,7 +60,7 @@ public class LoginManager {
 	
 	/** Create a user */
 	public User createUser(String username, String saltedPassword) throws SQLException, DuplicateNameException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO users (`username`, `password`, `teacher_flag`) VALUES (?, ?, 0)");
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO users (username, password, teacher_flag) VALUES (?, ?, 0)");
 		ps.setString(1, username);
 		ps.setString(2, saltedPassword);
 

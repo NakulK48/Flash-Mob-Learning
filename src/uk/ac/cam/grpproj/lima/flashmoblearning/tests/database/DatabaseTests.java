@@ -3,8 +3,11 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.tests.database;
 import junit.framework.Assert;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.Database;
 
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseTests {
 
@@ -39,12 +42,17 @@ public class DatabaseTests {
     @org.junit.Test
      // This test ensures that our database has all the tables we need.
      public void testSetup() throws Exception {
-        String[] tables = new String[] { "documents", "document_tags", "revisions", "tags", "users", "votes" };
+        String[] tables = new String[] { "documents", "document_parents", "document_tags", "revisions", "tags", "users", "votes" };
+        List<String> database_tables = new ArrayList<String>();
 
-        Statement statement = Database.getInstance().getStatement();
+        DatabaseMetaData databaseMetaData = Database.getInstance().getConnection().getMetaData();
+        ResultSet rs = databaseMetaData.getTables(null, null, "%", null);
+        while(rs.next()) {
+            database_tables.add(rs.getString("TABLE_NAME"));
+        }
+
         for(String table : tables) {
-            ResultSet rs = statement.executeQuery("SHOW TABLES LIKE '" + table + "'");
-            Assert.assertEquals("Checking " + table + " exists", true, rs.next());
+            Assert.assertEquals(table + " table should exist", true, database_tables.contains(table));
         }
     }
 

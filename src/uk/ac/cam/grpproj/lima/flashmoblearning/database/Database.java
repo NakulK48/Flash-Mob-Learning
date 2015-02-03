@@ -39,18 +39,13 @@ public class Database {
 	 * REQUIREMENTS: An external mysql server with username and password as above,
 	 * a database called flashmoblearning and appropriate permissions. **/
 	public static void init() throws ClassNotFoundException, SQLException {
-		// FIXME MYSQL: Can we pass in password here and avoid url hack?
-		init(c_JDBCURL + "?user=" + c_Username + "&password=" + c_Password, null, null);
+		Class.forName("com.mysql.jdbc.Driver");
+		init(c_JDBCURL, c_Username, c_Password);
 	}
 
 	/** Portable setup from an arbitrary JDBC URL */
 	public static void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection connection;
-		if(username != null)
-			connection = DriverManager.getConnection(databaseURL, username, password);
-		else
-			connection = DriverManager.getConnection(databaseURL);
+		Connection connection = DriverManager.getConnection(databaseURL, username, password);
 		setup(connection);
 		m_Instance = new Database(connection);
 	}

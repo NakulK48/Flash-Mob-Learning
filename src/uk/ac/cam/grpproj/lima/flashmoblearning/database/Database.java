@@ -102,19 +102,19 @@ public class Database {
 				"  featured_flag tinyint NOT NULL DEFAULT '0',\n" +
 				"  update_time timestamp NOT NULL,\n" +
 				"  vote_count int NOT NULL DEFAULT '0',\n" +
-				"  PRIMARY KEY (id),\n" +
+				"  PRIMARY KEY (id)\n" +
 				")\n";
 
 		String create_document_tags = "CREATE TABLE document_tags (\n" +
 				"  tag_id bigint NOT NULL,\n" +
 				"  document_id bigint NOT NULL,\n" +
-				"  PRIMARY KEY (tag_id, document_id),\n" +
+				"  PRIMARY KEY (tag_id, document_id)\n" +
 				")";
 		
 		String create_document_parents = "CREATE TABLE document_parents (\n" +
 				"  document_id bigint NOT NULL,\n" +
 				"  parent_document_id bigint NOT NULL,\n" +
-				"  PRIMARY KEY (document_id),\n" +
+				"  PRIMARY KEY (document_id)\n" +
 				")";
 
 		String create_revisions = "CREATE TABLE revisions (\n" +
@@ -122,7 +122,7 @@ public class Database {
 				"  document_id bigint NOT NULL,\n" +
 				"  update_time timestamp NOT NULL,\n" +
 				"  content text NOT NULL,\n" +
-				"  PRIMARY KEY (id),\n" +
+				"  PRIMARY KEY (id)\n" +
 				")";
 
 		String create_tags = "CREATE TABLE tags (\n" +
@@ -144,12 +144,12 @@ public class Database {
 		String create_votes = "CREATE TABLE votes (\n" +
 				"  user_id bigint NOT NULL,\n" +
 				"  document_id bigint NOT NULL,\n" +
-				"  PRIMARY KEY (user_id,document_id),\n" +
+				"  PRIMARY KEY (user_id,document_id)\n" +
 				")\n";
 
 		String create_settings = "CREATE TABLE settings (\n" +
 				"  setting_name varchar(255) NOT NULL,\n" +
-				"  setting_value text NOT NULL,\n" +
+				"  setting_value text NOT NULL\n" +
 				")";
 		
 		String[] create_indexes = new String[] 

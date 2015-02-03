@@ -201,7 +201,7 @@ public class DocumentManager {
 	}
 
 	/** Get the parent document for a given Document. Null if there is no parent. */
-	public Document getParentDoc(Document document) throws SQLException, NoSuchObjectException {
+	public Document getParentDocument(Document document) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT parent_document_id FROM document_parents WHERE document_id = ?");
 		ps.setLong(1, document.getID());
 		ResultSet rs = ps.executeQuery();
@@ -213,9 +213,19 @@ public class DocumentManager {
 	}
 
 	/** Set the parent document for a given document. */
-	public void setParentDoc(Document d, Document parentDoc) {
-		// TODO Auto-generated method stub
-
+	public void setParentDocument(Document d, Document parentDoc) throws SQLException, NoSuchObjectException {
+		if(getParentDocument(d) == null) {
+			PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_parents (document_id, parent_document_id) VALUES (?, ?)");
+			ps.setLong(1, d.getID());
+			ps.setLong(2, parentDoc.getID());
+			ps.executeUpdate();
+		} else {
+			PreparedStatement ps = m_Database.getConnection().prepareStatement("UPDATE document_parents SET parent_document_id = ? WHERE document_id = ?");
+			ps.setLong(1, parentDoc.getID());
+			ps.setLong(2, d.getID());
+			int affected_rows = ps.executeUpdate();
+			if(affected_rows < 1) throw new NoSuchObjectException("document " + d.getID());
+		}
 	}
 
 	/** Add a new document, either with no revisions or with a single revision based on another Document. */

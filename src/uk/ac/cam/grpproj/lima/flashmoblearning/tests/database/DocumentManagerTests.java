@@ -10,7 +10,6 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
 
-import javax.management.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -282,8 +281,16 @@ public class DocumentManagerTests {
 
     @Test
     public void testGetParentDoc() throws Exception {
-        Document parentDoc = DocumentManager.getInstance().getParentDoc(m_WIP_Document);
+        Document parentDoc = DocumentManager.getInstance().getParentDocument(m_WIP_Document);
         Assert.assertEquals("Parent should be as defined in test", m_Published_ID, parentDoc.getID());
+    }
+
+    @Test
+    public void testSetParentDoc() throws Exception {
+        Document published = DocumentManager.getInstance().getDocumentById(m_Published_ID);
+        DocumentManager.getInstance().setParentDocument(published, m_WIP_Document);
+        Document parentDoc = DocumentManager.getInstance().getParentDocument(published);
+        Assert.assertEquals("Parent should be as defined in test", m_WIP_Document.getID(), parentDoc.getID());
     }
 
     @Test

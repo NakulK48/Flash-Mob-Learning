@@ -141,7 +141,8 @@ public class Database {
 				"  UNIQUE KEY `setting_name` (`setting_name`)\n" +
 				")";
 
-		String create_login_banner = "INSERT IGNORE INTO `flashmoblearning`.`settings` (`setting_name`, `setting_value`) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";
+		String check_login_banner = "SELECT * FROM `settings` WHERE `setting_name` = 'login_banner'";
+		String create_login_banner = "INSERT INTO `settings` (`setting_name`, `setting_value`) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";
 
 		Statement statement = connection.createStatement();
 		statement.execute("SET FOREIGN_KEY_CHECKS=0");
@@ -152,7 +153,9 @@ public class Database {
 		statement.execute(create_users);
 		statement.execute(create_votes);
 		statement.execute(create_settings);
-		statement.execute(create_login_banner);
+		
+		if(!statement.executeQuery(check_login_banner).next())
+			statement.execute(create_login_banner);
 		
 		statement.execute("SET FOREIGN_KEY_CHECKS=1");
 	}

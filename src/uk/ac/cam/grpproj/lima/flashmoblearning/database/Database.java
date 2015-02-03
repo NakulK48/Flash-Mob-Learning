@@ -38,6 +38,12 @@ public class Database {
 	}
 	
 	private static final String DEFAULT_TEACHER_PASSWORD = "password";
+	private static final String LOGIN_PASSWORD_NAG = 
+			"Welcome to Flash Mob Learning! Please login to the account " +
+			"username \"Teacher\" with password \"password\" (no quotes " +
+			"needed), change your password, and change this login banner to " +
+			"something like \"Welcome to coding at XYZ school! Please create " +
+			"an account with your real name.\".";
 	
 	private static void oneTimeInit() throws SQLException {
 		LoginManager lm = LoginManager.getInstance();
@@ -45,6 +51,7 @@ public class Database {
 			User teacher = lm.createUser("Teacher", "", true);
 			teacher.setPassword(DEFAULT_TEACHER_PASSWORD);
 			lm.modifyUser(teacher);
+			lm.setLoginBanner(LOGIN_PASSWORD_NAG);
 		} catch (DuplicateNameException e) {
 			throw new IllegalStateException("Duplicate name in spite of empty database?!", e);
 		} catch (NoSuchObjectException e) {

@@ -95,8 +95,8 @@ public class DocumentManager {
 	
 	/** Search for published documents by title */
 	public List<PublishedDocument> getPublishedByTitle(String title, QueryParam param) throws SQLException, NoSuchObjectException { 
-		PreparedStatement ps = m_Database.getConnection().prepareStatement(getQueryWithParam("SELECT * FROM documents WHERE LOWER(title) LIKE LOWER('%?%') AND published_flag = true", param));
-		ps.setString(1, title);
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(getQueryWithParam("SELECT * FROM documents WHERE LOWER(title) LIKE ? AND published_flag = true", param));
+		ps.setString(1, "%" + title.toLowerCase() + "%");
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}

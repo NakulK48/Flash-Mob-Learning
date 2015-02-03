@@ -52,6 +52,7 @@ public class Database {
 			teacher.setPassword(DEFAULT_TEACHER_PASSWORD);
 			lm.modifyUser(teacher);
 			lm.setLoginBanner(LOGIN_PASSWORD_NAG);
+			System.out.println("Created default user and set login banner");
 		} catch (DuplicateNameException e) {
 			throw new IllegalStateException("Duplicate name in spite of empty database?!", e);
 		} catch (NoSuchObjectException e) {
@@ -251,6 +252,7 @@ public class Database {
 			if(table_count > 0)
 				throw new IllegalDatabaseStateException(table_count + " of " + tables.size() + " tables exist, database state corrupt.");
 
+			System.out.println("Creating tables");
 			// Create tables
 			statement.execute(create_documents);
 			statement.execute(create_document_tags);

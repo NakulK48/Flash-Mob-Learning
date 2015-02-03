@@ -11,7 +11,7 @@
 	String searchQuery = request.getParameter("query");
 	String searchDomain = request.getParameter("domain"); //tag, document or user.
 	if (searchDomain == null) searchDomain = "documents";
-	if (searchDomain != "documents" && searchDomain != "tags" && searchDomain != "users" ) searchDomain = "documents";
+	if (!searchDomain.equals("documents") && !searchDomain.equals("tags") && !searchDomain.equals("users") ) searchDomain = "documents";
 %>
 
 	<div id="searchTypesHolder">
@@ -22,26 +22,26 @@
 	<br>
 	
 <%
-	if (searchQuery == null || searchQuery == "") out.println("Please enter a search query.");
+	if (searchQuery == null || searchQuery.length() == 0) out.println("Please enter a search query.");
 	
 	else
 	{
 		out.println("<p id='query'>Searching " + searchDomain + " for '" + searchQuery + "'</p>");
 	}
 
-	if (searchDomain == "documents")
+	if (searchDomain.equals("documents"))
 	{
-		
+		//TODO: query Document database for matching titles
 	}
 	
-	else if (searchDomain == "users")
+	else if (searchDomain.equals("users"))
 	{
-		
+		//TODO: query User database for matching names
 	}
 	
-	else if (searchDomain == "tags")
+	else if (searchDomain.equals("tags"))
 	{
-		
+		//TODO: query Tag database for matching names
 	}
 %>
 

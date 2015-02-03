@@ -34,7 +34,7 @@ public class Database {
 	public synchronized static void realInit() throws ClassNotFoundException, SQLException, IOException {
 		boolean needOneTimeInit = 
 				Boolean.getBoolean("useMysql") ? init() : initLocal();
-				if(needOneTimeInit) oneTimeInit();
+		if(needOneTimeInit) oneTimeInit();
 	}
 	
 	private static final String DEFAULT_TEACHER_PASSWORD = "password";

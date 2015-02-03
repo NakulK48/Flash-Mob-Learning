@@ -2,11 +2,11 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
 
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.IllegalDatabaseStateException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
 /** Singleton class which opens the database connection, and deals with global config and Tags.
@@ -98,7 +98,7 @@ public class Database {
 
 	/** Creates all necessary tables if they do not exist. **/
 	private static void setup(Connection connection) throws SQLException {
-		String create_documents = "CREATE TABLE IF NOT EXISTS `documents` (\n" +
+		String create_documents = "CREATE TABLE `documents` (\n" +
 				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n" +
 				"  `user_id` bigint(20) NOT NULL,\n" +
 				"  `type` int(11) NOT NULL,\n" +
@@ -111,21 +111,21 @@ public class Database {
 				"  KEY `user_id` (`user_id`)\n" +
 				")\n";
 
-		String create_document_tags = "CREATE TABLE IF NOT EXISTS `document_tags` (\n" +
+		String create_document_tags = "CREATE TABLE `document_tags` (\n" +
 				"  `tag_id` bigint(20) NOT NULL,\n" +
 				"  `document_id` bigint(20) NOT NULL,\n" +
 				"  PRIMARY KEY (`tag_id`, `document_id`),\n" +
 				"  KEY `document_id` (`document_id`)\n" +
 				")";
 		
-		String create_document_parents = "CREATE TABLE IF NOT EXISTS `document_parents` (\n" +
+		String create_document_parents = "CREATE TABLE `document_parents` (\n" +
 				"  `document_id` bigint(20) NOT NULL,\n" +
 				"  `parent_document_id` bigint(20) NOT NULL,\n" +
 				"  PRIMARY KEY (`document_id`),\n" +
 				"  KEY `parent_document_id` (`parent_document_id`)\n" +
 				")";
 
-		String create_revisions = "CREATE TABLE IF NOT EXISTS `revisions` (\n" +
+		String create_revisions = "CREATE TABLE `revisions` (\n" +
 				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n" +
 				"  `document_id` bigint(20) NOT NULL,\n" +
 				"  `update_time` timestamp NOT NULL,\n" +
@@ -134,7 +134,7 @@ public class Database {
 				"  KEY `document_id` (`document_id`)\n" +
 				")";
 
-		String create_tags = "CREATE TABLE IF NOT EXISTS `tags` (\n" +
+		String create_tags = "CREATE TABLE `tags` (\n" +
 				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n" +
 				"  `name` text NOT NULL,\n" +
 				"  `banned_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
@@ -142,7 +142,7 @@ public class Database {
 				"  PRIMARY KEY (`id`)\n" +
 				")";
 
-		String create_users	 = "CREATE TABLE IF NOT EXISTS `users` (\n" +
+		String create_users	 = "CREATE TABLE `users` (\n" +
 				"  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n" +
 				"  `username` varchar(255) NOT NULL,\n" +
 				"  `password` varchar(255) NOT NULL,\n" +
@@ -151,14 +151,14 @@ public class Database {
 				"  PRIMARY KEY (`id`)\n" +
 				")";
 
-		String create_votes = "CREATE TABLE IF NOT EXISTS `votes` (\n" +
+		String create_votes = "CREATE TABLE `votes` (\n" +
 				"  `user_id` bigint(20) NOT NULL,\n" +
 				"  `document_id` bigint(20) NOT NULL,\n" +
 				"  PRIMARY KEY (`user_id`,`document_id`),\n" +
 				"  KEY `document_id` (`document_id`)\n" +
 				")\n";
 
-		String create_settings = "CREATE TABLE IF NOT EXISTS `settings` (\n" +
+		String create_settings = "CREATE TABLE `settings` (\n" +
 				"  `setting_name` varchar(255) NOT NULL,\n" +
 				"  `setting_value` text NOT NULL,\n" +
 				"  UNIQUE KEY `setting_name` (`setting_name`)\n" +
@@ -177,24 +177,45 @@ public class Database {
 		String check_login_banner = "SELECT * FROM `settings` WHERE `setting_name` = 'login_banner'";
 		String create_login_banner = "INSERT INTO `settings` (`setting_name`, `setting_value`) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";
 
-		Statement statement = connection.createStatement();
-		statement.execute(create_documents);
-		statement.execute(create_document_tags);
-		statement.execute(create_revisions);
-		statement.execute(create_tags);
-		statement.execute(create_users);
-		statement.execute(create_votes);
-		statement.execute(create_settings);
+		// Check if tables exist
+		int table_count = 0;
+		List<String> tables = Arrays.asList(new String[] { "documents", "document_parents", "document_tags", "revisions", "tags", "users", "votes" });
 
-		// Checks and creates login banner if it does not exist. 
-		if(!statement.executeQuery(check_login_banner).next())
+		Statement statement = connection.createStatement();
+		DatabaseMetaData databaseMetaData = connection.getMetaData();
+		ResultSet rs = databaseMetaData.getTables(null, null, "%", null);
+		while(rs.next()) {
+			table_count += tables.contains(rs.getString("TABLE_NAME")) ? 1 : 0;
+		}
+
+
+		// Database does not contain all tables
+		if(table_count < tables.size()) {
+			// If some tables exist - database corrupted!
+			if(table_count > 0)
+				throw new IllegalDatabaseStateException(table_count + " of " + tables.size() + " tables exist, database state corrupt.");
+
+			// Create tables
+			statement.execute(create_documents);
+			statement.execute(create_document_tags);
+			statement.execute(create_document_parents);
+			statement.execute(create_revisions);
+			statement.execute(create_tags);
+			statement.execute(create_users);
+			statement.execute(create_votes);
+			statement.execute(create_settings);
+		}
+
+		// Checks and creates login banner if it does not exist.
+		if (!statement.executeQuery(check_login_banner).next())
 			statement.execute(create_login_banner);
-		
+
 		// Create foreign keys - will throw an exception if they already exist, which can be ignored.
-		for(String create_fk : create_fks) {
+		for (String create_fk : create_fks) {
 			try {
 				statement.execute(create_fk);
-			} catch (SQLException e) {}
+			} catch (SQLException e) {
+			}
 		}
 	}
 	

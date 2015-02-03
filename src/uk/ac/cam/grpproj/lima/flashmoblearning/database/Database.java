@@ -96,12 +96,12 @@ public class Database {
 		String create_documents = "CREATE TABLE documents (\n" +
 				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
 				"  user_id bigint NOT NULL,\n" +
-				"  type int(11) NOT NULL,\n" +
+				"  type int NOT NULL,\n" +
 				"  title text NOT NULL,\n" +
-				"  published_flag tinyint(1) NOT NULL DEFAULT '0',\n" +
-				"  featured_flag tinyint(1) NOT NULL DEFAULT '0',\n" +
+				"  published_flag tinyint NOT NULL DEFAULT '0',\n" +
+				"  featured_flag tinyint NOT NULL DEFAULT '0',\n" +
 				"  update_time timestamp NOT NULL,\n" +
-				"  vote_count int(11) NOT NULL DEFAULT '0',\n" +
+				"  vote_count int NOT NULL DEFAULT '0',\n" +
 				"  PRIMARY KEY (id),\n" +
 				"  KEY user_id (user_id)\n" +
 				")\n";
@@ -132,8 +132,8 @@ public class Database {
 		String create_tags = "CREATE TABLE tags (\n" +
 				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
 				"  name text NOT NULL,\n" +
-				"  banned_flag tinyint(1) NOT NULL DEFAULT '0',\n" +
-				"  reference_count int(11) NOT NULL DEFAULT '0',\n" +
+				"  banned_flag tinyint NOT NULL DEFAULT '0',\n" +
+				"  reference_count int NOT NULL DEFAULT '0',\n" +
 				"  PRIMARY KEY (id)\n" +
 				")";
 
@@ -141,7 +141,7 @@ public class Database {
 				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
 				"  username varchar(255) NOT NULL,\n" +
 				"  password varchar(255) NOT NULL,\n" +
-				"  teacher_flag tinyint(1) NOT NULL DEFAULT '0',\n" +
+				"  teacher_flag tinyint NOT NULL DEFAULT '0',\n" +
 				"  UNIQUE KEY username (username),\n" +
 				"  PRIMARY KEY (id)\n" +
 				")";

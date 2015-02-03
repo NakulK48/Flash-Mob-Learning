@@ -8,7 +8,7 @@
 </head>
 <body>
 <%
-	long userID = Long.parseLong(request.getParameter("id"));
+	//long userID = Long.parseLong(request.getParameter("id"));
 	//TODO: lookup user in database by ID
 	
 	
@@ -22,6 +22,8 @@
 	
 	
 %>
+<h3>Welcome to Flash Mob Learning, home to all flash mob learners.</h3>
+<a href="login.jsp">Login Page</a>
 
 </body>
 </html>

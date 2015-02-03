@@ -7,6 +7,11 @@
 <title>Login - Flash Mob Learning</title>
 </head>
 <body>
-
+	<form name="loginForm" action="loginCheck.jsp" method="post">
+		<input type ="text" size ="30" name ="id" placeholder="UserID" required=""><br>
+		<input type ="password" size = "30" name ="pwd" placeholder="Password" required=""><br>
+		<input type ="submit" name="login" value ="login"><br>
+		<input type ="submit" name="register" value ="register"><br>
+	</form>
 </body>
 </html>

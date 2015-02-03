@@ -122,6 +122,7 @@ public class Database {
 				"  `username` varchar(255) NOT NULL,\n" +
 				"  `password` varchar(255) NOT NULL,\n" +
 				"  `teacher_flag` tinyint(1) NOT NULL DEFAULT '0',\n" +
+				"  UNIQUE KEY `username` (`username`),\n" +
 				"  PRIMARY KEY (`id`)\n" +
 				")";
 

@@ -92,6 +92,14 @@ public class DocumentManager {
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}
+	
+	/** Search for published documents by title */
+	public List<PublishedDocument> getPublishedByTitle(String title, QueryParam param) throws SQLException, NoSuchObjectException { 
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(getQueryWithParam("SELECT * FROM documents WHERE LOWER(title) LIKE LOWER('%?%') AND published_flag = true", param));
+		ps.setString(1, title);
+		ResultSet rs = ps.executeQuery();
+		return getPublishedDocumentsFromResultSet(rs, null);
+	}
 
 	/** Get featured documents */
 	public List<PublishedDocument> getFeatured(QueryParam param) throws SQLException, NoSuchObjectException {
@@ -228,7 +236,6 @@ public class DocumentManager {
 	/** Add a (positive) vote on a given document. Updates the total vote count and score
 	 * on the document (by statically calling PublishedDocument.getScore(votes,...). */
 	public void addVote(User u, PublishedDocument d) throws SQLException, NoSuchObjectException {}
-
 
 	/** Get the content of a Revision. This may be kept separately and fetched 
 	 * lazily, given its size, and given that we mostly don't need all the 

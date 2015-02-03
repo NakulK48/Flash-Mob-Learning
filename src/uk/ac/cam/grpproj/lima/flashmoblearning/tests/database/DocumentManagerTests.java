@@ -193,6 +193,13 @@ public class DocumentManagerTests {
         Assert.assertEquals("Expect 2 featured documents", 2, published.size());
         Assert.assertEquals("Expect correct featured title", c_TestDocumentTitle + " (FEATURED)", published.get(0).getTitle());
     }
+    
+    @Test
+    public void testSearchPublished() throws Exception {
+        List<PublishedDocument> published = DocumentManager.getInstance().getPublishedByTitle("FEATURED", QueryParam.UNSORTED);
+        Assert.assertEquals("Expect 2 documents with FEATURED in title", 2, published.size());
+        Assert.assertEquals("Expect correct featured title", c_TestDocumentTitle + " (FEATURED)", published.get(0).getTitle());
+    }
 
     @Test
     public void testGetFeaturedByTag() throws Exception {

@@ -14,16 +14,14 @@
 	
 	
 	//TODO: get required information
-	
-	
-	
-	//TODO: print required information
-	
-	
-	
 %>
-<h3>Welcome to Flash Mob Learning, home to all flash mob learners.</h3>
-<a href="login.jsp">Login Page</a>
+
+<h1><% //username %></h1>
+<h2>Top Documents</h2>
+<%
+	//output list of documents: votes, title, age
+%>
+
 
 </body>
 </html>

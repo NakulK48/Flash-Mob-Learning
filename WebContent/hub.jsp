@@ -17,6 +17,15 @@
 	
 	LinkedList<PublishedDocument> subs = hub.submissions;  */
 	
+	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
+	String doctype = request.getParameter("doctype"); //browsing text or skulpt?
+	if (upvoted != null)
+	{
+		long documentToUpvote = Long.parseLong(upvoted);
+		//TODO: query DB to find the document with this ID
+		//TODO: increase its votes by 1
+	}
+	
 %>
 <table>
 	<tr>
@@ -25,13 +34,7 @@
 		<td class='heading' id='ageHeading'></td>
 	</tr>
 	<%
-		String upvoted = request.getParameter("upvote");
-		if (upvoted != null)
-		{
-			long documentToUpvote = Long.parseLong(upvoted);
-			//TODO: query DB to find the document with this ID
-			//TODO: increase its votes by 1
-		}
+
 			
 /*   	
 		int sofar = 0; //how many submissions have been printed on the page?

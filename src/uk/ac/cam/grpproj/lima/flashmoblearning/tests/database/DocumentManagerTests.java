@@ -10,7 +10,6 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
 
-import javax.management.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,6 +23,7 @@ public class DocumentManagerTests {
     private User m_TestUser;
     private User m_TestUser2;
     private WIPDocument m_WIP_Document;
+    private int m_Published_ID;
 
     private static final String c_TestDocumentTitle = "Test Document";
     private static final String c_TestRevisionContent = "Test Revision";
@@ -70,7 +70,7 @@ public class DocumentManagerTests {
         ps.setInt(4, 1);
         ps.executeUpdate();
         rs = ps.getGeneratedKeys(); rs.next();
-        int published_ID = rs.getInt(1);
+        m_Published_ID = rs.getInt(1);
 
         ps.setLong(1, m_TestUser2.getID());
         ps.executeUpdate();
@@ -86,6 +86,14 @@ public class DocumentManagerTests {
         ps.setLong(1, m_TestUser2.getID());
         ps.executeUpdate();
 
+        /**
+         * PARENTS
+         */
+
+        ps = m_Connection.prepareStatement("INSERT INTO document_parents (document_id, parent_document_id) VALUES (?, ?)");
+        ps.setLong(1, m_WIP_Document.getID());
+        ps.setLong(2, m_Published_ID);
+        ps.executeUpdate();
 
         /**
          * REVISIONS
@@ -100,7 +108,7 @@ public class DocumentManagerTests {
         ps.executeUpdate(); // revision 3
 
         // Insert published revisions
-        ps.setLong(1, published_ID);
+        ps.setLong(1, m_Published_ID);
         ps.setString(2, c_TestRevisionContent + " (PUBLISHED)");
         ps.executeUpdate();
 
@@ -136,7 +144,7 @@ public class DocumentManagerTests {
         // Insert tag <-> document pair for published
         ps = m_Connection.prepareStatement("INSERT INTO document_tags (tag_id, document_id) VALUES (?, ?)");
         ps.setInt(1, usedtag_ID);
-        ps.setInt(2, published_ID);
+        ps.setInt(2, m_Published_ID);
         ps.executeUpdate();
 
         // Insert tag <-> document pair for featured
@@ -150,7 +158,7 @@ public class DocumentManagerTests {
         // Add a vote for our published document
         ps = m_Connection.prepareStatement("INSERT INTO votes (user_id, document_id) VALUES (?, ?)");
         ps.setLong(1, m_TestUser.getID());
-        ps.setLong(2, published_ID);
+        ps.setLong(2, m_Published_ID);
     }
 
     @After
@@ -269,6 +277,20 @@ public class DocumentManagerTests {
 
         List<WIPDocument> retrieved = DocumentManager.getInstance().getWorkInProgressByUser(m_TestUser, QueryParam.UNSORTED);
         Assert.assertEquals("Expected retrieved document with amended title", c_TestDocumentTitle + " (DYNAMIC)", retrieved.get(0).getTitle());
+    }
+
+    @Test
+    public void testGetParentDoc() throws Exception {
+        Document parentDoc = DocumentManager.getInstance().getParentDocument(m_WIP_Document);
+        Assert.assertEquals("Parent should be as defined in test", m_Published_ID, parentDoc.getID());
+    }
+
+    @Test
+    public void testSetParentDoc() throws Exception {
+        Document published = DocumentManager.getInstance().getDocumentById(m_Published_ID);
+        DocumentManager.getInstance().setParentDocument(published, m_WIP_Document);
+        Document parentDoc = DocumentManager.getInstance().getParentDocument(published);
+        Assert.assertEquals("Parent should be as defined in test", m_WIP_Document.getID(), parentDoc.getID());
     }
 
     @Test

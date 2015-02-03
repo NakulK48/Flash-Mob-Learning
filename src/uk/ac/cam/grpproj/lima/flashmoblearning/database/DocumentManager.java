@@ -35,8 +35,7 @@ public class DocumentManager {
 		List<PublishedDocument> ret = new ArrayList<PublishedDocument>();
 
 		while(rs.next())
-			ret.add(new PublishedDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
-					rs.getString("title"), rs.getTimestamp("update_time").getTime(), rs.getInt("vote_count")));
+			ret.add(getPublishedDocumentFromResultSet(rs, u));
 
 		return ret;
 	}
@@ -45,10 +44,27 @@ public class DocumentManager {
 		List<WIPDocument> ret = new ArrayList<WIPDocument>();
 
 		while(rs.next())
-			ret.add(new WIPDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
-					rs.getString("title"), rs.getTimestamp("update_time").getTime()));
+			ret.add(getWIPDocumentFromResultSet(rs, u));
 
 		return ret;
+	}
+
+	private PublishedDocument getPublishedDocumentFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
+		return new PublishedDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
+				rs.getString("title"), rs.getTimestamp("update_time").getTime(), rs.getInt("vote_count"));
+	}
+
+	private WIPDocument getWIPDocumentFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
+		return new WIPDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
+                rs.getString("title"), rs.getTimestamp("update_time").getTime());
+	}
+
+	private Document getDocumentFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
+		if(rs.getBoolean("published_flag")) {
+			return getPublishedDocumentFromResultSet(rs, u);
+		} else {
+			return getWIPDocumentFromResultSet(rs, u);
+		}
 	}
 
 	private LinkedList<Revision> getRevisionsFromResultSet(ResultSet rs, Document d) throws SQLException {
@@ -172,6 +188,46 @@ public class DocumentManager {
 		}
 	}
 
+	/** Get a given Document by ID */
+	public Document getDocumentById(long id) throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM documents WHERE id = ?");
+		ps.setLong(1, id);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+			return getDocumentFromResultSet(rs, null);
+		} else {
+			throw new NoSuchObjectException("document " + id);
+		}
+	}
+
+	/** Get the parent document for a given Document. Null if there is no parent. */
+	public Document getParentDocument(Document document) throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT parent_document_id FROM document_parents WHERE document_id = ?");
+		ps.setLong(1, document.getID());
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+			return getDocumentById(rs.getLong("parent_document_id"));
+		} else {
+			return null;
+		}
+	}
+
+	/** Set the parent document for a given document. */
+	public void setParentDocument(Document d, Document parentDoc) throws SQLException, NoSuchObjectException {
+		if(getParentDocument(d) == null) {
+			PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_parents (document_id, parent_document_id) VALUES (?, ?)");
+			ps.setLong(1, d.getID());
+			ps.setLong(2, parentDoc.getID());
+			ps.executeUpdate();
+		} else {
+			PreparedStatement ps = m_Database.getConnection().prepareStatement("UPDATE document_parents SET parent_document_id = ? WHERE document_id = ?");
+			ps.setLong(1, parentDoc.getID());
+			ps.setLong(2, d.getID());
+			int affected_rows = ps.executeUpdate();
+			if(affected_rows < 1) throw new NoSuchObjectException("document " + d.getID());
+		}
+	}
+
 	/** Add a new document, either with no revisions or with a single revision based on another Document. */
 	public void createDocument(Document d) throws SQLException, IDAlreadySetException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
@@ -248,18 +304,6 @@ public class DocumentManager {
 
 		if(!rs.next()) throw new NoSuchObjectException("revision " + revision.getID());
 		return rs.getString("content");
-	}
-
-	/** Get the parent document for a given Document. Null if there is no parent. */
-	public Document getParentDoc(Document document) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/** Set the parent document for a given document. */
-	public void setParentDoc(Document d, Document parentDoc) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

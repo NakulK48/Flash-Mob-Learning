@@ -84,7 +84,7 @@ public class LoginManager {
 	
 	/** Modify a user, index by userId. */
 	public void modifyUser(User u) throws SQLException, NoSuchObjectException, DuplicateNameException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement("UPDATE users SET username = ?, password = ?, teacher_flag = ? WHERE id = ? LIMIT 1");
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("UPDATE users SET username = ?, password = ?, teacher_flag = ? WHERE id = ?");
 		ps.setString(1, u.name);
 		ps.setString(2, u.getEncryptedPassword());
 		ps.setBoolean(3, u instanceof Teacher); // TODO
@@ -104,7 +104,7 @@ public class LoginManager {
 
 	/** Set the login banner */
 	public void setLoginBanner(String banner) throws SQLException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement("UPDATE settings SET setting_value = ? WHERE setting_name = 'login_banner' LIMIT 1");
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("UPDATE settings SET setting_value = ? WHERE setting_name = 'login_banner'");
 		ps.setString(1, banner);
 		ps.executeUpdate();
 	}

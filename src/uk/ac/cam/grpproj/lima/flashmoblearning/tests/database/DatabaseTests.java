@@ -52,7 +52,7 @@ public class DatabaseTests {
         }
 
         for(String table : tables) {
-            Assert.assertEquals(table + " table should exist", true, database_tables.contains(table));
+            Assert.assertEquals(table + " table should exist", true, database_tables.contains(table) || database_tables.contains(table.toUpperCase()));
         }
     }
 

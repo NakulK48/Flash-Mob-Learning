@@ -1,4 +1,3 @@
-<%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -8,6 +7,10 @@
 <title>Home - Flash Mob Learning</title>
 </head>
 <body>
-
+	<%
+		//TODO: Database query
+	%>
+	<p2>Welcome, <%=session.getAttribute("id") %>!</p2>
+	<p2><a href="logout.jsp">logout</a></p2>
 </body>
 </html>

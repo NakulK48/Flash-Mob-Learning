@@ -254,36 +254,119 @@ public class DocumentManager {
 	}
 
 	/** List all tags. */
-	public Set<Tag> getTags() throws SQLException, NoSuchObjectException { return null; }
-	
+	public Set<Tag> getTags() throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM tags");
+		ResultSet rs = ps.executeQuery();
+		return getTagsFromResultSet(rs);
+	}
+
+	private Set<Tag> getTagsFromResultSet(ResultSet rs) throws SQLException {
+		Set<Tag> ret = new HashSet<Tag>();
+
+		while(rs.next())
+			ret.add(getTagFromResultSet(rs));
+
+		return ret;
+	}
+
+	private Tag getTagFromResultSet(ResultSet rs) throws SQLException {
+		return new Tag(rs.getLong("id"), rs.getString("name"), rs.getBoolean("banned_flag"));
+	}
+
 	/** List all tags which have documents (for browsing by tag). */
-	public Set<Tag> getTagsNotEmpty() throws SQLException, NoSuchObjectException { return null; }
+	public Set<Tag> getTagsNotEmpty() throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM tags WHERE reference_count > 0");
+		ResultSet rs = ps.executeQuery();
+		return getTagsFromResultSet(rs);
+	}
 	
 	/** List all tags which exist but have not been banned (for adding a tag). */
-	public Set<Tag> getTagsNotBanned() throws SQLException, NoSuchObjectException { return null; }
+	public Set<Tag> getTagsNotBanned() throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM tags WHERE banned_flag = false");
+		ResultSet rs = ps.executeQuery();
+		return getTagsFromResultSet(rs);
+	}
 	
 	/** Get tag by name */
-	public Tag getTag(String name) throws SQLException, NoSuchObjectException { return null; }
+	public Tag getTag(String name) throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM tags WHERE name = ?");
+		ps.setString(1, name);
+		ResultSet rs = ps.executeQuery();
+
+		if(rs.next()) {
+			return getTagFromResultSet(rs);
+		} else {
+			throw new NoSuchObjectException("tag " + name);
+		}
+	}
 
 	/** Create tag, or return an existing Tag of the same name, atomically. **/
-	public Tag createTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException { return null; }
+	public Tag createTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement
+				("INSERT INTO tags (name, banned_flag, reference_count) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+		ps.setString(1, tag.name);
+		ps.setBoolean(2, tag.getBanned());
+		ps.setLong(3, 0);
+		ps.executeUpdate();
+		ResultSet rs = ps.getGeneratedKeys();
+		if(rs.next())
+			return new Tag(rs.getLong(1), tag.name, tag.getBanned());
+		else
+			throw new NoSuchObjectException("failed to create tag " + tag.name);
+	}
 
 	/** Update a document's tags (stored separately) */
-	public void updateTags(Document d) throws SQLException, NoSuchObjectException {}
+	public void updateTags(Document d) throws SQLException, NoSuchObjectException {
+		for(Tag t : d.getTags()) {
+
+		}
+	}
 
 	/** Update a tag. I.e. it may go from banned to unbanned or vice versa. */
-	public void updateTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException {}
+	public void updateTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement
+				("UPDATE tags SET name = ?, banned_flag = ? where id = ?");
+		ps.setString(1, tag.name);
+		ps.setBoolean(2, tag.getBanned());
+		ps.setLong(3, tag.getID());
+		int affected_rows = ps.executeUpdate();
+		if(affected_rows < 1) throw new NoSuchObjectException("tag " + tag.getID());
+	}
 
 	/** Delete a tag. Database will delete references from all documents to this tag. */
-	public void deleteTag(Tag tag) throws SQLException, NoSuchObjectException {}
+	public void deleteTag(Tag tag) throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM tags WHERE id = ?");
+		ps.setLong(1, tag.getID());
+
+		int affected_rows = ps.executeUpdate();
+		if(affected_rows < 1) throw new NoSuchObjectException("tag " + tag.getID());
+	}
 
 	/** Delete all references from documents to a given tag. Will be called internally by
 	 * deleteTag() but also useful when a tag is banned. */
-	public void deleteTagReferences(Tag tag) throws SQLException, NoSuchObjectException {}
+	public void deleteTagReferences(Tag tag) throws SQLException, NoSuchObjectException {
+
+	}
 	
 	/** Add a (positive) vote on a given document. Updates the total vote count and score
-	 * on the document (by statically calling PublishedDocument.getScore(votes,...). */
-	public void addVote(User u, PublishedDocument d) throws SQLException, NoSuchObjectException {}
+	 * on the document (by statically calling PublishedDocument.getScore(votes,...).
+	 * Returns true if succesful, false if failed (user has already voted) */
+	public boolean addVote(User u, PublishedDocument d) throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO votes (user_id, document_id) VALUES (?, ?)");
+		ps.setLong(1, u.getID());
+		ps.setLong(2, d.getID());
+		try {
+			ps.executeUpdate();
+			ps = m_Database.getConnection().prepareStatement("UPDATE documents SET vote_count = vote_count + 1 WHERE id = ?");
+			ps.setLong(1, d.getID());
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			// duplicate entry - user has already voted!
+			if(e.getMessage().toLowerCase().contains("duplicate")) return false;
+			else throw e;
+		}
+	}
 
 	/** Get the content of a Revision. This may be kept separately and fetched 
 	 * lazily, given its size, and given that we mostly don't need all the 

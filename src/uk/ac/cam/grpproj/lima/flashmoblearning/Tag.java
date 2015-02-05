@@ -20,7 +20,7 @@ public class Tag {
 	
 	/** Create a tag and store it to the database */
 	public static Tag create(String name) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
-		Tag t = new Tag(name);
+		Tag t = new Tag(-1, name, false);
 		return DocumentManager.getInstance().createTag(t);
 	}
 
@@ -40,8 +40,10 @@ public class Tag {
 	}
 	
 	/** SHOULD ONLY BE CALLED BY DATABASE! */
-	public Tag(String n) {
-		name = n;
+	public Tag(long id, String n, boolean banned) {
+		this.name = n;
+		this.id = id;
+		this.banned = banned;
 		if(n == null) throw new NullPointerException(); // Fail early.
 	}
 	

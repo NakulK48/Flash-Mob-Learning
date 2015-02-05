@@ -31,12 +31,6 @@ public class Database {
 		return m_Instance;
 	}
 	
-	public synchronized static void realInit() throws ClassNotFoundException, SQLException, IOException {
-		boolean needOneTimeInit = 
-				Boolean.getBoolean("useMysql") ? init() : initLocal();
-		if(needOneTimeInit) oneTimeInit();
-	}
-	
 	private static final String DEFAULT_TEACHER_PASSWORD = "password";
 	private static final String LOGIN_PASSWORD_NAG = 
 			"Welcome to Flash Mob Learning! Please login to the account " +
@@ -44,65 +38,52 @@ public class Database {
 			"needed), change your password, and change this login banner to " +
 			"something like \"Welcome to coding at XYZ school! Please create " +
 			"an account with your real name.\".";
-	
-	private static void oneTimeInit() throws SQLException {
-		LoginManager lm = LoginManager.getInstance();
-		try {
-			User teacher = lm.createUser("Teacher", "", true);
-			teacher.setPassword(DEFAULT_TEACHER_PASSWORD);
-			lm.modifyUser(teacher);
-			lm.setLoginBanner(LOGIN_PASSWORD_NAG);
-			System.out.println("Created default user and set login banner");
-		} catch (DuplicateNameException e) {
-			throw new IllegalStateException("Duplicate name in spite of empty database?!", e);
-		} catch (NoSuchObjectException e) {
-			throw new IllegalStateException("Impossible setting up database: "+e, e);
-		}
-	}
-	
-	/** Create a database in a file. Will not be deleted on shutdown. Doesn't
-	 * require setting up mysql so convenient for testing higher level
-	 * functionality.
-	 */
-	public static boolean initLocal() throws ClassNotFoundException, SQLException, IOException {
-		Class.forName("org.hsqldb.jdbcDriver");
-		File f = new File(System.getProperty("user.home"),".flashmoblearning.hdb");
-		return init("jdbc:hsqldb:"+f+";sql.syntax_mys=true","SA","");
-	}
-	
-	/** Setup a database for a unit test. */
-	public static void initTest() throws ClassNotFoundException, SQLException, IOException {
-    	if(Boolean.getBoolean("testsUseMysql")) {
-    		init();
-    	} else {
-    		initTemp();
-    	}
-	}
-	
-	/** Setup a temporary hsqldb database, in a tempfile, initially empty, will
-	 * be deleted on shutdown. */
-	public static void initTemp() throws ClassNotFoundException, SQLException, IOException {
-		Class.forName("org.hsqldb.jdbcDriver");
-		File tmpFile = File.createTempFile("flashmoblearning", ".test.db");
-		tmpFile.deleteOnExit();
-		init("jdbc:hsqldb:"+tmpFile+";sql.syntax_mys=true","SA","");
-	}
-	
+
 	/** Initializes and tests a MySQL database connection, setting up the 
 	 * database if necessary, and exiting if it is incorrectly setup.
 	 * REQUIREMENTS: An external mysql server with username and password as above,
 	 * a database called flashmoblearning and appropriate permissions. **/
-	public static boolean init() throws ClassNotFoundException, SQLException {
-		Class.forName("com.mysql.jdbc.Driver");
-		return init(c_JDBCURL, c_Username, c_Password);
+	public static void init() throws ClassNotFoundException, SQLException {
+		if(Boolean.getBoolean("useHsqlDb")) {
+            Class.forName("org.hsqldb.jdbcDriver");
+            try {
+                File f = null;
+                if(Boolean.getBoolean("unitTests")) {
+                    f = File.createTempFile("flashmoblearning", ".test.db");
+                    f.deleteOnExit();
+                } else {
+                    f = new File(System.getProperty("user.home"),".flashmoblearning.hdb");
+                }
+                init("jdbc:hsqldb:"+f+";sql.syntax_mys=true","SA","");
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to create temporary JDBC database file.");
+            }
+        } else {
+            Class.forName("com.mysql.jdbc.Driver");
+            init(c_JDBCURL, c_Username, c_Password);
+        }
 	}
 
 	/** Portable setup from an arbitrary JDBC URL */
-	public static boolean init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
+	private static void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
 		Connection connection = DriverManager.getConnection(databaseURL, username, password);
-		boolean ret = setup(connection);
-		m_Instance = new Database(connection);
-		return ret;
+		boolean createUser = setup(connection);
+        m_Instance = new Database(connection);
+
+        if(createUser) {
+            LoginManager lm = LoginManager.getInstance();
+            try {
+                User teacher = lm.createUser("Teacher", "", true);
+                teacher.setPassword(DEFAULT_TEACHER_PASSWORD);
+                lm.modifyUser(teacher);
+                lm.setLoginBanner(LOGIN_PASSWORD_NAG);
+                System.out.println("Created default user and set login banner");
+            } catch (DuplicateNameException e) {
+                throw new IllegalStateException("Duplicate name in spite of empty database?!", e);
+            } catch (NoSuchObjectException e) {
+                throw new IllegalStateException("Impossible setting up database: "+e, e);
+            }
+        }
 	}
 	
 	private Database(Connection connection) throws SQLException {
@@ -149,8 +130,9 @@ public class Database {
 	/** Creates all necessary tables if they do not exist.
 	 * @return True if we created tables. **/
 	private static boolean setup(Connection connection) throws SQLException {
-		boolean ret = false;
-		String create_documents = "CREATE TABLE documents (\n" +
+        boolean ret = false;
+
+        String create_documents = "CREATE TABLE documents (\n" +
 				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
 				"  user_id bigint NOT NULL,\n" +
 				"  type int NOT NULL,\n" +
@@ -262,7 +244,8 @@ public class Database {
 			statement.execute(create_users);
 			statement.execute(create_votes);
 			statement.execute(create_settings);
-			ret = true;
+
+            ret = true;
 		}
 
 		// Checks and creates login banner if it does not exist.
@@ -287,8 +270,7 @@ public class Database {
 	}
 	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
-		realInit();
+		init();
 		System.out.println("Success!");
 	}
-
 }

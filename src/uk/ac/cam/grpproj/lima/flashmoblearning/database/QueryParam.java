@@ -46,6 +46,8 @@ public class QueryParam {
 	public String updateQuery(String sql) {
 		if(sortField == SortField.TIME) {
 			sql += " ORDER BY update_time " + (sortOrder == SortOrder.ASCENDING ? "ASCENDING" : "DESCENDING");
+		} else if(sortField == SortField.VOTES) {
+			sql += " ORDER BY vote_count " + (sortOrder == SortOrder.ASCENDING ? "ASCENDING" : "DESCENDING");
 		}
 		if(limit > 0) sql += " LIMIT " + limit;
 		if(offset > 0) sql += " OFFSET " + offset;
@@ -59,7 +61,9 @@ public class QueryParam {
 		// Sort by creation time - limited to Documents.
 		TIME,	
 		// Sorts by popularity - limited to PublishedDocuments.
-		POPULARITY
+		POPULARITY,
+		// Sorts by votes - limited to PublishedDocuments.
+		VOTES
 		
 	}
 

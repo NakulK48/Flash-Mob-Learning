@@ -13,7 +13,7 @@ public class Revision {
 	/** This is a revision of a specific document. It will be deleted when the 
 	 * document is deleted. This makes housekeeping considerably easier. */
 	public final Document document;
-	/** Creation time */
+	/** Creation time. Not included in equals/hashCode because SQL truncates it. */
 	public final Date creationTime;
 	private final long id;
 	
@@ -55,8 +55,6 @@ public class Revision {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ creationTime.hashCode();
-		result = prime * result
 				+ document.hashCode();
 		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
@@ -73,7 +71,6 @@ public class Revision {
 		Revision other = (Revision) obj;
 		if (id != other.id)
 			return false;
-		if(!creationTime.equals(other.creationTime)) return false;
 		return document.equals(other.document);
 	}
 

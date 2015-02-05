@@ -21,7 +21,7 @@ public class DocumentManagerTests {
     private User m_TestUser;
     private User m_TestUser2;
     private WIPDocument m_WIP_Document;
-    private int m_Published_ID;
+    private PublishedDocument m_Published_Document;
     private Tag m_UsedTag;
     private Tag m_BannedTag;
 
@@ -43,6 +43,7 @@ public class DocumentManagerTests {
         m_TestUser2 = LoginManager.getInstance().createUser("test_user2", "test_password2", false);
 
         m_WIP_Document = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, c_TestDocumentTitle + " (WIP)", 0);
+        m_Published_Document = new PublishedDocument(-1, DocumentType.PLAINTEXT, m_TestUser, c_TestDocumentTitle + " (PUBLISHED)", 0, 0);
 
         /**
          * DOCUMENTS
@@ -70,7 +71,7 @@ public class DocumentManagerTests {
         ps.setInt(4, 1);
         ps.executeUpdate();
         rs = ps.getGeneratedKeys(); rs.next();
-        m_Published_ID = rs.getInt(1);
+        m_Published_Document.setID(rs.getInt(1));
 
         ps.setLong(1, m_TestUser2.getID());
         ps.executeUpdate();
@@ -92,7 +93,7 @@ public class DocumentManagerTests {
 
         ps = m_Connection.prepareStatement("INSERT INTO document_parents (document_id, parent_document_id) VALUES (?, ?)");
         ps.setLong(1, m_WIP_Document.getID());
-        ps.setLong(2, m_Published_ID);
+        ps.setLong(2, m_Published_Document.getID());
         ps.executeUpdate();
 
         /**
@@ -108,7 +109,7 @@ public class DocumentManagerTests {
         ps.executeUpdate(); // revision 3
 
         // Insert published revisions
-        ps.setLong(1, m_Published_ID);
+        ps.setLong(1, m_Published_Document.getID());
         ps.setString(2, c_TestRevisionContent + " (PUBLISHED)");
         ps.executeUpdate();
 
@@ -148,7 +149,7 @@ public class DocumentManagerTests {
         // Insert tag <-> document pair for published
         ps = m_Connection.prepareStatement("INSERT INTO document_tags (tag_id, document_id) VALUES (?, ?)");
         ps.setInt(1, usedtag_ID);
-        ps.setInt(2, m_Published_ID);
+        ps.setLong(2, m_Published_Document.getID());
         ps.executeUpdate();
 
         // Insert tag <-> document pair for featured
@@ -162,7 +163,7 @@ public class DocumentManagerTests {
         // Add a vote for our published document
         ps = m_Connection.prepareStatement("INSERT INTO votes (user_id, document_id) VALUES (?, ?)");
         ps.setLong(1, m_TestUser.getID());
-        ps.setLong(2, m_Published_ID);
+        ps.setLong(2, m_Published_Document.getID());
     }
 
     @After
@@ -287,12 +288,12 @@ public class DocumentManagerTests {
     @Test
     public void testGetParentDoc() throws Exception {
         Document parentDoc = DocumentManager.getInstance().getParentDocument(m_WIP_Document);
-        Assert.assertEquals("Parent should be as defined in test", m_Published_ID, parentDoc.getID());
+        Assert.assertEquals("Parent should be as defined in test", m_Published_Document.getID(), parentDoc.getID());
     }
 
     @Test
     public void testSetParentDoc() throws Exception {
-        Document published = DocumentManager.getInstance().getDocumentById(m_Published_ID);
+        Document published = DocumentManager.getInstance().getDocumentById(m_Published_Document.getID());
         DocumentManager.getInstance().setParentDocument(published, m_WIP_Document);
         Document parentDoc = DocumentManager.getInstance().getParentDocument(published);
         Assert.assertEquals("Parent should be as defined in test", m_WIP_Document.getID(), parentDoc.getID());
@@ -317,6 +318,12 @@ public class DocumentManagerTests {
         Set<Tag> tagSet = DocumentManager.getInstance().getTagsNotBanned();
         Tag[] tags = tagSet.toArray(new Tag[tagSet.size()]);
         Assert.assertEquals("Expecting 2 tags", 2, tags.length);
+    }
+
+    @Test
+    public void testGetTagsForDocument() throws Exception {
+        Set<Tag> tagSet = DocumentManager.getInstance().getTags(m_Published_Document);
+        Assert.assertEquals("Expecting 1 tag", 1, tagSet.size());
     }
 
     @Test

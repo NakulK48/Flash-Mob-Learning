@@ -300,6 +300,14 @@ public class DocumentManager {
 		}
 	}
 
+	/** Get all tags for a particular document */
+	public Set<Tag> getTags(Document document) throws SQLException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM document_tags INNER JOIN tags on document_tags.tag_id = tags.id WHERE document_id = ?");
+		ps.setLong(1, document.getID());
+		ResultSet rs = ps.executeQuery();
+		return getTagsFromResultSet(rs);
+	}
+
 	/** Create tag, or return an existing Tag of the same name, atomically. **/
 	public Tag createTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
@@ -356,7 +364,7 @@ public class DocumentManager {
 		ps.setLong(1, u.getID());
 		ps.setLong(2, d.getID());
 		ps.executeUpdate();
-		
+
 		ps = m_Database.getConnection().prepareStatement("UPDATE documents SET vote_count = vote_count + 1 WHERE id = ?");
 		ps.setLong(1, d.getID());
 		ps.executeUpdate();
@@ -374,5 +382,4 @@ public class DocumentManager {
 		if(!rs.next()) throw new NoSuchObjectException("revision " + revision.getID());
 		return rs.getString("content");
 	}
-
 }

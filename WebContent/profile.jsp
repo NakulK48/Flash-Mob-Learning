@@ -41,10 +41,11 @@
 	}
 	
 	LinkedList<PublishedDocument> thisUserDocuments = null;
+	User profileUser;
 
 	try
 	{
-		User profileUser = LoginManager.getInstance().getUser(userID);
+		profileUser = LoginManager.getInstance().getUser(userID);
 		QueryParam p;
 		if (sortType == "new")
 		{
@@ -73,7 +74,7 @@
 		<a href='<%="profile.jsp?id=" + userIDString + "&sort=new"%>'><div class="order">New</div></a>
 	</div>
 
-<h1><% //username %></h1>
+<h1><%= profileUser.name %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
 <%
 	//TODO: output list of documents: upvote button, votes, title, age

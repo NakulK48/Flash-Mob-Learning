@@ -22,7 +22,7 @@
 </head>
 <body>
 <%
-	String tagIDString = request.getParameter("id");
+	String tagName = request.getParameter("name");
 	
 	String sortType = request.getParameter("sort");
 	if (sortType == null ) sortType = "new";
@@ -32,7 +32,7 @@
 
 	try
 	{
-		Tag tag = DocumentManager.getInstance().getTag(tagIDString);
+		Tag tag = DocumentManager.getInstance().getTag(tagName);
 		QueryParam p;
 		if (sortType == "new")
 		{
@@ -57,11 +57,11 @@
 %>
 
 	<div id="orderHolder">
-		<a href='<%="tag.jsp?id=" + tagIDString + "&sort=top"%>'><div class="order">Top</div></a>
-		<a href='<%="tag.jsp?id=" + tagIDString + "&sort=new"%>'><div class="order">New</div></a>
+		<a href='<%="tag.jsp?id=" + tagName + "&sort=top"%>'><div class="order">Top</div></a>
+		<a href='<%="tag.jsp?id=" + tagName + "&sort=new"%>'><div class="order">New</div></a>
 	</div>
 
-<h1><% //tagname %></h1>
+<h1><%= tagName %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
 <%
 	//TODO: output list of documents: upvote button, votes, title, age

@@ -94,7 +94,7 @@
 		//TODO: query Tag database for matching names
 		Tag tag = DocumentManager.getInstance().getTag(searchQuery);
 		String tagID = tag.name;
-		out.println("<a class='searchResult' href='../tag.jsp?id='" + tagID + "'>" + tag.name + "</a>");		
+		out.println("<a class='searchResult' href='../tag.jsp?name='" + tagID + "'>" + tag.name + "</a>");		
 		
 	}
 %>

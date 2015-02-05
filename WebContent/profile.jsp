@@ -1,10 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*"%>
+    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*,uk.ac.cam.grpproj.lima.flashmoblearning.database.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Profile - Flash Mob Learning</title>
+<%!
+	public void jspInit()
+	{
+		try
+		{
+			Database.realInit();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Something went wrong! Try reloading the page.");
+			return;
+		}
+	}
+%>
 </head>
 <body>
 <%

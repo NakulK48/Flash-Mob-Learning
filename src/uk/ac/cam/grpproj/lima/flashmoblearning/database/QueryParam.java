@@ -43,7 +43,7 @@ public class QueryParam {
 		this.sortOrder = sortOrder;
 	}
 
-	protected String updateQuery(String sql) {
+	public String updateQuery(String sql) {
 		if(sortField == SortField.TIME) {
 			sql += " ORDER BY update_time " + (sortOrder == SortOrder.ASCENDING ? "ASCENDING" : "DESCENDING");
 		}

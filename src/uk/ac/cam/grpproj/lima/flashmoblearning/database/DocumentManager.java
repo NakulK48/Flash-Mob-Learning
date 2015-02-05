@@ -322,11 +322,14 @@ public class DocumentManager {
 			throw new NoSuchObjectException("failed to create tag " + tag.name);
 	}
 
-	/** Update a document's tags (stored separately) */
-	public void updateTags(Document d) throws SQLException, NoSuchObjectException {
-		for(Tag t : d.getTags()) {
+	/** Add a tag to a document. Throws if the tag is already attached. */
+	public void addTag(Document doc, Tag tag) throws SQLException, NoSuchObjectException {
+		// FIXME implement
+	}
 
-		}
+	/** Remove a tag from a document. Throws if the tag is not present. */
+	public void deleteTag(Document doc, Tag tag) throws SQLException, NoSuchObjectException {
+		// FIXME implement
 	}
 
 	/** Update a tag. I.e. it may go from banned to unbanned or vice versa. */

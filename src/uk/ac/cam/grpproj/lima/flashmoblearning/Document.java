@@ -18,9 +18,6 @@ public class Document {
 	/** Time and date of creation of the document */
 	public final long creationTime;
 
-	/** Tags associated with this document. Can be modified, when modified we update the
-	 * database automatically. Non-null. */
-	private Set<Tag> tags;
 	/** Every work-in-progress document has a unique ID which never changes.
 	 * This must be set by the database when the document is first stored. It cannot be changed
 	 * after that point. */
@@ -41,7 +38,6 @@ public class Document {
 		this.id = id;
 		this.docType = docType;
 		this.owner = owner;
-		this.tags = new HashSet<Tag>();
 		this.title = title;
 		this.creationTime = time;
 	}
@@ -61,9 +57,11 @@ public class Document {
 		}
 	}
 
-	/** Get the current list of tags. Read-only. */
-	public synchronized Set<Tag> getTags() {
-		return Collections.unmodifiableSet(new HashSet<Tag>(tags));
+	/** Get the current list of tags. Read-only. 
+	 * @throws SQLException 
+	 * @throws NotInitializedException */
+	public synchronized Set<Tag> getTags() throws NotInitializedException, SQLException {
+		return Collections.unmodifiableSet(DocumentManager.getInstance().getTags(this));
 	}
 	
 	/** Add a tag.
@@ -71,13 +69,8 @@ public class Document {
 	 * @throws NoSuchObjectException If the Document has not been stored.
 	 * @throws SQLException 
 	 * @throws NotInitializedException If the database has not been initialised. */
-	public boolean addTag(Tag t) throws NotInitializedException, SQLException, NoSuchObjectException {
-		boolean ret;
-		synchronized(this) {
-			ret = tags.add(t);
-		}
-		DocumentManager.getInstance().updateTags(this);
-		return ret;
+	public void addTag(Tag t) throws NotInitializedException, SQLException, NoSuchObjectException {
+		DocumentManager.getInstance().addTag(this, t);
 	}
 	
 	/** Remove a tag.
@@ -85,13 +78,8 @@ public class Document {
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public boolean deleteTag(Tag t) throws NotInitializedException, SQLException, NoSuchObjectException {
-		boolean ret;
-		synchronized(this) {
-			ret = tags.remove(t);
-		}
-		DocumentManager.getInstance().updateTags(this);
-		return ret;
+	public void deleteTag(Tag t) throws NotInitializedException, SQLException, NoSuchObjectException {
+		DocumentManager.getInstance().deleteTag(this, t);
 	}
 	
 	/** Get the title of the document */

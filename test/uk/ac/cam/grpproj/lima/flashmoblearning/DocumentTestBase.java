@@ -113,8 +113,51 @@ public abstract class DocumentTestBase {
     	DocumentManager.getInstance().setParentDocument(doc2, doc);
     	Assert.assertNull(DocumentManager.getInstance().getParentDocument(doc));
     	Assert.assertEquals(DocumentManager.getInstance().getParentDocument(doc2), doc);
-    	DocumentManager.getInstance().setParentDocument(doc2, null);
+    }
+    
+    @Test
+    public void testNoResetNullParentDocument() throws NotInitializedException, SQLException, NoSuchObjectException, IDAlreadySetException {
+    	Document doc = create(-1, docType, owner, titleSimple, 
+    			System.currentTimeMillis());
+    	DocumentManager.getInstance().createDocument(doc);
+    	Assert.assertNull(DocumentManager.getInstance().getParentDocument(doc));
+    	Document doc2 = create(-1, docType, owner, titleSimple2, 
+    			System.currentTimeMillis());
+    	DocumentManager.getInstance().createDocument(doc2);
     	Assert.assertNull(DocumentManager.getInstance().getParentDocument(doc2));
+    	DocumentManager.getInstance().setParentDocument(doc2, doc);
+    	Assert.assertNull(DocumentManager.getInstance().getParentDocument(doc));
+    	Assert.assertEquals(DocumentManager.getInstance().getParentDocument(doc2), doc);
+    	try {
+    		DocumentManager.getInstance().setParentDocument(doc2, null);
+    		Assert.fail("Should throw here");
+    	} catch (NullPointerException e) {
+    		// FIXME this should be an SQL error.
+    	}
+    }
+    
+    @Test
+    public void testNoResetParentDocument() throws NotInitializedException, SQLException, NoSuchObjectException, IDAlreadySetException {
+    	Document doc = create(-1, docType, owner, titleSimple, 
+    			System.currentTimeMillis());
+    	DocumentManager.getInstance().createDocument(doc);
+    	Assert.assertNull(DocumentManager.getInstance().getParentDocument(doc));
+    	Document doc2 = create(-1, docType, owner, titleSimple2, 
+    			System.currentTimeMillis());
+    	DocumentManager.getInstance().createDocument(doc2);
+    	Assert.assertNull(DocumentManager.getInstance().getParentDocument(doc2));
+    	DocumentManager.getInstance().setParentDocument(doc2, doc);
+    	Assert.assertNull(DocumentManager.getInstance().getParentDocument(doc));
+    	Assert.assertEquals(DocumentManager.getInstance().getParentDocument(doc2), doc);
+    	Document doc3 = create(-1, docType, owner, titleSimple2, 
+    			System.currentTimeMillis());
+    	DocumentManager.getInstance().createDocument(doc3);
+    	try {
+    		DocumentManager.getInstance().setParentDocument(doc2, doc3);
+    		Assert.fail("Should throw here");
+    	} catch (SQLException e) {
+    		// OK.
+    	}
     }
     
     @Test

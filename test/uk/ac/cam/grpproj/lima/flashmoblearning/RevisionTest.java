@@ -41,6 +41,7 @@ public class RevisionTest {
 		Revision r = Revision.createRevision(doc, new Date(), payloadSimple);
 		Assert.assertNotSame(r.getID(), -1);
 		Assert.assertEquals(r, doc.getLastRevision());
+		Assert.assertEquals(payloadSimple, r.getContent());
 		List<Revision> revisions = doc.getRevisions(QueryParam.UNSORTED);
 		Assert.assertEquals(1, revisions.size());
 		Assert.assertEquals(r, revisions.get(0));
@@ -53,6 +54,7 @@ public class RevisionTest {
 		Revision r = Revision.createRevision(doc, new Date(), payloadUnicode);
 		Assert.assertNotSame(r.getID(), -1);
 		Assert.assertEquals(r, doc.getLastRevision());
+		Assert.assertEquals(payloadUnicode, r.getContent());
 		List<Revision> revisions = doc.getRevisions(QueryParam.UNSORTED);
 		Assert.assertEquals(1, revisions.size());
 		Assert.assertEquals(r, revisions.get(0));

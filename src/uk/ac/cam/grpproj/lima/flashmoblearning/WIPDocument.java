@@ -40,5 +40,9 @@ public class WIPDocument extends Document {
 		Revision.createRevision(d, new Date(), content);
 		return d;
 	}
+	
+	public void addRevision(Date d, String content) throws NotInitializedException, SQLException, NoSuchObjectException {
+		super.addRevision(d, content);
+	}
 
 }

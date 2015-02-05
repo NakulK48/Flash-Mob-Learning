@@ -129,7 +129,7 @@ public class Document {
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public void addRevision(Date d, String content) throws NotInitializedException, SQLException, NoSuchObjectException {
+	protected void addRevision(Date d, String content) throws NotInitializedException, SQLException, NoSuchObjectException {
 		Revision.createRevision(this, d, content);
 	}
 	

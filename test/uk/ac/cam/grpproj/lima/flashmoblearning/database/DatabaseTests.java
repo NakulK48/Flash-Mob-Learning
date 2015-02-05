@@ -1,4 +1,4 @@
-package uk.ac.cam.grpproj.lima.flashmoblearning.tests.database;
+package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
 import junit.framework.Assert;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.Database;

@@ -1,6 +1,7 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
@@ -29,7 +30,9 @@ public class WIPDocument extends Document {
 		PublishedDocument d = new PublishedDocument(this);
 		try {
 			DocumentManager.getInstance().createDocument(d);
-			DocumentManager.getInstance().setParentDocument(d, getParentDocument());
+			Document doc = getParentDocument();
+			if(doc != null)
+				DocumentManager.getInstance().setParentDocument(d, getParentDocument());
 		} catch (IDAlreadySetException e) {
 			throw new IllegalStateException("ID already set but just created?!");
 		}

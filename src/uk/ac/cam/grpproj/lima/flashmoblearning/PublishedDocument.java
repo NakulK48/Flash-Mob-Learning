@@ -68,7 +68,9 @@ public class PublishedDocument extends Document{
 		String content = this.getLastRevision().getContent();
 		try {
 			DocumentManager.getInstance().createDocument(d);
-			DocumentManager.getInstance().setParentDocument(d, this);
+			Document doc = getParentDocument();
+			if(doc != null)
+				DocumentManager.getInstance().setParentDocument(d, getParentDocument());
 		} catch (IDAlreadySetException e) {
 			throw new IllegalStateException("ID already set but just created?!");
 		}

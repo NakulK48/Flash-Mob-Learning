@@ -45,9 +45,9 @@ public class QueryParam {
 
 	public String updateQuery(String sql) {
 		if(sortField == SortField.TIME) {
-			sql += " ORDER BY update_time " + (sortOrder == SortOrder.ASCENDING ? "ASCENDING" : "DESCENDING");
+			sql += " ORDER BY update_time " + (sortOrder == SortOrder.ASCENDING ? "ASC" : "DESC");
 		} else if(sortField == SortField.VOTES) {
-			sql += " ORDER BY vote_count " + (sortOrder == SortOrder.ASCENDING ? "ASCENDING" : "DESCENDING");
+			sql += " ORDER BY vote_count " + (sortOrder == SortOrder.ASCENDING ? "ASC" : "DESC");
 		}
 		if(limit > 0) sql += " LIMIT " + limit;
 		if(offset > 0) sql += " OFFSET " + offset;

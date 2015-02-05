@@ -189,6 +189,13 @@ public class DocumentManagerTests {
     }
 
     @Test
+    public void testCanGetSortedWorkInProgressByUser() throws Exception {
+        List<WIPDocument> wip = DocumentManager.getInstance().getWorkInProgressByUser(m_TestUser, new QueryParam(0, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING));
+        Assert.assertEquals("Expect 1 WIP document", 1, wip.size());
+        Assert.assertEquals("Expect correct WIP title", c_TestDocumentTitle + " (WIP)", wip.get(0).getTitle());
+    }
+
+    @Test
     public void testGetPublishedByTag() throws Exception {
         Tag tag = DocumentManager.getInstance().getTag(c_TestTagTitle + " (USED)");
         List<PublishedDocument> published = DocumentManager.getInstance().getPublishedByTag(tag, QueryParam.UNSORTED);

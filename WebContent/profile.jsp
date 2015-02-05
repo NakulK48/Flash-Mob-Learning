@@ -10,7 +10,7 @@
 	{
 		try
 		{
-			Database.realInit();
+			Database.init();
 		}
 		catch (Exception e)
 		{

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*, java.util.LinkedList"%>
+    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*,uk.ac.cam.grpproj.lima.flashmoblearning.database.*,java.util.LinkedList"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -8,27 +8,31 @@
 <title>Hub - Flash Mob Learning</title>
 <link rel="stylesheet" type="text/css" href="HubStyle.css">
 <%!
-	public void jspInit()
+ 	public void jspInit()
 	{
 		try
 		{
-			Database.realInit();
+			Database.init();
 		}
 		catch (Exception e)
 		{
 			System.out.println("Something went wrong! Try reloading the page.");
 			return;
 		}
-	}
+	} 
 %>
 </head>
 <body>
 <%
-/*  	Hub hub = new Hub();
-	SortType st = SortType.BEST;
-	hub.sort(st);
+  	//Hub hub = new Hub();
+
+	QueryParam p = new QueryParam(25, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+	LinkedList<PublishedDocument> subs = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
 	
-	LinkedList<PublishedDocument> subs = hub.submissions;  */
+	
+	SortType st = SortType.BEST;
+	
+	 //TODO: put something here
 	
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
 	String doctype = request.getParameter("doctype"); //browsing text or skulpt?
@@ -47,18 +51,10 @@
 		<td class='heading' id='ageHeading'></td>
 	</tr>
 	<%
-
-			
-/*   	
-		int sofar = 0; //how many submissions have been printed on the page?
 	
 		for (PublishedDocument pd : subs)
 		{
-			if (sofar >= 25)
-			{
-				break;
-			}
-			
+
 			String ageString;
 			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
 			if (ageInHours < 1) ageString = "Less than an hour ago";
@@ -84,10 +80,9 @@
 			"</tr>"; 
 			
 			out.println(entry);
-			
-			sofar++;
 		} 
-		 */
+		
+		 /*
 		String entry = 
 		"<tr class='upperRow'>" + 
 		"<td class='upvote'><form method='post' action='hub.jsp'><button name='upvote12345'>Upvote</button></form></td>" + //upvote
@@ -129,6 +124,7 @@
 		"</tr>"; 
 		
 		out.println(entry3);
+		*/
 	%>
 	
 	

@@ -22,8 +22,8 @@
 </head>
 <body>
 <%
-	long userID = 0;
-	String userIDString = request.getParameter("id");
+	long tagID = 0;
+	String tagIDString = request.getParameter("id");
 	
 	String sortType = request.getParameter("sort");
 	if (sortType == null ) sortType = "new";
@@ -32,19 +32,19 @@
 	
 	try
 	{
-		userID = Long.parseLong(userIDString);	
+		tagID = Long.parseLong(tagIDString);	
 	}
 	catch (NumberFormatException e)
 	{
-		out.println("<p class='error'>This user doesn't seem to exist!</p>");
+		out.println("<p class='error'>This tag doesn't seem to exist!</p>");
 		return;
 	}
 	
-	LinkedList<PublishedDocument> thisUserDocuments = null;
+	LinkedList<PublishedDocument> thistagDocuments = null;
 
 	try
 	{
-		User profileUser = LoginManager.getInstance().getUser(userID);
+		Tag profiletag = DocumentManager.getInstance().getTag(tagID);
 		QueryParam p;
 		if (sortType == "new")
 		{
@@ -56,12 +56,12 @@
 			p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 		}
 
-		thisUserDocuments = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublishedByUser(profileUser, p);
+		thistagDocuments = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTag(profiletag, p);
 	}
 	
 	catch (Exception e)
 	{
-		out.println("<p class='error'>This user doesn't seem to exist!</p>");
+		out.println("<p class='error'>This tag doesn't seem to exist!</p>");
 		return;
 	}
 	
@@ -69,15 +69,15 @@
 %>
 
 	<div id="orderHolder">
-		<a href='<%="profile.jsp?id=" + userIDString + "&sort=top"%>'><div class="order">Top</div></a>
-		<a href='<%="profile.jsp?id=" + userIDString + "&sort=new"%>'><div class="order">New</div></a>
+		<a href='<%="profile.jsp?id=" + tagIDString + "&sort=top"%>'><div class="order">Top</div></a>
+		<a href='<%="profile.jsp?id=" + tagIDString + "&sort=new"%>'><div class="order">New</div></a>
 	</div>
 
-<h1><% //username %></h1>
+<h1><% //tagname %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
 <%
 	//TODO: output list of documents: upvote button, votes, title, age
-	for (PublishedDocument pd : thisUserDocuments)
+	for (PublishedDocument pd : thistagDocuments)
 	{
 		String ageString;
 		int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);

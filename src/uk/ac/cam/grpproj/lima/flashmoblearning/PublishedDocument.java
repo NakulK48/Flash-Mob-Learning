@@ -65,14 +65,7 @@ public class PublishedDocument extends Document{
 	 * @throws NotInitializedException */
 	public WIPDocument fork(User newOwner) throws NotInitializedException, SQLException, NoSuchObjectException {
 		WIPDocument d = new WIPDocument(this, newOwner);
-		String content = this.getLastRevision().getContent();
-		try {
-			DocumentManager.getInstance().createDocument(d);
-			DocumentManager.getInstance().setParentDocument(d, this);
-		} catch (IDAlreadySetException e) {
-			throw new IllegalStateException("ID already set but just created?!");
-		}
-		Revision.createRevision(d, new Date(), content);
+		copyTo(d, this);
 		return d;
 	}
 	

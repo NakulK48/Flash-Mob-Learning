@@ -147,7 +147,26 @@ public class Document {
 	public void setParentDocument(Document parent) throws SQLException, NoSuchObjectException {
 		DocumentManager.getInstance().setParentDocument(this, parent);
 	}
-
+	
+	/** Copy the last revision, tags and any other mutable metadata to a new 
+	 * document. Used by fork() and publish().
+	 * @param d A new document which hasn't been stored yet.
+	 * @throws NoSuchObjectException 
+	 * @throws SQLException 
+	 * @throws NotInitializedException 
+	 */
+	protected void copyTo(Document d, Document newParent) throws NotInitializedException, SQLException, NoSuchObjectException {
+		String content = this.getLastRevision().getContent();
+		try {
+			DocumentManager.getInstance().createDocument(d);
+			if(newParent != null)
+				DocumentManager.getInstance().setParentDocument(d, newParent);
+		} catch (IDAlreadySetException e) {
+			throw new IllegalStateException("ID already set but just created?!");
+		}
+		Revision.createRevision(d, new Date(), content);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

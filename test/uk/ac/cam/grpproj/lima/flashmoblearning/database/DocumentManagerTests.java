@@ -10,11 +10,9 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class DocumentManagerTests {
 
@@ -396,12 +394,9 @@ public class DocumentManagerTests {
         Assert.assertEquals("Featured document has 1 vote", 1, featured.getVotes());
     }
 
-    @Test
+    @Test(expected=SQLException.class)
     public void testAddTwoVotes() throws Exception {
-        boolean vote1 = DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0));
-        boolean vote2 = DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0));
-
-        Assert.assertEquals("First vote succeeds", true, vote1);
-        Assert.assertEquals("Second vote fails", false, vote2);
+        DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0));
+        DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0));
     }
 }

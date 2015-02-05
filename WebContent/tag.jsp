@@ -57,14 +57,13 @@
 %>
 
 	<div id="orderHolder">
-		<a href='<%="tag.jsp?id=" + tagName + "&sort=top"%>'><div class="order">Top</div></a>
-		<a href='<%="tag.jsp?id=" + tagName + "&sort=new"%>'><div class="order">New</div></a>
+		<a href='<%="tag.jsp?name=" + tagName + "&sort=top"%>'><div class="order">Top</div></a>
+		<a href='<%="tag.jsp?name=" + tagName + "&sort=new"%>'><div class="order">New</div></a>
 	</div>
 
 <h1><%= tagName %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
 <%
-	//TODO: output list of documents: upvote button, votes, title, age
 	for (PublishedDocument pd : thisTagDocuments)
 	{
 		String ageString;

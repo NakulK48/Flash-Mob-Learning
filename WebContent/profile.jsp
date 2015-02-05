@@ -77,7 +77,6 @@
 <h1><%= profileUser.name %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
 <%
-	//TODO: output list of documents: upvote button, votes, title, age
 	for (PublishedDocument pd : thisUserDocuments)
 	{
 		String ageString;

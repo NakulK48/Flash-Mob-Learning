@@ -285,5 +285,10 @@ public class Database {
 		}
 		return ret;
 	}
+	
+	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
+		realInit();
+		System.out.println("Success!");
+	}
 
 }

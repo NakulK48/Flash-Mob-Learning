@@ -323,13 +323,21 @@ public class DocumentManager {
 	}
 
 	/** Add a tag to a document. Throws if the tag is already attached. */
-	public void addTag(Document doc, Tag tag) throws SQLException, NoSuchObjectException {
-		// FIXME implement
+	public void addTag(Document doc, Tag tag) throws SQLException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_tags (tag_id, document_id) VALUES (?, ?)");
+		ps.setLong(1, tag.getID());
+		ps.setLong(2, doc.getID());
+		ps.executeUpdate();
 	}
 
 	/** Remove a tag from a document. Throws if the tag is not present. */
 	public void deleteTag(Document doc, Tag tag) throws SQLException, NoSuchObjectException {
-		// FIXME implement
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM document_tags WHERE tag_id = ? AND document_id = ?");
+		ps.setLong(1, tag.getID());
+		ps.setLong(2, doc.getID());
+
+		int affected_rows = ps.executeUpdate();
+		if(affected_rows < 1) throw new NoSuchObjectException("tag " + tag.getID() + " on " + doc.getID());
 	}
 
 	/** Update a tag. I.e. it may go from banned to unbanned or vice versa. */

@@ -339,9 +339,8 @@ public class DocumentManagerTests {
     }
 
     @Test
-    public void testUpdateTags() throws Exception {
-        m_WIP_Document.addTag(DocumentManager.getInstance().getTag(c_TestTagTitle + " (UNUSED)"));
-        DocumentManager.getInstance().updateTags(m_WIP_Document);
+    public void testAddTagToDocument() throws Exception {
+        DocumentManager.getInstance().addTag(m_WIP_Document, m_BannedTag);
 
         Set<Tag> tagSet = DocumentManager.getInstance().getTagsNotEmpty();
         Tag[] tags = tagSet.toArray(new Tag[tagSet.size()]);
@@ -349,6 +348,14 @@ public class DocumentManagerTests {
 
         List<WIPDocument> retrieved = DocumentManager.getInstance().getWorkInProgressByUser(m_TestUser, QueryParam.UNSORTED);
         Assert.assertEquals("Expected retrieved document with tag", 1, retrieved.get(0).getTags().size());
+    }
+
+    @Test
+    public void testDeleteTagFromDocument() throws Exception {
+        DocumentManager.getInstance().deleteTag(m_Published_Document, m_UsedTag);
+
+        List<PublishedDocument> retrieved = DocumentManager.getInstance().getPublishedByTitle(m_Published_Document.getTitle(), QueryParam.UNSORTED);
+        Assert.assertEquals("Expected retrieved document with no tags", 0, retrieved.get(0).getTags().size());
     }
 
     @Test

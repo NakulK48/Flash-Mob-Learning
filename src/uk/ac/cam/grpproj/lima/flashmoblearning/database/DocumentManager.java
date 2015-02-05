@@ -275,7 +275,7 @@ public class DocumentManager {
 
 	/** List all tags which have documents (for browsing by tag). */
 	public Set<Tag> getTagsNotEmpty() throws SQLException, NoSuchObjectException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM tags WHERE reference_count > 0");
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM tags INNER JOIN document_tags on document_tags.tag_id = tags.id GROUP BY tags.id");
 		ResultSet rs = ps.executeQuery();
 		return getTagsFromResultSet(rs);
 	}
@@ -311,10 +311,9 @@ public class DocumentManager {
 	/** Create tag, or return an existing Tag of the same name, atomically. **/
 	public Tag createTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
-				("INSERT INTO tags (name, banned_flag, reference_count) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+				("INSERT INTO tags (name, banned_flag) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
 		ps.setString(1, tag.name);
 		ps.setBoolean(2, tag.getBanned());
-		ps.setLong(3, 0);
 		ps.executeUpdate();
 		ResultSet rs = ps.getGeneratedKeys();
 		if(rs.next())
@@ -352,8 +351,10 @@ public class DocumentManager {
 
 	/** Delete all references from documents to a given tag. Will be called internally by
 	 * deleteTag() but also useful when a tag is banned. */
-	public void deleteTagReferences(Tag tag) throws SQLException, NoSuchObjectException {
-
+	public void deleteTagReferences(Tag tag) throws SQLException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM document_tags WHERE tag_id = ?");
+		ps.setLong(1, tag.getID());
+		ps.executeUpdate();
 	}
 	
 	/** Add a (positive) vote on a given document. Updates the total vote count and score

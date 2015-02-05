@@ -168,7 +168,6 @@ public class Database {
 				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
 				"  name text NOT NULL,\n" +
 				"  banned_flag tinyint NOT NULL DEFAULT '0',\n" +
-				"  reference_count int NOT NULL DEFAULT '0',\n" +
 				"  PRIMARY KEY (id)\n" +
 				")";
 

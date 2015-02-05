@@ -123,15 +123,13 @@ public class DocumentManagerTests {
          */
 
         // Insert unused tag
-        ps = m_Connection.prepareStatement("INSERT INTO tags (name, banned_flag, reference_count) VALUES (?, ?, ?)",  Statement.RETURN_GENERATED_KEYS);
+        ps = m_Connection.prepareStatement("INSERT INTO tags (name, banned_flag) VALUES (?, ?)",  Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, c_TestTagTitle + " (UNUSED)");
         ps.setInt(2, 0);
-        ps.setInt(3, 0);
         ps.executeUpdate();
 
         // Insert used tag (2 references, 1 by published and featured respectively.
         ps.setString(1, c_TestTagTitle + " (USED)");
-        ps.setInt(3, 2);
         ps.executeUpdate();
         rs = ps.getGeneratedKeys(); rs.next();
         int usedtag_ID = rs.getInt(1);
@@ -140,7 +138,6 @@ public class DocumentManagerTests {
         // Insert banned tag
         ps.setString(1, c_TestTagTitle + " (BANNED)");
         ps.setInt(2, 1);
-        ps.setInt(3, 0);
         ps.executeUpdate();
         rs = ps.getGeneratedKeys(); rs.next();
         int bannedtag_ID = rs.getInt(1);

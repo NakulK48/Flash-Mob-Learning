@@ -24,6 +24,8 @@ public class DocumentManagerTests {
     private User m_TestUser2;
     private WIPDocument m_WIP_Document;
     private int m_Published_ID;
+    private Tag m_UsedTag;
+    private Tag m_BannedTag;
 
     private static final String c_TestDocumentTitle = "Test Document";
     private static final String c_TestRevisionContent = "Test Revision";
@@ -134,12 +136,16 @@ public class DocumentManagerTests {
         ps.executeUpdate();
         rs = ps.getGeneratedKeys(); rs.next();
         int usedtag_ID = rs.getInt(1);
+        m_UsedTag = new Tag(usedtag_ID, c_TestTagTitle + " (USED)", false);
 
         // Insert banned tag
         ps.setString(1, c_TestTagTitle + " (BANNED)");
         ps.setInt(2, 1);
         ps.setInt(3, 0);
         ps.executeUpdate();
+        rs = ps.getGeneratedKeys(); rs.next();
+        int bannedtag_ID = rs.getInt(1);
+        m_BannedTag = new Tag(bannedtag_ID, c_TestTagTitle + " (BANNED)", true);
 
         // Insert tag <-> document pair for published
         ps = m_Connection.prepareStatement("INSERT INTO document_tags (tag_id, document_id) VALUES (?, ?)");
@@ -163,8 +169,9 @@ public class DocumentManagerTests {
 
     @After
     public void tearDown() throws Exception {
-        LoginManager.getInstance().deleteUser(m_TestUser);
-        LoginManager.getInstance().deleteUser(m_TestUser2);
+        Database.getInstance().getStatement().executeUpdate("DELETE FROM users WHERE id = '" + m_TestUser.getID() + "'");
+        Database.getInstance().getStatement().executeUpdate("DELETE FROM users WHERE id = '" + m_TestUser2.getID() + "'");
+        Database.getInstance().getStatement().executeUpdate("DELETE FROM tags WHERE name LIKE '" + c_TestTagTitle + "%'");
         Database.getInstance().close();
     }
 
@@ -301,14 +308,16 @@ public class DocumentManagerTests {
 
     @Test
     public void testGetTagsNotEmpty() throws Exception {
-        Tag[] tags = (Tag[]) DocumentManager.getInstance().getTagsNotEmpty().toArray();
+        Set<Tag> tagSet = DocumentManager.getInstance().getTagsNotEmpty();
+        Tag[] tags = tagSet.toArray(new Tag[tagSet.size()]);
         Assert.assertEquals("Expecting 1 tag", 1, tags.length);
         Assert.assertEquals("Expecting used tag", c_TestTagTitle + " (USED)", tags[0].name);
     }
 
     @Test
     public void testGetTagsNotBanned() throws Exception {
-        Tag[] tags = (Tag[]) DocumentManager.getInstance().getTagsNotBanned().toArray();
+        Set<Tag> tagSet = DocumentManager.getInstance().getTagsNotBanned();
+        Tag[] tags = tagSet.toArray(new Tag[tagSet.size()]);
         Assert.assertEquals("Expecting 2 tags", 2, tags.length);
     }
 
@@ -320,7 +329,7 @@ public class DocumentManagerTests {
 
     @Test
     public void testCreateTag() throws Exception {
-        Tag tag = new Tag(c_TestTagTitle + " (DYNAMIC)");
+        Tag tag = new Tag(-1, c_TestTagTitle + " (DYNAMIC)", false);
         DocumentManager.getInstance().createTag(tag);
 
         Tag retrieved = DocumentManager.getInstance().getTag(c_TestTagTitle + " (DYNAMIC)");
@@ -332,7 +341,8 @@ public class DocumentManagerTests {
         m_WIP_Document.addTag(DocumentManager.getInstance().getTag(c_TestTagTitle + " (UNUSED)"));
         DocumentManager.getInstance().updateTags(m_WIP_Document);
 
-        Tag[] tags = (Tag[]) DocumentManager.getInstance().getTagsNotEmpty().toArray();
+        Set<Tag> tagSet = DocumentManager.getInstance().getTagsNotEmpty();
+        Tag[] tags = tagSet.toArray(new Tag[tagSet.size()]);
         Assert.assertEquals("Expecting 2 used tags", 2,  tags.length);
 
         List<WIPDocument> retrieved = DocumentManager.getInstance().getWorkInProgressByUser(m_TestUser, QueryParam.UNSORTED);
@@ -341,8 +351,7 @@ public class DocumentManagerTests {
 
     @Test
     public void testUpdateTag() throws Exception {
-        Tag banned = new Tag(c_TestTagTitle + " (BANNED)");
-        banned.setBanned(false);
+        Tag banned = new Tag(m_BannedTag.getID(), m_BannedTag.name, false);
         DocumentManager.getInstance().updateTag(banned);
 
         Tag retrieved = DocumentManager.getInstance().getTag(c_TestTagTitle + " (BANNED)");
@@ -351,13 +360,13 @@ public class DocumentManagerTests {
 
     @Test
     public void testDeleteTag() throws Exception {
-        Tag used = new Tag(c_TestTagTitle + " (USED)");
-        DocumentManager.getInstance().deleteTag(used);
+        DocumentManager.getInstance().deleteTag(m_UsedTag);
 
         Set<Tag> tags = DocumentManager.getInstance().getTags();
         Assert.assertEquals("Expecting 2 tags", 2, tags.size());
 
-        Tag[] nonEmptyTags = (Tag[]) DocumentManager.getInstance().getTagsNotEmpty().toArray();
+        Set<Tag> tagSet = DocumentManager.getInstance().getTagsNotEmpty();
+        Tag[] nonEmptyTags = tagSet.toArray(new Tag[tagSet.size()]);
         Assert.assertEquals("Expecting no used tags", 0, nonEmptyTags.length);
 
         PublishedDocument featured = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0);
@@ -366,13 +375,13 @@ public class DocumentManagerTests {
 
     @Test
     public void testDeleteTagReferences() throws Exception {
-        Tag used = new Tag(c_TestTagTitle + " (USED)");
-        DocumentManager.getInstance().deleteTagReferences(used);
+        DocumentManager.getInstance().deleteTagReferences(m_UsedTag);
 
         Set<Tag> tags = DocumentManager.getInstance().getTags();
         Assert.assertEquals("Expecting 3 tags", 3, tags.size());
 
-        Tag[] nonEmptyTags = (Tag[]) DocumentManager.getInstance().getTagsNotEmpty().toArray();
+        Set<Tag> tagSet = DocumentManager.getInstance().getTagsNotEmpty();
+        Tag[] nonEmptyTags = tagSet.toArray(new Tag[tagSet.size()]);
         Assert.assertEquals("Expecting no used tags", 0, nonEmptyTags.length);
 
         PublishedDocument featured = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0);
@@ -385,5 +394,14 @@ public class DocumentManagerTests {
 
         PublishedDocument featured = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0);
         Assert.assertEquals("Featured document has 1 vote", 1, featured.getVotes());
+    }
+
+    @Test
+    public void testAddTwoVotes() throws Exception {
+        boolean vote1 = DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0));
+        boolean vote2 = DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0));
+
+        Assert.assertEquals("First vote succeeds", true, vote1);
+        Assert.assertEquals("Second vote fails", false, vote2);
     }
 }

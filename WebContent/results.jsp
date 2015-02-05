@@ -93,7 +93,7 @@
 	{
 		//TODO: query Tag database for matching names
 		Tag tag = DocumentManager.getInstance().getTag(searchQuery);
-		String tagID = Long.toString(tag.getID());
+		String tagID = tag.name;
 		out.println("<a class='searchResult' href='../tag.jsp?id='" + tagID + "'>" + tag.name + "</a>");		
 		
 	}

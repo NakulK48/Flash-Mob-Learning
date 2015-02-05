@@ -147,4 +147,36 @@ public class Document {
 		DocumentManager.getInstance().setParentDocument(this, parent);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (creationTime ^ (creationTime >>> 32));
+		result = prime * result + ((docType == null) ? 0 : docType.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Document other = (Document) obj;
+		if (creationTime != other.creationTime)
+			return false;
+		if (docType != other.docType)
+			return false;
+		if (id != other.id)
+			return false;
+		if (!owner.equals(other.owner))
+			return false;
+		return title.equals(other.title);
+	}
+
 }

@@ -79,7 +79,20 @@ public class RevisionTest {
 		Assert.assertEquals(r2, revisions.get(1));
 	}
 	
+	@Test
+	public void testPublish() throws NotInitializedException, SQLException, IDAlreadySetException, NoSuchObjectException {
+		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, System.currentTimeMillis());
+		DocumentManager.getInstance().createDocument(doc);
+		Revision r = Revision.createRevision(doc, new Date(), payloadSimple);
+		PublishedDocument published = doc.publish();
+		Revision publishedRevision = published.getContentRevision();
+		Assert.assertEquals(published, publishedRevision.document);
+		Assert.assertEquals(payloadSimple, publishedRevision.getContent());
+		// FIXME check that it is gettable.
+		// FIXME delete one, is the other gettable?
+	}
+	
 	// FIXME PublishedDocument's.
-	// FIXME forking - different Revision
+	// FIXME fork() - similar issues to publish().
 
 }

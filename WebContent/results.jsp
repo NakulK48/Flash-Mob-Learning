@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*,uk.ac.cam.grpproj.lima.flashmoblearning.database.*"%>
+    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*,uk.ac.cam.grpproj.lima.flashmoblearning.database.*,java.util.LinkedList,java.util.TreeSet"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -47,16 +47,55 @@
 	if (searchDomain.equals("documents"))
 	{
 		//TODO: query Document database for matching titles
+		QueryParam p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
+		LinkedList<PublishedDocument> matchingDocs = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTitle(searchQuery, p);
+		for (PublishedDocument pd : matchingDocs)
+		{
+
+			String ageString;
+			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
+			if (ageInHours < 1) ageString = "Less than an hour ago";
+			else if (ageInHours < 24) ageString = ageInHours + " hours ago";
+			else
+			{
+				int ageInDays = ageInHours / 24;
+				ageString = ageInDays + " days ago";
+			}
+			
+			String entry = 
+			"<tr class='upperRow'>" + 
+			"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >Upvote</button></td>" + //upvote
+			//TODO: Replace with upvote sprite
+			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
+			"<td class='title'> <a href='../preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='age'>" + ageString + "</td>" + //age
+			"</tr>" + 
+			"<tr class='lowerRow'>" +
+			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
+			"<td class='submitter'> <a href='../userpage.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.name 		+ "</a></td>" + //submitter
+			"<td></td>" +
+			"</tr>"; 
+			
+			out.println(entry);
+		} 
+		
 	}
 	
 	else if (searchDomain.equals("users"))
 	{
-		//TODO: query User database for matching names
+		//TODO: maybe implement a fuzzier search here?
+		User u = LoginManager.getInstance().getUser(searchQuery);
+		String userID = Long.toString(u.getID());
+		out.println("<a class='searchResult' href='../profile.jsp?id='" + userID + "'>" + u.name + "</a>");		
 	}
 	
 	else if (searchDomain.equals("tags"))
 	{
 		//TODO: query Tag database for matching names
+		Tag tag = DocumentManager.getInstance().getTag(searchQuery);
+		String tagID = Long.toString(tag.getID());
+		out.println("<a class='searchResult' href='../tag.jsp?id='" + tagID + "'>" + tag.name + "</a>");		
+		
 	}
 %>
 

@@ -51,6 +51,7 @@ public class User {
 		// FIXME SECURITY: Hash passwords with a salt, use MessageDigest.isEqual etc.
 		synchronized(this) {
 			if(this.encryptedPassword.equals(newPassword)) return;
+			encryptedPassword = newPassword;
 		}
 		LoginManager.getInstance().modifyUser(this);
 	}

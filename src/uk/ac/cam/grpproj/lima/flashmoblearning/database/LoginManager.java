@@ -108,10 +108,4 @@ public class LoginManager {
 		ps.setString(1, banner);
 		ps.executeUpdate();
 	}
-
-	/** List all users */
-	public List<User> getUsers(QueryParam param) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

@@ -64,6 +64,7 @@ public class User {
 		this.id = id;
 		this.name = name;
 		this.encryptedPassword = epass;
+		if(name == null) throw new NullPointerException();
 	}
 
 	@Override

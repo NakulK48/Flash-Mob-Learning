@@ -40,6 +40,7 @@ public class Document {
 		this.owner = owner;
 		this.title = title;
 		this.creationTime = time;
+		if(title == null) throw new NullPointerException();
 	}
 
 	/** Called by database */

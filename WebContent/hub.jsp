@@ -7,7 +7,20 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Hub - Flash Mob Learning</title>
 <link rel="stylesheet" type="text/css" href="HubStyle.css">
-
+<%!
+	public void jspInit()
+	{
+		try
+		{
+			Database.realInit();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Something went wrong! Try reloading the page.");
+			return;
+		}
+	}
+%>
 </head>
 <body>
 <%

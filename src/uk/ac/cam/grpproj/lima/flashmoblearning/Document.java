@@ -165,6 +165,8 @@ public class Document {
 			throw new IllegalStateException("ID already set but just created?!");
 		}
 		Revision.createRevision(d, new Date(), content);
+		for(Tag t : getTags())
+			d.addTag(t);
 	}
 	
 	@Override

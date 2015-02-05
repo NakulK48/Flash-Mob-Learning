@@ -22,29 +22,17 @@
 </head>
 <body>
 <%
-	long tagID = 0;
 	String tagIDString = request.getParameter("id");
 	
 	String sortType = request.getParameter("sort");
 	if (sortType == null ) sortType = "new";
 	if (!sortType.equals("new") && !sortType.equals("top")) sortType = "new";
 	String capitalisedSortType = sortType.substring(0, 1).toUpperCase() + sortType.substring(1);
-	
-	try
-	{
-		tagID = Long.parseLong(tagIDString);	
-	}
-	catch (NumberFormatException e)
-	{
-		out.println("<p class='error'>This tag doesn't seem to exist!</p>");
-		return;
-	}
-	
-	LinkedList<PublishedDocument> thistagDocuments = null;
+	LinkedList<PublishedDocument> thisTagDocuments = null;
 
 	try
 	{
-		Tag profiletag = DocumentManager.getInstance().getTag(tagID);
+		Tag tag = DocumentManager.getInstance().getTag(tagIDString);
 		QueryParam p;
 		if (sortType == "new")
 		{
@@ -56,7 +44,7 @@
 			p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 		}
 
-		thistagDocuments = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTag(profiletag, p);
+		thisTagDocuments = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTag(tag, p);
 	}
 	
 	catch (Exception e)
@@ -69,15 +57,15 @@
 %>
 
 	<div id="orderHolder">
-		<a href='<%="profile.jsp?id=" + tagIDString + "&sort=top"%>'><div class="order">Top</div></a>
-		<a href='<%="profile.jsp?id=" + tagIDString + "&sort=new"%>'><div class="order">New</div></a>
+		<a href='<%="tag.jsp?id=" + tagIDString + "&sort=top"%>'><div class="order">Top</div></a>
+		<a href='<%="tag.jsp?id=" + tagIDString + "&sort=new"%>'><div class="order">New</div></a>
 	</div>
 
 <h1><% //tagname %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
 <%
 	//TODO: output list of documents: upvote button, votes, title, age
-	for (PublishedDocument pd : thistagDocuments)
+	for (PublishedDocument pd : thisTagDocuments)
 	{
 		String ageString;
 		int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
@@ -99,6 +87,7 @@
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
 		"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
+		"<td class='submitter'> <a href='../userpage.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.name 		+ "</a></td>" + //submitter
 		"<td></td>" +
 		"</tr>"; 
 		

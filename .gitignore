@@ -13,3 +13,4 @@ hs_err_pid*
 /bin/
 # dependencies
 /jars/
+.DS_Store

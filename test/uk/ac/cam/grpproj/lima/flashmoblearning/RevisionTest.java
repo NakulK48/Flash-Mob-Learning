@@ -15,6 +15,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
+/** Tests Revision and methods on WIPDocument / PublishedDocument related to it. */
 public class RevisionTest {
 	
 	final DocumentType docType = DocumentType.PLAINTEXT;
@@ -85,14 +86,35 @@ public class RevisionTest {
 		DocumentManager.getInstance().createDocument(doc);
 		Revision r = Revision.createRevision(doc, new Date(), payloadSimple);
 		PublishedDocument published = doc.publish();
+		Assert.assertEquals(1, published.getRevisions(QueryParam.UNSORTED).size());
 		Revision publishedRevision = published.getContentRevision();
 		Assert.assertEquals(published, publishedRevision.document);
 		Assert.assertEquals(payloadSimple, publishedRevision.getContent());
-		// FIXME check that it is gettable.
-		// FIXME delete one, is the other gettable?
+		Assert.assertEquals(payloadSimple, r.getContent());
+		Assert.assertEquals(DocumentManager.getInstance().getDocumentById(doc.getID()), doc);
+		Assert.assertEquals(DocumentManager.getInstance().getDocumentById(published.getID()), published);
+		// Now delete the parent.
+		DocumentManager.getInstance().deleteDocument(doc);
+		try {
+			DocumentManager.getInstance().getDocumentById(doc.getID());
+			Assert.fail();
+		} catch (NoSuchObjectException e) {
+			// Ok.
+		}
+		DocumentManager.getInstance().getDocumentById(published.getID());
+		try {
+			r.getContent();
+		} catch (NoSuchObjectException e) {
+			// Ok.
+		}
+		publishedRevision.getContent();
+		// Now fork and do the same basic test.
+		WIPDocument fork = published.fork(owner);
+		Assert.assertEquals(1, fork.getRevisions(QueryParam.UNSORTED).size());
+		Revision forkedRevision = fork.getLastRevision();
+		Assert.assertEquals(payloadSimple, forkedRevision.getContent());
+		Assert.assertEquals(fork, forkedRevision.document);
+		Assert.assertEquals(DocumentManager.getInstance().getDocumentById(fork.getID()), fork);
 	}
 	
-	// FIXME PublishedDocument's.
-	// FIXME fork() - similar issues to publish().
-
 }

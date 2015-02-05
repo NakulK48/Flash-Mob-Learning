@@ -17,6 +17,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameE
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
+/** Test Tag and Tag-related methods on Document */
 public class TagTest {
 
 	@org.junit.Before
@@ -31,6 +32,7 @@ public class TagTest {
 	}
 
 	final String tagName1 = "Test";
+	final String tagName2 = "Testing";
 	final DocumentType docType = DocumentType.PLAINTEXT;
 	private User owner;
 	final String titleSimple = "Test document";
@@ -128,5 +130,32 @@ public class TagTest {
 		doc = (WIPDocument) DocumentManager.getInstance().getDocumentById(doc.getID());
 		Assert.assertEquals(0, doc.getTags().size());
 	}
-
+	
+	@Test
+	public void testDeleteTagFromDocument() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException, IDAlreadySetException {
+		Tag t = Tag.create(tagName1);
+		Assert.assertNotSame(-1, t.getID());
+		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 
+    			System.currentTimeMillis());
+		DocumentManager.getInstance().createDocument(doc);
+		doc.addRevision(new Date(), payloadSimple);
+		doc.addTag(t);
+		Set<Tag> tags = doc.getTags();
+		Assert.assertEquals(1, tags.size());
+		Assert.assertTrue(tags.contains(t));
+		// Add another tag.
+		Tag t2 = Tag.create(tagName2);
+		Assert.assertNotSame(-1, t.getID());
+		doc.addTag(t2);
+		tags = doc.getTags();
+		Assert.assertEquals(2, tags.size());
+		Assert.assertTrue(tags.contains(t));
+		Assert.assertTrue(tags.contains(t2));
+		// Delete first tag.
+		doc.deleteTag(t);
+		tags = doc.getTags();
+		Assert.assertEquals(1, tags.size());
+		Assert.assertFalse(tags.contains(t));
+		Assert.assertTrue(tags.contains(t2));
+	}
 }

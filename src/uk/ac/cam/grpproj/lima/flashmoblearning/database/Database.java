@@ -31,6 +31,7 @@ public class Database {
 		return m_Instance;
 	}
 	
+	public static final String DEFAULT_TEACHER_USERNAME = "Teacher";
 	private static final String DEFAULT_TEACHER_PASSWORD = "password";
 	private static final String LOGIN_PASSWORD_NAG = 
 			"Welcome to Flash Mob Learning! Please login to the account " +
@@ -73,7 +74,7 @@ public class Database {
         if(createUser) {
             LoginManager lm = LoginManager.getInstance();
             try {
-                User teacher = lm.createUser("Teacher", "", true);
+                User teacher = lm.createUser(DEFAULT_TEACHER_USERNAME, "", true);
                 teacher.setPassword(DEFAULT_TEACHER_PASSWORD);
                 lm.modifyUser(teacher);
                 lm.setLoginBanner(LOGIN_PASSWORD_NAG);

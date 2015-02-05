@@ -31,7 +31,7 @@ public class DocumentManagerTests {
 
     @Before
     public void setUp() throws Exception {
-    	Database.initTest();
+    	Database.init();
         m_Statement = Database.getInstance().getStatement();
         m_Connection = Database.getInstance().getConnection();
 

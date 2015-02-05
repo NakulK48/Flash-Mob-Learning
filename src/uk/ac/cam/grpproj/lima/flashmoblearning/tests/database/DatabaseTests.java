@@ -13,7 +13,7 @@ public class DatabaseTests {
 
     @org.junit.Before
     public void setUp() throws Exception {
-    	Database.initTest();
+    	Database.init();
     }
 
     @org.junit.After

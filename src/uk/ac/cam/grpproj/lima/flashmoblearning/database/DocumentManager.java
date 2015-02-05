@@ -109,6 +109,22 @@ public class DocumentManager {
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}
 
+	/** Search for published documents by title */
+	public List<PublishedDocument> getPublishedByExactTitle(String title, QueryParam param) throws SQLException, NoSuchObjectException { 
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE title = ? AND published_flag = true"));
+		ps.setString(1, title);
+		ResultSet rs = ps.executeQuery();
+		return getPublishedDocumentsFromResultSet(rs, null);
+	}
+
+	/** Search for in-progress documents by title */
+	public List<WIPDocument> getWIPByExactTitle(String title, QueryParam param) throws SQLException, NoSuchObjectException { 
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE title = ? AND published_flag = false"));
+		ps.setString(1, title);
+		ResultSet rs = ps.executeQuery();
+		return getWIPDocumentsFromResultSet(rs, null);
+	}
+
 	/** Get featured documents */
 	public List<PublishedDocument> getFeatured(QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE featured_flag = true"));

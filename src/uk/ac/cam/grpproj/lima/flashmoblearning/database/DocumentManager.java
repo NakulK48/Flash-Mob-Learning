@@ -349,8 +349,24 @@ public class DocumentManager {
 	}
 	
 	/** Add a (positive) vote on a given document. Updates the total vote count and score
-	 * on the document (by statically calling PublishedDocument.getScore(votes,...). */
-	public void addVote(User u, PublishedDocument d) throws SQLException, NoSuchObjectException {}
+	 * on the document (by statically calling PublishedDocument.getScore(votes,...).
+	 * Returns true if succesful, false if failed (user has already voted) */
+	public boolean addVote(User u, PublishedDocument d) throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO votes (user_id, document_id) VALUES (?, ?)");
+		ps.setLong(1, u.getID());
+		ps.setLong(2, d.getID());
+		try {
+			ps.executeUpdate();
+			ps = m_Database.getConnection().prepareStatement("UPDATE documents SET vote_count = vote_count + 1 WHERE id = ?");
+			ps.setLong(1, d.getID());
+			ps.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			// duplicate entry - user has already voted!
+			if(e.getMessage().toLowerCase().contains("duplicate")) return false;
+			else throw e;
+		}
+	}
 
 	/** Get the content of a Revision. This may be kept separately and fetched 
 	 * lazily, given its size, and given that we mostly don't need all the 

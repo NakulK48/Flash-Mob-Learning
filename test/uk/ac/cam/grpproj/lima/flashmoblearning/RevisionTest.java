@@ -117,4 +117,22 @@ public class RevisionTest {
 		Assert.assertEquals(DocumentManager.getInstance().getDocumentById(fork.getID()), fork);
 	}
 	
+	@Test
+	public void testPublishMultipleRevisions() throws NotInitializedException, SQLException, IDAlreadySetException, NoSuchObjectException {
+		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, System.currentTimeMillis());
+		DocumentManager.getInstance().createDocument(doc);
+		Revision r = Revision.createRevision(doc, new Date(), payloadSimple);
+		Revision.createRevision(doc, new Date(), payloadSimple);
+		Assert.assertEquals(2, doc.getRevisions(QueryParam.UNSORTED).size());
+		PublishedDocument published = doc.publish();
+		Assert.assertEquals(1, published.getRevisions(QueryParam.UNSORTED).size());
+		Assert.assertEquals(2, doc.getRevisions(QueryParam.UNSORTED).size());
+		Revision publishedRevision = published.getContentRevision();
+		Assert.assertEquals(published, publishedRevision.document);
+		Assert.assertEquals(payloadSimple, publishedRevision.getContent());
+		Assert.assertEquals(payloadSimple, r.getContent());
+		Assert.assertEquals(DocumentManager.getInstance().getDocumentById(doc.getID()), doc);
+		Assert.assertEquals(DocumentManager.getInstance().getDocumentById(published.getID()), published);
+	}
+	
 }

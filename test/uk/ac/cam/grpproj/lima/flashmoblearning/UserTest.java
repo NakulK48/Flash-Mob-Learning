@@ -15,6 +15,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitialized
 public class UserTest {
 	
 	public final String testUser = "TestUser";
+	public final String testUser2 = "TestUser2";
 	public final String testPassword = "password";
 	public final String testPassword2 = "123456;_";
 	
@@ -73,4 +74,20 @@ public class UserTest {
 		Assert.assertTrue(s.checkPassword(testPassword2));
 	}
 
+	@Test
+	public void testChangeName() throws NotInitializedException, SQLException, DuplicateNameException, NoSuchObjectException {
+		Student s = (Student) LoginManager.getInstance().createUser(testUser, "", false);
+		Assert.assertNotSame(s.getID(), -1);
+		Assert.assertEquals(s, LoginManager.getInstance().getUser(s.getID()));
+		Assert.assertEquals(s, LoginManager.getInstance().getUser(testUser));
+		s.setName(testUser2);
+		Assert.assertEquals(s, LoginManager.getInstance().getUser(s.getID()));
+		try {
+			LoginManager.getInstance().getUser(testUser);
+			Assert.fail();
+		} catch (NoSuchObjectException e) {
+			// Ok.
+		}
+		Assert.assertEquals(s, LoginManager.getInstance().getUser(testUser2));
+	}
 }

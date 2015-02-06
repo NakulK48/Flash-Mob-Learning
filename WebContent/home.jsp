@@ -9,8 +9,14 @@
 <body>
 	<%
 		//TODO: Database query
+		
+		//Session check
+		if(session.getAttribute("uid")==null){
+			//session invalid
+			response.sendRedirect("login.jsp");
+		}
 	%>
-	<p2>Welcome, <%=session.getAttribute("id") %>!</p2>
+	<p2>Welcome, <%=session.getAttribute("uid") %>!</p2>
 	<p2><a href="logout.jsp">logout</a></p2>
 </body>
 </html>

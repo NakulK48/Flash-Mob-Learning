@@ -7,6 +7,20 @@
 <title>-Register - Flash Mob Learning</title>
 </head>
 <body>
+	<%	
+		String status = request.getParameter("status");
+		if(status!=null){
+			if(status.equals("pwfail")){
+				%>
+					<div><center><font color="red">Password not matching.</font></center></div>
+				<%
+			}else if(status.equals("regfail")){
+				%>
+					<div><center><font color="red">Failed to register.</font></center></div>
+				<%
+			}
+		}
+	%>
 	<form method="post" action="registration.jsp">
 		<center>
 			<table border="1" width="30%" cellpadding="3">
@@ -31,8 +45,16 @@
 						<td>Password</td>
 						<td><input type="password" name="pwd" placeholder="Password" required/></td>
 					</tr>
+										<tr>
+						<td>Repeat Password</td>
+						<td><input type="password" name="rpwd" placeholder="Password" required/></td>
+					</tr>
+					
 					<tr>
 						<td><input type="submit" value="Register" /></td>
+					</tr>
+					<tr>
+						<td>Or <a href="login.jsp">login</a>. </td>
 					</tr>
 				</tbody>
 			</table>

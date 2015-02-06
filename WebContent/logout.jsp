@@ -8,9 +8,9 @@
 </head>
 <body>
 	<%
-		String username = (String)session.getAttribute("id");
+		String username = (String)session.getAttribute("uid");
 		if(username!=null)
-			session.removeAttribute("id");
+			session.removeAttribute("uid");
 		out.println("You are being logged out!");
 	%>
 </body>

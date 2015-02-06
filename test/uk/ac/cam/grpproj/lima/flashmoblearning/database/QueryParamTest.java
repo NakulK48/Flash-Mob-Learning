@@ -27,12 +27,12 @@ public class QueryParamTest {
     @Test
     public void testSort() throws Exception {
         QueryParam param = new QueryParam(0, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
-        Assert.assertEquals("Expect sort", c_StandardQuery + " ORDER BY update_time DESCENDING", param.updateQuery(c_StandardQuery));
+        Assert.assertEquals("Expect sort", c_StandardQuery + " ORDER BY update_time DESC", param.updateQuery(c_StandardQuery));
     }
 
     @Test
     public void testSortWithLimitAndOffset() throws Exception {
         QueryParam param = new QueryParam(30, 50, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
-        Assert.assertEquals("Expect sort", c_StandardQuery + " ORDER BY update_time DESCENDING LIMIT 30 OFFSET 50", param.updateQuery(c_StandardQuery));
+        Assert.assertEquals("Expect sort", c_StandardQuery + " ORDER BY update_time DESC LIMIT 30 OFFSET 50", param.updateQuery(c_StandardQuery));
     }
 }

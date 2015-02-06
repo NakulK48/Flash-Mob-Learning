@@ -44,12 +44,12 @@ public class Document {
 	}
 
 	/** Called by database */
-	public synchronized long getID() {
+	public long getID() {
 		return id;
 	}
 	
 	/** Called by the database when a document is first stored */
-	public synchronized void setID(long newID) throws IDAlreadySetException {
+	public void setID(long newID) throws IDAlreadySetException {
 		if(this.id == -1) {
 			this.id = newID;
 		} else {
@@ -61,7 +61,7 @@ public class Document {
 	/** Get the current list of tags. Read-only. 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public synchronized Set<Tag> getTags() throws NotInitializedException, SQLException {
+	public Set<Tag> getTags() throws NotInitializedException, SQLException {
 		return Collections.unmodifiableSet(DocumentManager.getInstance().getTags(this));
 	}
 	
@@ -93,10 +93,8 @@ public class Document {
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
 	public void setTitle(String title) throws NotInitializedException, SQLException, NoSuchObjectException {
-		synchronized(this) {
-			if(this.title.equals(title)) return;
-			this.title = title;
-		}
+		if(this.title.equals(title)) return;
+		this.title = title;
 		DocumentManager.getInstance().updateDocument(this);
 	}
 	

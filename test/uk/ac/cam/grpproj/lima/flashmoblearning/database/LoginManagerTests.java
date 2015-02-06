@@ -58,19 +58,19 @@ public class LoginManagerTests {
     // Tests both the fact that we can get the user, and that the user in setup has been created.
     public void testGetUser() throws Exception {
         Student student = (Student) LoginManager.getInstance().getUser(c_TestUsername);
-        Assert.assertEquals("User retrieved", c_TestUsername, student.name);
+        Assert.assertEquals("User retrieved", c_TestUsername, student.getName());
     }
 
     @Test
     public void testGetUserById() throws Exception {
         Student student = (Student) LoginManager.getInstance().getUser(m_UserID);
-        Assert.assertEquals("User retrieved", c_TestUsername, student.name);
+        Assert.assertEquals("User retrieved", c_TestUsername, student.getName());
     }
 
     @Test
     public void testUpdateTeacher() throws Exception {
         User u = LoginManager.getInstance().getUser(c_TestUsername);
-        Teacher t = new Teacher(u.getID(), u.name, u.getEncryptedPassword());
+        Teacher t = new Teacher(u.getID(), u.getName(), u.getEncryptedPassword());
         LoginManager.getInstance().modifyUser(t);
 
         Teacher u2 = (Teacher) LoginManager.getInstance().getUser(c_TestUsername);

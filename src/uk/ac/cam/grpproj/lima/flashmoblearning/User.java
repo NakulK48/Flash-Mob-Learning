@@ -12,8 +12,17 @@ public class User {
 	
 	/** Name of the user.
 	 * FIXME Consider ability (for teacher?) to change user names. */
-	public final String name;
+	private String name;
 
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String n) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
+		name = n;
+		LoginManager.getInstance().modifyUser(this);
+	}
+	
 	/** User has a fixed numerical ID, even if their name is changed. This is 
 	 * set by the database when the document is first stored, and cannot be 
 	 * changed after that. */

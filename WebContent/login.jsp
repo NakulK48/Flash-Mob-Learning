@@ -8,6 +8,9 @@
 </head>
 <body>
 	<%	
+		if(session.getAttribute("uid")!=null){
+			response.sendRedirect("home.jsp");
+		}
 		String status = request.getParameter("status");
 		if(status!=null){
 			if(status.equals("fail")){

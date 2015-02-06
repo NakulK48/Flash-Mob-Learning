@@ -10,14 +10,11 @@
 <body>
 	<%
 		// get request parameters
-		String userID = request.getParameter("id");
+		String userID = request.getParameter("uid");
 		String pwd = request.getParameter("pwd");
 		//TODO: data base connection
-		if (userID==null||pwd==null){
-			response.sendRedirect("error.jsp");
-		}
 		if (userID.equals("1") && pwd.equals("pwd")) {
-			session.setAttribute("id", userID);
+			session.setAttribute("uid", userID);
 			response.sendRedirect("home.jsp");
 		} else {
 			%>

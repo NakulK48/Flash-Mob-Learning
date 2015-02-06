@@ -18,7 +18,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitialized
 public abstract class DocumentTestBase {
 	
 	final DocumentType docType = DocumentType.PLAINTEXT;
-	private User owner;
+	protected User owner;
 	final String titleSimple = "Test document";
 	final String titleSimple2 = "Different test document";
 	

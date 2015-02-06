@@ -70,7 +70,7 @@ public class PublishedDocument extends Document{
 	}
 	
 	/** Is this document Featured? */
-	public synchronized boolean getFeatured() {
+	public boolean getFeatured() {
 		return isFeatured;
 	}
 	
@@ -79,10 +79,8 @@ public class PublishedDocument extends Document{
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
 	public void setFeatured(boolean set) throws NotInitializedException, SQLException, NoSuchObjectException {
-		synchronized(this) {
-			if(set == isFeatured) return;
-			isFeatured = set;
-		}
+		if(set == isFeatured) return;
+		isFeatured = set;
 		DocumentManager.getInstance().updateDocument(this);
 	}
 	

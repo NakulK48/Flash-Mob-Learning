@@ -30,12 +30,12 @@ public class User {
 	private String encryptedPassword;
 	
 	/** Called by database */
-	public synchronized long getID() {
+	public long getID() {
 		return id;
 	}
 	
 	/** Called by the database when a document is first stored */
-	public synchronized void setID(long newID) throws IDAlreadySetException {
+	public void setID(long newID) throws IDAlreadySetException {
 		if(this.id == -1) {
 			this.id = newID;
 		} else {
@@ -46,7 +46,7 @@ public class User {
 
 	/** Try to log in.
 	 * @return True if the password is correct. */
-	public synchronized boolean checkPassword(String password) {
+	public boolean checkPassword(String password) {
 		// FIXME SECURITY: Hash passwords with a salt, use MessageDigest.isEqual etc.
 		return password.equals(encryptedPassword);
 	}
@@ -58,10 +58,8 @@ public class User {
 	 * @throws NotInitializedException */
 	public void setPassword(String newPassword) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
 		// FIXME SECURITY: Hash passwords with a salt, use MessageDigest.isEqual etc.
-		synchronized(this) {
-			if(this.encryptedPassword.equals(newPassword)) return;
-			encryptedPassword = newPassword;
-		}
+		if(this.encryptedPassword.equals(newPassword)) return;
+		encryptedPassword = newPassword;
 		LoginManager.getInstance().modifyUser(this);
 	}
 

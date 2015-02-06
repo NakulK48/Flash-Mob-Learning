@@ -25,12 +25,12 @@ public class Tag {
 	}
 
 	/** Called by database */
-	public synchronized long getID() {
+	public long getID() {
 		return id;
 	}
 
 	/** Called by the database when a tag is first stored */
-	public synchronized void setID(long newID) throws IDAlreadySetException {
+	public void setID(long newID) throws IDAlreadySetException {
 		if(this.id == -1) {
 			this.id = newID;
 		} else {
@@ -48,7 +48,7 @@ public class Tag {
 	}
 	
 	/** Has the tag been banned? */
-	public synchronized boolean getBanned() {
+	public boolean getBanned() {
 		return banned;
 	}
 	
@@ -58,10 +58,8 @@ public class Tag {
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
 	public void setBanned(boolean b) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
-		synchronized(this) {
-			if(banned == b) return;
-			banned = b;
-		}
+		if(banned == b) return;
+		banned = b;
 		DocumentManager.getInstance().updateTag(this);
 		if(b)
 			DocumentManager.getInstance().deleteTagReferences(this);

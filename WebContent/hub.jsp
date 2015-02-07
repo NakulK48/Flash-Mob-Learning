@@ -24,18 +24,32 @@
 </head>
 <body>
 <%
-  	//Hub hub = new Hub();
-
-	QueryParam p = new QueryParam(25, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
-	LinkedList<PublishedDocument> subs = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
-	
-	
-	SortType st = SortType.BEST;
-	
-	 //TODO: put something here
-	
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
 	String doctype = request.getParameter("doctype"); //browsing text or skulpt?
+	String sortType = request.getParameter("sort");
+	
+	if (!sortType.equals("new") && !sortType.equals("top") && !sortType.equals("hot")) sortType = "hot";
+	
+	QueryParam p;
+	
+	if (sortType.equals("new"))
+	{
+		p = new QueryParam(25, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+	}
+	
+	else if (sortType.equals("top"))
+	{
+		p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
+	}
+	
+	else
+	{
+		p = new QueryParam(25, 0, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
+	}
+
+	LinkedList<PublishedDocument> subs = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
+	
+
 	if (upvoted != null)
 	{
 		long documentToUpvote = Long.parseLong(upvoted);
@@ -75,7 +89,7 @@
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
 			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-			"<td class='submitter'> <a href='../userpage.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.name 		+ "</a></td>" + //submitter
+			"<td class='submitter'> <a href='../userpage.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
 			"<td></td>" +
 			"</tr>"; 
 			

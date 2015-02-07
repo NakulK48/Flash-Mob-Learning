@@ -30,7 +30,7 @@
 </head>
 <body>
 <%
-	LoginManager lm = LoginManager.getInstance();
+	/*LoginManager lm = LoginManager.getInstance();
 	DocumentManager dm = DocumentManager.getInstance();
 	User jimmy = lm.createUser("Jimmy Fallon", "password1", false);
 	PublishedDocument da = new PublishedDocument(-1, DocumentType.SKULPT, jimmy, "Cicada tax cuts", System.currentTimeMillis(), 0);
@@ -39,6 +39,13 @@
 
 	dm.createDocument(da);
 	dm.createDocument(db);
+	dm.createDocument(dc);*/
+	
+	LoginManager lm = LoginManager.getInstance();
+	DocumentManager dm = DocumentManager.getInstance();
+	
+	User jimmy = lm.getUser("Jimmy Fallon");
+	PublishedDocument dc = new PublishedDocument(-1, DocumentType.SKULPT, jimmy, "Venus flytrap infrastructure spending", System.currentTimeMillis() - 7200000, 5);
 	dm.createDocument(dc);
 	
 	
@@ -122,8 +129,8 @@
 			out.println(entry);
 		} 
 		
-		dm.deleteAllDocumentsByUser(jimmy);
-		lm.deleteUser(jimmy);
+		//dm.deleteAllDocumentsByUser(jimmy);
+		//lm.deleteUser(jimmy);
 	%>
 	
 	

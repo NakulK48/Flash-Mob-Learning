@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*,uk.ac.cam.grpproj.lima.flashmoblearning.database.*,java.util.LinkedList"%>
+    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*,uk.ac.cam.grpproj.lima.flashmoblearning.database.*,java.util.ArrayList"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -28,7 +28,7 @@
 	if (sortType == null ) sortType = "new";
 	if (!sortType.equals("new") && !sortType.equals("top")) sortType = "new";
 	String capitalisedSortType = sortType.substring(0, 1).toUpperCase() + sortType.substring(1);
-	LinkedList<PublishedDocument> thisTagDocuments = null;
+	ArrayList<PublishedDocument> thisTagDocuments = null;
 
 	try
 	{
@@ -44,7 +44,7 @@
 			p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 		}
 
-		thisTagDocuments = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTag(tag, p);
+		thisTagDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTag(tag, p);
 	}
 	
 	catch (Exception e)

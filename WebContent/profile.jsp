@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*,uk.ac.cam.grpproj.lima.flashmoblearning.database.*,java.util.LinkedList"%>
+    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*,uk.ac.cam.grpproj.lima.flashmoblearning.database.*,java.util.ArrayList"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -40,7 +40,7 @@
 		return;
 	}
 	
-	LinkedList<PublishedDocument> thisUserDocuments = null;
+	ArrayList<PublishedDocument> thisUserDocuments = null;
 	User profileUser;
 
 	try
@@ -57,7 +57,7 @@
 			p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 		}
 
-		thisUserDocuments = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublishedByUser(profileUser, p);
+		thisUserDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByUser(profileUser, p);
 	}
 	
 	catch (Exception e)
@@ -77,6 +77,7 @@
 
 <h1><%= profileUser.getName() %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
+<table>
 <%
 	for (PublishedDocument pd : thisUserDocuments)
 	{
@@ -107,7 +108,7 @@
 	}
 	
 %>
-
+</table>
 
 </body>
 </html>

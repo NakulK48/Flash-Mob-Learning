@@ -84,6 +84,7 @@
 		String ageString;
 		int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
 		if (ageInHours < 1) ageString = "Less than an hour ago";
+		else if (ageInHours < 2) ageString = "An hour ago";
 		else if (ageInHours < 24) ageString = ageInHours + " hours ago";
 		else
 		{

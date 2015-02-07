@@ -46,14 +46,6 @@
 %>
 <table>
 <%
-	Tag t = Tag.create("Bob");
-	DocumentManager dm = DocumentManager.getInstance();
-	LoginManager lm = LoginManager.getInstance();
-	dm.createTag(t);
-	User jimmy = lm.getUser("Jimmy Fallon");
-	PublishedDocument dc = new PublishedDocument(-1, DocumentType.SKULPT, jimmy, "Daffodil restructuring", System.currentTimeMillis() - 5600000, 9);
-	dm.createDocument(dc);
-	dm.addTag(dc, t);
 
 	if (searchDomain.equals("documents"))
 	{
@@ -66,6 +58,7 @@
 			String ageString;
 			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
 			if (ageInHours < 1) ageString = "Less than an hour ago";
+			else if (ageInHours < 2) ageString = "An hour ago";
 			else if (ageInHours < 24) ageString = ageInHours + " hours ago";
 			else
 			{

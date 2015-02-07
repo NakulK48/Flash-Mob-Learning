@@ -4,10 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Whoops!</title>
 </head>
 <body>
-	<div><p2><font color="red">Oops there's been a problem, blame Matthew!</font></p2></div>
-	<div><p3>return to <a href=\"home\">home</a></p3></div>
+	<div><p2><font color="red">A dragon ate your page!</font></p2></div>
+	<div><p3>return to <a href='landing.html'>the homepage</a></p3></div>
 </body>
 </html>

@@ -74,7 +74,7 @@
 		<a href='<%="profile.jsp?id=" + userIDString + "&sort=new"%>'><div class="order">New</div></a>
 	</div>
 
-<h1><%= profileUser.name %></h1>
+<h1><%= profileUser.getName() %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
 <%
 	for (PublishedDocument pd : thisUserDocuments)

@@ -72,7 +72,7 @@
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
 			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-			"<td class='submitter'> <a href='../userpage.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.name 		+ "</a></td>" + //submitter
+			"<td class='submitter'> <a href='../userpage.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
 			"<td></td>" +
 			"</tr>"; 
 			
@@ -86,7 +86,7 @@
 		//TODO: maybe implement a fuzzier search here?
 		User u = LoginManager.getInstance().getUser(searchQuery);
 		String userID = Long.toString(u.getID());
-		out.println("<a class='searchResult' href='../profile.jsp?id='" + userID + "'>" + u.name + "</a>");		
+		out.println("<a class='searchResult' href='../profile.jsp?id='" + userID + "'>" + u.getName() + "</a>");		
 	}
 	
 	else if (searchDomain.equals("tags"))

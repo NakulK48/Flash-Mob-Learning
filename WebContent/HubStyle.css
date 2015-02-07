@@ -5,8 +5,14 @@ table
 	width:100%;
 	border-collapse:collapse;
 	position:absolute;
-	top:100px;
+	top:50px;
 }
+
+.votes
+{text-align:center; font-size:18pt}
+
+.upvote
+{text-align:center}
 
 #upvoteScoreHeading
 {
@@ -36,7 +42,7 @@ tr.lowerRow td
 #orderHolder
 {
 	width:100%;
-	height:80px;
+	height:40px;
 	font-size:20pt;
 	font-family:Verdana;
 }

@@ -21,7 +21,7 @@
 	}
 %>
 <style>
-table {top:250px;}
+table {top:200px;}
 </style>
 </head>
 <body>
@@ -98,7 +98,7 @@ table {top:250px;}
 		
 		String entry = 
 		"<tr class='upperRow'>" + 
-		"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >Upvote</button></td>" + //upvote
+		"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >UP</button></td>" + //upvote
 		//TODO: Replace with upvote sprite
 		//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
 		"<td class='title'> <a href='preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title

@@ -4,6 +4,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<style>
+
+
+
+</style>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Hub - Flash Mob Learning</title>
 <link rel="stylesheet" type="text/css" href="HubStyle.css">
@@ -30,26 +35,9 @@
 </head>
 <body>
 <%
-	/*LoginManager lm = LoginManager.getInstance();
-	DocumentManager dm = DocumentManager.getInstance();
-	User jimmy = lm.createUser("Jimmy Fallon", "password1", false);
-	PublishedDocument da = new PublishedDocument(-1, DocumentType.SKULPT, jimmy, "Cicada tax cuts", System.currentTimeMillis(), 0);
-	PublishedDocument db = new PublishedDocument(-1, DocumentType.SKULPT, jimmy, "Grasshopper tax increases", System.currentTimeMillis(), 1);
-	PublishedDocument dc = new PublishedDocument(-1, DocumentType.SKULPT, jimmy, "Preying mantis spending cuts", System.currentTimeMillis(), 2);
-
-	dm.createDocument(da);
-	dm.createDocument(db);
-	dm.createDocument(dc);*/
 	
 	LoginManager lm = LoginManager.getInstance();
 	DocumentManager dm = DocumentManager.getInstance();
-	
-	User jimmy = lm.getUser("Jimmy Fallon");
-	PublishedDocument dc = new PublishedDocument(-1, DocumentType.SKULPT, jimmy, "Venus flytrap infrastructure spending", System.currentTimeMillis() - 7200000, 5);
-	dm.createDocument(dc);
-	
-	
-	
 
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
 	String doctype = request.getParameter("doctype"); //browsing text or skulpt?
@@ -86,9 +74,9 @@
 	
 %>
 	<div id="orderHolder">
-		<a href='<%="hub.jsp?sort=hot"%>'><div class="order">Hot</div></a>
-		<a href='<%="hub.jsp?sort=top"%>'><div class="order">Top</div></a>
-		<a href='<%="hub.jsp?sort=new"%>'><div class="order">New</div></a>
+		<a href='<%="hub.jsp?sort=hot"%>'><div class="order" id="left">Hot</div></a>
+		<a href='<%="hub.jsp?sort=top"%>'><div class="order" id="centre">Top</div></a>
+		<a href='<%="hub.jsp?sort=new"%>'><div class="order" id="right">New</div></a>
 	</div>
 
 <table>

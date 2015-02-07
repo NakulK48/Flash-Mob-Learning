@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Profile - Flash Mob Learning</title>
+<link rel="stylesheet" type="text/css" href="HubStyle.css">
 <%!
 	public void jspInit()
 	{
@@ -19,6 +20,9 @@
 		}
 	}
 %>
+<style>
+table {top:250px;}
+</style>
 </head>
 <body>
 <%
@@ -71,8 +75,8 @@
 %>
 
 	<div id="orderHolder">
-		<a href='<%="profile.jsp?id=" + userIDString + "&sort=top"%>'><div class="order">Top</div></a>
-		<a href='<%="profile.jsp?id=" + userIDString + "&sort=new"%>'><div class="order">New</div></a>
+		<a href='<%="profile.jsp?id=" + userIDString + "&sort=top"%>'><div class="order" id="left">Top</div></a>
+		<a href='<%="profile.jsp?id=" + userIDString + "&sort=new"%>'><div class="order" id="right">New</div></a>
 	</div>
 
 <h1>User: <%= profileUser.getName() %></h1>

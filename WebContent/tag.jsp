@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Profile - Flash Mob Learning</title>
+<link rel="stylesheet" type="text/css" href="HubStyle.css">
 <%!
 	public void jspInit()
 	{
@@ -57,8 +58,8 @@
 %>
 
 	<div id="orderHolder">
-		<a href='<%="tag.jsp?name=" + tagName + "&sort=top"%>'><div class="order">Top</div></a>
-		<a href='<%="tag.jsp?name=" + tagName + "&sort=new"%>'><div class="order">New</div></a>
+		<a href='<%="tag.jsp?name=" + tagName + "&sort=top"%>'><div class="order" id="left">Top</div></a>
+		<a href='<%="tag.jsp?name=" + tagName + "&sort=new"%>'><div class="order" id="right">New</div></a>
 	</div>
 
 <h1>Tag: <%= tagName %></h1>

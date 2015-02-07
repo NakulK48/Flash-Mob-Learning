@@ -28,6 +28,7 @@
 	String doctype = request.getParameter("doctype"); //browsing text or skulpt?
 	String sortType = request.getParameter("sort");
 	
+	if (sortType == null) sortType = "hot";
 	if (!sortType.equals("new") && !sortType.equals("top") && !sortType.equals("hot")) sortType = "hot";
 	
 	QueryParam p;
@@ -47,7 +48,7 @@
 		p = new QueryParam(25, 0, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
 	}
 
-	LinkedList<PublishedDocument> subs = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
+	LinkedList<PublishedDocument> subs = new LinkedList<PublishedDocument>(); //(LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
 	
 
 	if (upvoted != null)
@@ -59,9 +60,9 @@
 	
 %>
 	<div id="orderHolder">
-		<a href='<%="profile.jsp?sort=hot"%>'><div class="order">Hot</div></a>
-		<a href='<%="profile.jsp?sort=top"%>'><div class="order">Top</div></a>
-		<a href='<%="profile.jsp?sort=new"%>'><div class="order">New</div></a>
+		<a href='<%="hub.jsp?sort=hot"%>'><div class="order">Hot</div></a>
+		<a href='<%="hub.jsp?sort=top"%>'><div class="order">Top</div></a>
+		<a href='<%="hub.jsp?sort=new"%>'><div class="order">New</div></a>
 	</div>
 
 <table>

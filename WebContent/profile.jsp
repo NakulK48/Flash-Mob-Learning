@@ -75,7 +75,7 @@
 		<a href='<%="profile.jsp?id=" + userIDString + "&sort=new"%>'><div class="order">New</div></a>
 	</div>
 
-<h1><%= profileUser.getName() %></h1>
+<h1>User: <%= profileUser.getName() %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
 <table>
 <%
@@ -96,7 +96,7 @@
 		"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >Upvote</button></td>" + //upvote
 		//TODO: Replace with upvote sprite
 		//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-		"<td class='title'> <a href='../preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+		"<td class='title'> <a href='preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
 		"<td class='age'>" + ageString + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +

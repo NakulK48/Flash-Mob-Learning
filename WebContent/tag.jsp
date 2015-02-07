@@ -61,8 +61,9 @@
 		<a href='<%="tag.jsp?name=" + tagName + "&sort=new"%>'><div class="order">New</div></a>
 	</div>
 
-<h1><%= tagName %></h1>
+<h1>Tag: <%= tagName %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
+<table>
 <%
 	for (PublishedDocument pd : thisTagDocuments)
 	{
@@ -81,12 +82,12 @@
 		"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >Upvote</button></td>" + //upvote
 		//TODO: Replace with upvote sprite
 		//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-		"<td class='title'> <a href='../preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+		"<td class='title'> <a href='preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
 		"<td class='age'>" + ageString + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
 		"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-		"<td class='submitter'> <a href='../userpage.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
+		"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
 		"<td></td>" +
 		"</tr>"; 
 		
@@ -94,7 +95,7 @@
 	}
 	
 %>
-
+</table>
 
 </body>
 </html>

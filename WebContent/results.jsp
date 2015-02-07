@@ -43,6 +43,17 @@
 	{
 		out.println("<p id='query'>Searching " + searchDomain + " for '" + searchQuery + "'</p>");
 	}
+%>
+<table>
+<%
+	Tag t = Tag.create("Bob");
+	DocumentManager dm = DocumentManager.getInstance();
+	LoginManager lm = LoginManager.getInstance();
+	dm.createTag(t);
+	User jimmy = lm.getUser("Jimmy Fallon");
+	PublishedDocument dc = new PublishedDocument(-1, DocumentType.SKULPT, jimmy, "Daffodil restructuring", System.currentTimeMillis() - 5600000, 9);
+	dm.createDocument(dc);
+	dm.addTag(dc, t);
 
 	if (searchDomain.equals("documents"))
 	{
@@ -67,12 +78,12 @@
 			"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >Upvote</button></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='../preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href='preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
 			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-			"<td class='submitter'> <a href='../userpage.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
+			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
 			"<td></td>" +
 			"</tr>"; 
 			
@@ -84,21 +95,38 @@
 	else if (searchDomain.equals("users"))
 	{
 		//TODO: maybe implement a fuzzier search here?
-		User u = LoginManager.getInstance().getUser(searchQuery);
-		String userID = Long.toString(u.getID());
-		out.println("<a class='searchResult' href='../profile.jsp?id='" + userID + "'>" + u.getName() + "</a>");		
+			try
+			{
+				User u = LoginManager.getInstance().getUser(searchQuery);
+				String userID = Long.toString(u.getID());
+				out.println(userID);
+				out.println("<a class='searchResult' href='profile.jsp?id=" + userID + "'>" + u.getName() + "</a>");		
+			}
+			catch (Exception e)
+			{
+				out.println("No such user exists.");
+			}
+
+	
 	}
 	
 	else if (searchDomain.equals("tags"))
 	{
 		//TODO: query Tag database for matching names
-		Tag tag = DocumentManager.getInstance().getTag(searchQuery);
-		String tagID = tag.name;
-		out.println("<a class='searchResult' href='../tag.jsp?name='" + tagID + "'>" + tag.name + "</a>");		
-		
+			try
+			{
+				Tag tag = DocumentManager.getInstance().getTag(searchQuery);
+				String tagID = tag.name;
+				out.println("<a class='searchResult' href='tag.jsp?name=" + tagID + "'>" + tag.name + "</a>");		
+			}
+			catch (Exception e)
+			{
+				out.println("No such tag exists.");
+			}
+
 	}
 %>
-
+</table>
 
 
 </body>

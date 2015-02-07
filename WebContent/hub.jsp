@@ -42,7 +42,7 @@
 		p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 	}
 	
-	else
+	else // "hot"
 	{
 		p = new QueryParam(25, 0, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
 	}
@@ -58,6 +58,12 @@
 	}
 	
 %>
+	<div id="orderHolder">
+		<a href='<%="profile.jsp?sort=hot"%>'><div class="order">Hot</div></a>
+		<a href='<%="profile.jsp?sort=top"%>'><div class="order">Top</div></a>
+		<a href='<%="profile.jsp?sort=new"%>'><div class="order">New</div></a>
+	</div>
+
 <table>
 	<tr>
 		<td class='heading' id='upvoteScoreHeading'></td>

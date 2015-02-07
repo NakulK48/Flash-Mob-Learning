@@ -31,11 +31,12 @@
 <body>
 <%
 	LoginManager lm = LoginManager.getInstance();
-	User jimmy = lm.createUser("Jimmy Robinson", "bob123", false);
-	Document da = new Document(1, DocumentType.SKULPT, jimmy, "Cicada tax cuts", System.currentTimeMillis());
-	Document db = new Document(2, DocumentType.SKULPT, jimmy, "Grasshopper tax increases", System.currentTimeMillis());
-	Document dc = new Document(3, DocumentType.SKULPT, jimmy, "Preying mantis spending cuts", System.currentTimeMillis());
 	DocumentManager dm = DocumentManager.getInstance();
+	User jimmy = lm.createUser("Jimmy Fallon", "password1", false);
+	PublishedDocument da = new PublishedDocument(-1, DocumentType.SKULPT, jimmy, "Cicada tax cuts", System.currentTimeMillis(), 0);
+	PublishedDocument db = new PublishedDocument(-1, DocumentType.SKULPT, jimmy, "Grasshopper tax increases", System.currentTimeMillis(), 1);
+	PublishedDocument dc = new PublishedDocument(-1, DocumentType.SKULPT, jimmy, "Preying mantis spending cuts", System.currentTimeMillis(), 2);
+
 	dm.createDocument(da);
 	dm.createDocument(db);
 	dm.createDocument(dc);
@@ -68,7 +69,6 @@
 	}
 
 	ArrayList<PublishedDocument> subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
-	
 
 	if (upvoted != null)
 	{
@@ -110,12 +110,12 @@
 			"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >Upvote</button></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='../preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href='preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
 			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-			"<td class='submitter'> <a href='../userpage.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
+			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
 			"<td></td>" +
 			"</tr>"; 
 			

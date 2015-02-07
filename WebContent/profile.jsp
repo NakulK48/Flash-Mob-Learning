@@ -36,7 +36,7 @@
 	}
 	catch (NumberFormatException e)
 	{
-		out.println("<p class='error'>This user doesn't seem to exist!</p>");
+		out.println("<p class='error'>This user ID is invalid!</p>");
 		return;
 	}
 	
@@ -63,6 +63,7 @@
 	catch (Exception e)
 	{
 		out.println("<p class='error'>This user doesn't seem to exist!</p>");
+		e.printStackTrace();
 		return;
 	}
 	

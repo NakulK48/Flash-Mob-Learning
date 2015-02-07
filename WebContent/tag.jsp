@@ -34,7 +34,7 @@
 	{
 		Tag tag = DocumentManager.getInstance().getTag(tagName);
 		QueryParam p;
-		if (sortType == "new")
+		if (sortType.equals("new"))
 		{
 			p = new QueryParam(25, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 		}

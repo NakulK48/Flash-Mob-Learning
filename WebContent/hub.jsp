@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="java.util.LinkedList, uk.ac.cam.grpproj.lima.flashmoblearning.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.*" %>
+    pageEncoding="ISO-8859-1" import="java.sql.*, java.util.ArrayList, uk.ac.cam.grpproj.lima.flashmoblearning.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -14,16 +14,35 @@
 		{
 			Database.init();
 		}
-		catch (Exception e)
+		
+		catch (ClassNotFoundException e)
 		{
-			System.out.println("Something went wrong! Try reloading the page.");
-			return;
+			e.printStackTrace();
 		}
+		
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
 	} 
 %>
 </head>
 <body>
 <%
+	LoginManager lm = LoginManager.getInstance();
+	User jimmy = lm.createUser("Jimmy Robinson", "bob123", false);
+	Document da = new Document(1, DocumentType.SKULPT, jimmy, "Cicada tax cuts", System.currentTimeMillis());
+	Document db = new Document(2, DocumentType.SKULPT, jimmy, "Grasshopper tax increases", System.currentTimeMillis());
+	Document dc = new Document(3, DocumentType.SKULPT, jimmy, "Preying mantis spending cuts", System.currentTimeMillis());
+	DocumentManager dm = DocumentManager.getInstance();
+	dm.createDocument(da);
+	dm.createDocument(db);
+	dm.createDocument(dc);
+	
+	
+	
+
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
 	String doctype = request.getParameter("doctype"); //browsing text or skulpt?
 	String sortType = request.getParameter("sort");
@@ -48,7 +67,7 @@
 		p = new QueryParam(25, 0, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
 	}
 
-	LinkedList<PublishedDocument> subs = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
+	ArrayList<PublishedDocument> subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
 	
 
 	if (upvoted != null)
@@ -103,49 +122,8 @@
 			out.println(entry);
 		} 
 		
-		 /*
-		String entry = 
-		"<tr class='upperRow'>" + 
-		"<td class='upvote'><form method='post' action='hub.jsp'><button name='upvote12345'>Upvote</button></form></td>" + //upvote
-		"<td class='title'>" + "Spider climbing up screen" 	+ "</td>" + //title
-		"<td class='age'>" + "4" + " hours ago" + "</td>" + //age
-		"</tr>" + 
-		"<tr class='lowerRow'>" +
-		"<td class='votes'>" + "11"	+ "</td>" + //score
-		"<td class='submitter'>" + "George Bush" 		+ "</td>" + //submitter
-		"<td></td>" +
-		"</tr>"; 
-		
-		out.println(entry);
-		
-		String entry2 = 
-		"<tr class='upperRow'>" + 
-		"<td class='upvote'>O</td>" + //upvote
-		"<td class='title'>" + "Mosquito flying around screen" 	+ "</td>" + //title
-		"<td class='age'>" + "Less than an hour ago" + "</td>" + //age
-		"</tr>" + 
-		"<tr class='lowerRow'>" +
-		"<td class='votes'>" + "18"	+ "</td>" + //score
-		"<td class='submitter'>" + "Bill Clinton" 		+ "</td>" + //submitter
-		"<td></td>" +
-		"</tr>"; 
-		
-		out.println(entry2);
-		
-		String entry3 = 
-		"<tr class='upperRow'>" + 
-		"<td class='upvote'>O</td>" + //upvote
-		"<td class='title'>" + "Cicada receiving tax cuts" 	+ "</td>" + //title
-		"<td class='age'>" + "2 days ago" + "</td>" + //age
-		"</tr>" + 
-		"<tr class='lowerRow'>" +
-		"<td class='votes'>" + "48"	+ "</td>" + //score
-		"<td class='submitter'>" + "Ronald Reagan" 		+ "</td>" + //submitter
-		"<td></td>" +
-		"</tr>"; 
-		
-		out.println(entry3);
-		*/
+		dm.deleteAllDocumentsByUser(jimmy);
+		lm.deleteUser(jimmy);
 	%>
 	
 	

@@ -48,7 +48,7 @@
 		p = new QueryParam(25, 0, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
 	}
 
-	LinkedList<PublishedDocument> subs = new LinkedList<PublishedDocument>(); //(LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
+	LinkedList<PublishedDocument> subs = (LinkedList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
 	
 
 	if (upvoted != null)

@@ -1,7 +1,7 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
 import junit.framework.Assert;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.Database;
+import uk.ac.cam.grpproj.lima.flashmoblearning.TestHelper;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -13,12 +13,12 @@ public class DatabaseTests {
 
     @org.junit.Before
     public void setUp() throws Exception {
-    	Database.init();
+        TestHelper.databaseInit();
     }
 
     @org.junit.After
     public void tearDown() throws Exception {
-        Database.getInstance().close();
+        TestHelper.databaseCleanTablesAndClose();
     }
 
     @org.junit.Test

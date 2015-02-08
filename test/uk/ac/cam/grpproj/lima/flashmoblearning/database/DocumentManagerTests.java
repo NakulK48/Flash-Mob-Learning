@@ -5,10 +5,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.ac.cam.grpproj.lima.flashmoblearning.*;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.Database;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
 
 import java.sql.*;
 import java.util.*;
@@ -31,7 +27,7 @@ public class DocumentManagerTests {
 
     @Before
     public void setUp() throws Exception {
-    	Database.init();
+        TestHelper.databaseInit();
         m_Statement = Database.getInstance().getStatement();
         m_Connection = Database.getInstance().getConnection();
 
@@ -165,10 +161,7 @@ public class DocumentManagerTests {
 
     @After
     public void tearDown() throws Exception {
-        Database.getInstance().getStatement().executeUpdate("DELETE FROM users WHERE id = '" + m_TestUser.getID() + "'");
-        Database.getInstance().getStatement().executeUpdate("DELETE FROM users WHERE id = '" + m_TestUser2.getID() + "'");
-        Database.getInstance().getStatement().executeUpdate("DELETE FROM tags WHERE name LIKE '" + c_TestTagTitle + "%'");
-        Database.getInstance().close();
+        TestHelper.databaseCleanTablesAndClose();
     }
 
     @Test

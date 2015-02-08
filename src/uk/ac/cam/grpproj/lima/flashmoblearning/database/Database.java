@@ -45,28 +45,12 @@ public class Database {
 	 * REQUIREMENTS: An external mysql server with username and password as above,
 	 * a database called flashmoblearning and appropriate permissions. **/
 	public static void init() throws ClassNotFoundException, SQLException {
-		if(Boolean.getBoolean("useHsqlDb")) {
-            Class.forName("org.hsqldb.jdbcDriver");
-            try {
-                File f = null;
-                if(Boolean.getBoolean("unitTests")) {
-                    f = File.createTempFile("flashmoblearning", ".test.db");
-                    f.deleteOnExit();
-                } else {
-                    f = new File(System.getProperty("user.home"),".flashmoblearning.hdb");
-                }
-                init("jdbc:hsqldb:"+f+";sql.syntax_mys=true","SA","");
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to create temporary JDBC database file.");
-            }
-        } else {
-            Class.forName("com.mysql.jdbc.Driver");
-            init(c_JDBCURL, c_Username, c_Password);
-        }
+		Class.forName("com.mysql.jdbc.Driver");
+        init(c_JDBCURL, c_Username, c_Password);
 	}
 
 	/** Portable setup from an arbitrary JDBC URL */
-	private static void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
+	public static void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
 		Connection connection = DriverManager.getConnection(databaseURL, username, password);
 		boolean createUser = setup(connection);
         m_Instance = new Database(connection);

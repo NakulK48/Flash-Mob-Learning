@@ -26,13 +26,13 @@ public class RevisionTest {
 	
     @org.junit.Before
     public void setUp() throws Exception {
-    	Database.init();
+    	TestHelper.databaseInit();
     	owner = LoginManager.getInstance().getUser(Database.DEFAULT_TEACHER_USERNAME);
     }
 
     @org.junit.After
     public void tearDown() throws Exception {
-        Database.getInstance().close();
+		TestHelper.databaseCleanTablesAndClose();
     }
 
 	@Test

@@ -21,12 +21,12 @@ public class UserTest {
 	
     @org.junit.Before
     public void setUp() throws Exception {
-    	Database.init();
+    	TestHelper.databaseInit();
     }
 
     @org.junit.After
     public void tearDown() throws Exception {
-        Database.getInstance().close();
+		TestHelper.databaseCleanTablesAndClose();
     }
     
 	final int id = 1;

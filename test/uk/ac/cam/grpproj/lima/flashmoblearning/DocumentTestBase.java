@@ -24,13 +24,13 @@ public abstract class DocumentTestBase {
 	
     @org.junit.Before
     public void setUp() throws Exception {
-    	Database.init();
+    	TestHelper.databaseInit();
     	owner = LoginManager.getInstance().getUser(Database.DEFAULT_TEACHER_USERNAME);
     }
 
     @org.junit.After
     public void tearDown() throws Exception {
-        Database.getInstance().close();
+		TestHelper.databaseCleanTablesAndClose();
     }
 
 	abstract Document create(long id, DocumentType docType, User owner,

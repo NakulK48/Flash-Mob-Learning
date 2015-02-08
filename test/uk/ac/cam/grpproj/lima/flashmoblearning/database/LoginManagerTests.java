@@ -6,9 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Student;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Teacher;
+import uk.ac.cam.grpproj.lima.flashmoblearning.TestHelper;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.Database;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 
 import java.lang.reflect.Field;
@@ -27,7 +26,7 @@ public class LoginManagerTests {
 
     @Before
     public void setUp() throws Exception {
-    	Database.init();
+        TestHelper.databaseInit();
         m_Statement = Database.getInstance().getStatement();
         m_Connection = Database.getInstance().getConnection();
 
@@ -44,8 +43,7 @@ public class LoginManagerTests {
 
     @After
     public void tearDown() throws Exception {
-        Database.getInstance().getStatement().executeUpdate("DELETE FROM users WHERE username = '" + c_TestUsername + "'");
-        Database.getInstance().close();
+        TestHelper.databaseCleanTablesAndClose();
     }
 
     @Test

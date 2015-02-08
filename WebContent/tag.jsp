@@ -29,6 +29,8 @@ table {top:200px;}
 	String tagName = request.getParameter("name");
 	
 	String sortType = request.getParameter("sort");
+	
+	
 	if (sortType == null ) sortType = "new";
 	if (!sortType.equals("new") && !sortType.equals("top")) sortType = "new";
 	String capitalisedSortType = sortType.substring(0, 1).toUpperCase() + sortType.substring(1);

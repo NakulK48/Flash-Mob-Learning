@@ -42,6 +42,18 @@
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
 	String doctype = request.getParameter("doctype"); //browsing text or skulpt?
 	String sortType = request.getParameter("sort");
+	String pageNumberString = request.getParameter("page");
+	if (pageNumberString == null) pageNumberString = "1";
+	int pageNumber = Integer.parseInt(pageNumberString);
+	int previousPage = pageNumber - 1;
+	int nextPage = pageNumber + 1;
+	if (pageNumber <= 1)
+	{
+		pageNumber = 1;
+		previousPage = 1;
+	}
+
+	int offset = (pageNumber - 1) * 25;
 	
 	if (sortType == null) sortType = "hot";
 	if (!sortType.equals("new") && !sortType.equals("top") && !sortType.equals("hot")) sortType = "hot";
@@ -50,17 +62,17 @@
 	
 	if (sortType.equals("new"))
 	{
-		p = new QueryParam(25, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+		p = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	}
 	
 	else if (sortType.equals("top"))
 	{
-		p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
+		p = new QueryParam(25, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 	}
 	
 	else // "hot"
 	{
-		p = new QueryParam(25, 0, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
+		p = new QueryParam(25, offset, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
 	}
 
 	ArrayList<PublishedDocument> subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
@@ -120,9 +132,17 @@
 		
 		//dm.deleteAllDocumentsByUser(jimmy);
 		//lm.deleteUser(jimmy);
+		
+		String previousURL = "hub.jsp?sort=" + sortType + "&page=" + previousPage;
+		String nextURL = "hub.jsp?sort=" + sortType + "&page=" + nextPage;
+		
 	%>
 	
-	
+	<tr id="pageHolder">	
+	<td id="previous"><a href='<%=previousURL %>'>Previous</a></td>
+	<td id="current">Page <%=pageNumber %></td>
+	<td id="next"><a href='<%=nextURL %>'>Next</a></td>
+	</tr>	
 </table>
 </body>
 </html>

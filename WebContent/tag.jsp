@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Profile - Flash Mob Learning</title>
+<title>Tag - Flash Mob Learning</title>
 <link rel="stylesheet" type="text/css" href="HubStyle.css">
 <%!
 	public void jspInit()

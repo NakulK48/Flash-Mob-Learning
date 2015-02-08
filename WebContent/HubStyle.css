@@ -20,6 +20,21 @@ td
 .upvote
 {text-align:center}
 
+#previous
+{
+	text-align:right;
+}
+
+#current
+{
+	text-align:center;
+}
+
+#next
+{
+	text-align:left;
+}
+
 #upvoteScoreHeading
 {
 	width:10%;

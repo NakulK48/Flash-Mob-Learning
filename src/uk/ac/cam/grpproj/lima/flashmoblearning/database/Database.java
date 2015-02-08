@@ -52,10 +52,15 @@ public class Database {
 	/** Portable setup from an arbitrary JDBC URL */
 	public static void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
 		Connection connection = DriverManager.getConnection(databaseURL, username, password);
-		boolean createUser = setup(connection);
+		setup(connection);
         m_Instance = new Database(connection);
+		createDefaultUser();
+	}
 
-        if(createUser) {
+	private static void createDefaultUser() throws SQLException {
+		// Check if there are any users, if not, create one.
+		ResultSet rs = m_Instance.getStatement().executeQuery("SELECT * FROM users");
+		if(!rs.first()) {
             LoginManager lm = LoginManager.getInstance();
             try {
                 User teacher = lm.createUser(DEFAULT_TEACHER_USERNAME, "", true);
@@ -70,7 +75,7 @@ public class Database {
             }
         }
 	}
-	
+
 	private Database(Connection connection) throws SQLException {
 		m_Connection = connection;
 		m_LoginManagerInstance = new LoginManager(this);
@@ -114,9 +119,7 @@ public class Database {
 
 	/** Creates all necessary tables if they do not exist.
 	 * @return True if we created tables. **/
-	private static boolean setup(Connection connection) throws SQLException {
-        boolean ret = false;
-
+	private static void setup(Connection connection) throws SQLException {
         String create_documents = "CREATE TABLE documents (\n" +
 				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
 				"  user_id bigint NOT NULL,\n" +
@@ -228,8 +231,6 @@ public class Database {
 			statement.execute(create_users);
 			statement.execute(create_votes);
 			statement.execute(create_settings);
-
-            ret = true;
 		}
 
 		// Checks and creates login banner if it does not exist.
@@ -250,7 +251,6 @@ public class Database {
 			} catch (SQLException e) {
 			}
 		}
-		return ret;
 	}
 	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {

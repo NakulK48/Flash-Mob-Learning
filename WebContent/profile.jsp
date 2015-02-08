@@ -22,6 +22,7 @@
 %>
 <style>
 table {top:200px;}
+.title {font-size:16pt;}
 </style>
 </head>
 <body>
@@ -106,6 +107,7 @@ table {top:200px;}
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
 		"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
+		"<td></td>" + 
 		"<td></td>" +
 		"</tr>"; 
 		

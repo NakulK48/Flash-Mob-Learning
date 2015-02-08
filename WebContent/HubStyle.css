@@ -6,6 +6,12 @@ table
 	border-collapse:collapse;
 	position:absolute;
 	top:50px;
+	font-size:14pt;
+}
+
+td
+{
+	padding-left:10px;
 }
 
 .votes

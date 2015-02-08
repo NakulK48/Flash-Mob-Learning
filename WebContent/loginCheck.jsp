@@ -11,11 +11,6 @@
 <title>JSP Page</title>
 </head>
 <body>
-	<%!
-		public void jspInit(){
-			
-		}
-	%>
 	<%
 		// get request parameters
 		//String userID = request.getParameter("uid");

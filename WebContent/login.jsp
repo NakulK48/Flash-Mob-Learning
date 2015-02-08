@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -11,6 +12,8 @@
 		if(session.getAttribute("uid")!=null){
 			response.sendRedirect("home.jsp");
 		}
+		out.println("<center><p2>Welcome!</p2></center>");
+		//out.println"<p2>"+(LoginManager.getInstance().getLoginBanner()+</p2>);
 		String status = request.getParameter("status");
 		if(status!=null){
 			if(status.equals("fail")){
@@ -19,6 +22,8 @@
 				<%
 			}
 		}
+		
+		
 	%>
 	<form method="post" action="loginCheck.jsp">
 		<center>
@@ -31,7 +36,7 @@
 
 					<tr>
 						<td>User Name</td>
-						<td><input type="text" name="id" placeholder="UserID"
+						<td><input type="text" name="username" placeholder="Username"
 							required /></td>
 					</tr>
 					<tr>

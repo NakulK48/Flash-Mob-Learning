@@ -18,7 +18,7 @@
 		String pwd = request.getParameter("pwd");
 		String rpwd = request.getParameter("rpwd");
 		
-		if (pwd.length()<10||pwd.length()>22){
+		if (pwd.length()<8||pwd.length()>22){
 			%>
 			<jsp:forward page="reg.jsp">
 			<jsp:param value="length" name="pwstatus"/>
@@ -31,41 +31,19 @@
 			</jsp:forward>
 			<%
 		}
-		/*
+		boolean success = false;
+		
 		//Data base connection 
 		try{
+			
 			LoginManager l = LoginManager.getInstance();
+			System.out.println("successfully invoked login manager");
 			User u = l.createUser(fname+" "+lname, pwd, false);
-			session.setAttribute("uid",u.getID());
-			response.sendRedirect("home.jsp");
+			session.setAttribute("uid",String.valueOf(u.getID()));
+			response.sendRedirect("home.jsp");			
 		}catch(DuplicateNameException e){
-			%>
-			<jsp:forward page="reg.jsp">
-			<jsp:param value="dname" name="reg"/>
-			</jsp:forward>
-			<%
-		}catch(Exception e){
-			%>
-			<jsp:forward page="reg.jsp">
-			<jsp:param value="regfail" name="reg"/>
-			</jsp:forward>
-			<%
+			response.sendRedirect("reg.jsp");
 			e.printStackTrace();
-		}
-		
-		*/
-		//TODO: data base connection
-		boolean reg = true;
-		String userID = "2";
-		if (reg) {
-			session.setAttribute("uid", userID);
-			response.sendRedirect("home.jsp");
-		} else {
-			%>
-			<jsp:forward page="reg.jsp">
-			<jsp:param value="regfail" name="status"/>
-			</jsp:forward>
-			<%
 		}
 	%>
 </html>

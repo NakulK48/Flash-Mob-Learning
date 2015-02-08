@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,6 +8,16 @@
 <title>Login - Flash Mob Learning</title>
 </head>
 <body>
+	<%!
+		//init db on login page??
+		public void jspInit(){
+			try{
+				Database.init();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	%>
 	<%	
 		if(session.getAttribute("uid")!=null){
 			response.sendRedirect("home.jsp");

@@ -27,7 +27,7 @@
 			if(reg.equals("regfail")){
 				%>
 				<div><center><font color="red">Failed to register, try again later.</font></center></div>
-			<%
+				<%
 			}
 		}
 	%>
@@ -36,7 +36,7 @@
 			<table border="1" width="30%" cellpadding="3">
 				<thead>
 					<tr>
-						<th colspan="2">Login Here</th>
+						<th colspan="2">Register Here</th>
 					</tr>
 				</thead>
 				<tbody>

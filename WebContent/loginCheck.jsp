@@ -16,14 +16,13 @@
 		//String userID = request.getParameter("uid");
 		String username = request.getParameter("username");
 		String pwd = request.getParameter("pwd");
-		//TODO: data base connection
-		/*
+		
 		//TODO: test database.
 		try{
 			LoginManager l = LoginManager.getInstance();
 			User u = l.getUser(username);
 			if(u.checkPassword(pwd)){
-				session.setAttribute("uid",u.getID());
+				session.setAttribute("uid",String.valueOf(u.getID()));
 				response.sendRedirect("home.jsp");
 			}else{
 				%>
@@ -34,21 +33,6 @@
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-		}
-		*/
-		
-		
-		
-				
-		if (username.equals("Jamie") && pwd.equals("pwd")) {
-			session.setAttribute("uid", "1");
-			response.sendRedirect("home.jsp");
-		} else {
-			%>
-			<jsp:forward page="login.jsp">
-			<jsp:param value="fail" name="status"/>
-			</jsp:forward>
-			<%
 		}
 	%>
 </body>

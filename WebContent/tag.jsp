@@ -35,6 +35,19 @@ table {top:200px;}
 	if (!sortType.equals("new") && !sortType.equals("top")) sortType = "new";
 	String capitalisedSortType = sortType.substring(0, 1).toUpperCase() + sortType.substring(1);
 	ArrayList<PublishedDocument> thisTagDocuments = null;
+	
+	String pageNumberString = request.getParameter("page");
+	if (pageNumberString == null) pageNumberString = "1";
+	int pageNumber = Integer.parseInt(pageNumberString);
+	int previousPage = pageNumber - 1;
+	int nextPage = pageNumber + 1;
+	if (pageNumber <= 1)
+	{
+		pageNumber = 1;
+		previousPage = 1;
+	}
+
+	int offset = (pageNumber - 1) * 25;
 
 	try
 	{
@@ -42,12 +55,12 @@ table {top:200px;}
 		QueryParam p;
 		if (sortType.equals("new"))
 		{
-			p = new QueryParam(25, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+			p = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 		}
 		
 		else
 		{
-			p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
+			p = new QueryParam(25, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 		}
 
 		thisTagDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTag(tag, p);
@@ -101,7 +114,16 @@ table {top:200px;}
 		out.println(entry);
 	}
 	
-%>
+		String previousURL = "tag.jsp?sort=" + sortType + "&name=" + tagName + "&page=" + previousPage;
+		String nextURL = "tag.jsp?sort=" + sortType + "&name=" + tagName + "&page=" + nextPage;
+		
+	%>
+	
+	<tr id="pageHolder">	
+	<td id="previous"><a href='<%=previousURL %>'>Previous</a></td>
+	<td id="current">Page <%=pageNumber %></td>
+	<td id="next"><a href='<%=nextURL %>'>Next</a></td>
+	</tr>	
 </table>
 
 </body>

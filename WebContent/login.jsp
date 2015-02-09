@@ -18,23 +18,6 @@
 			}
 		}
 	%>
-	<%	
-		if(session.getAttribute("uid")!=null){
-			response.sendRedirect("home.jsp");
-		}
-		out.println("<center><p2>Welcome!</p2></center>");
-		//out.println"<p2>"+(LoginManager.getInstance().getLoginBanner()+</p2>);
-		String status = request.getParameter("status");
-		if(status!=null){
-			if(status.equals("fail")){
-				%>
-					<div><center><font color="red">Either user id or password is wrong.</font></center></div>
-				<%
-			}
-		}
-		
-		
-	%>
 	<form method="post" action="loginCheck.jsp">
 		<center>
 			<table border="1" width="30%" cellpadding="3">

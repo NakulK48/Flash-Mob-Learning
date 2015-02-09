@@ -3,7 +3,8 @@
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*"%>
-
+<%@ page import="javax.servlet.*" %>
+<%@ page import="java.io.*" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -19,31 +20,25 @@
 		String rpwd = request.getParameter("rpwd");
 		
 		if (pwd.length()<8||pwd.length()>22){
-			%>
-			<jsp:forward page="reg.jsp">
-			<jsp:param value="length" name="pwstatus"/>
-			</jsp:forward>
-			<%
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/reg.jsp");
+			response.getWriter().println("<center><font color=red>Password length must be between 8 and 22 characters.</font></center>");
+			rd.include(request, response);
 		}else if (!pwd.equals(rpwd)){
-			%>
-			<jsp:forward page="reg.jsp">
-			<jsp:param value="match" name="pwstatus"/>
-			</jsp:forward>
-			<%
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/reg.jsp");
+			response.getWriter().println("<center><font color=red>Password does not match.</font></center>");
+			rd.include(request, response);
 		}
-		boolean success = false;
 		
 		//Data base connection 
 		try{
-			
 			LoginManager l = LoginManager.getInstance();
-			System.out.println("successfully invoked login manager");
 			User u = l.createUser(fname+" "+lname, pwd, false);
 			session.setAttribute("uid",String.valueOf(u.getID()));
 			response.sendRedirect("home.jsp");			
 		}catch(DuplicateNameException e){
-			response.sendRedirect("reg.jsp");
-			e.printStackTrace();
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/reg.jsp");
+			response.getWriter().println("<center><font color=red>Username already exists.</font></center>");
+			rd.include(request, response);
 		}
 	%>
 </html>

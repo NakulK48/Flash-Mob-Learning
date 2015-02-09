@@ -7,30 +7,6 @@
 <title>-Register - Flash Mob Learning</title>
 </head>
 <body>
-	<%	
-		String status = request.getParameter("pwstatus");
-		String reg = request.getParameter("regstatus");
-		if(status!=null){
-			if(status.equals("match")){
-				%><div><center><font color="red">Password does not match.</font></center></div><%
-			}
-			if(status.equals("length")){
-				%><div><center><font color="red">The password must be between 10 and 22 characters</font></center></div><%
-			}
-		}
-		if(reg!=null){
-			if(reg.equals("dname")){
-				%>
-				<div><center><font color="red">User name already exits..</font></center></div>
-			<%
-			}
-			if(reg.equals("regfail")){
-				%>
-				<div><center><font color="red">Failed to register, try again later.</font></center></div>
-				<%
-			}
-		}
-	%>
 	<form method="post" action="regCheck.jsp">
 		<center>
 			<table border="1" width="30%" cellpadding="3">

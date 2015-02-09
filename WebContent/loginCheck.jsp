@@ -25,13 +25,11 @@
 				session.setAttribute("uid",String.valueOf(u.getID()));
 				response.sendRedirect("home.jsp");
 			}else{
-				%>
-				<jsp:forward page="login.jsp">
-				<jsp:param value="fail" name="status"/>
-				</jsp:forward>
-				<%
-			}
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
+				response.getWriter().println("<center><font color=red>Password/Username does not match.</font></center>");
+				rd.include(request, response);			}
 		}catch(Exception e){
+			response.sendRedirect("err.jsp");
 			e.printStackTrace();
 		}
 	%>

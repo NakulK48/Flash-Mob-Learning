@@ -29,10 +29,8 @@
 			response.sendRedirect("home.jsp");
 		}
 	%>
-	<center><%=LoginManager.getInstance().getLoginBanner() %></center>
 	<div class="login-card">
-		<h1>Login</h1>
-		<br>
+	<center><%=LoginManager.getInstance().getLoginBanner() %></center>
 		<form method="post" action="loginCheck.jsp">
 			<input type="text" name="username" placeholder="Username" required> <input
 				type="password" name="pwd" placeholder="Password" required> <input

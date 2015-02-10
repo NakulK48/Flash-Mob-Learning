@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*"%>
 <%@ page import="javax.servlet.*"%>
 
@@ -22,14 +23,22 @@
 			User u = l.getUser(username);
 			if(u.checkPassword(pwd)){
 				session.setAttribute("uid",String.valueOf(u.getID()));
+				if((u.getID())==1){
+					System.out.println("Admin mode");
+					
+				}
 				response.sendRedirect("home.jsp");
 			}else{
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 				response.getWriter().println("<center><font color=red>Password/Username does not match.</font></center>");
 				rd.include(request, response);			
 			}
+		}catch(NoSuchObjectException e){
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
+			response.getWriter().println("<center><font color=red>Password/Username does not match.</font></center>");
+			rd.include(request, response);
 		}catch(Exception e){
-			response.sendRedirect("err.jsp");
+			response.sendRedirect("error.jsp");
 			e.printStackTrace();
 		}
 	%>

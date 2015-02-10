@@ -14,8 +14,7 @@
 </head>
 	<%
 		// get request parameters
-		String fname = request.getParameter("fn");
-		String lname = request.getParameter("ln");
+		String name = request.getParameter("username");
 		String pwd = request.getParameter("pwd");
 		String rpwd = request.getParameter("rpwd");
 		
@@ -32,7 +31,7 @@
 		//Data base connection 
 		try{
 			LoginManager l = LoginManager.getInstance();
-			User u = l.createUser(fname+" "+lname, pwd, false);
+			User u = l.createUser(name, pwd, false);
 			session.setAttribute("uid",String.valueOf(u.getID()));
 			response.sendRedirect("home.jsp");			
 		}catch(DuplicateNameException e){

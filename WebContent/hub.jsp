@@ -110,7 +110,8 @@
 			else
 			{
 				int ageInDays = ageInHours / 24;
-				ageString = ageInDays + " days ago";
+				if (ageInDays == 1) ageString = "yesterday";
+				else ageString = ageInDays + " days ago";
 			}
 			
 			String entry = 

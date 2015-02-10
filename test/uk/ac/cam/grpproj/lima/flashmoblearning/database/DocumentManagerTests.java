@@ -166,7 +166,7 @@ public class DocumentManagerTests {
 
     @After
     public void tearDown() throws Exception {
-        //TestHelper.databaseCleanTablesAndClose();
+        TestHelper.databaseCleanTablesAndClose();
     }
 
     @Test
@@ -423,7 +423,10 @@ public class DocumentManagerTests {
         DocumentManager.getInstance().ageScores(QueryParam.UNSORTED);
         List<PublishedDocument> published_with_votes = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED);
         PublishedDocument doc = published_with_votes.get(0);
-        System.out.println("Score has aged from " + doc.getVotes() + " to " + doc.getScore() + " calculated " + doc.calculateScore());
+        double calculatedScore = doc.calculateScore();
+        double drift = Math.abs((doc.getScore() - calculatedScore)/doc.getScore());
+        System.out.println("Score has aged from " + doc.getVotes() + " to " + doc.getScore() + " calculated " + calculatedScore + ", drift: " + drift);
         Assert.assertTrue("Expect score to have reduced", doc.getVotes() > doc.getScore());
+        Assert.assertTrue("Calculated and DB score should not be drift by more than 5%", drift < 0.05);
     }
 }

@@ -405,7 +405,7 @@ public class DocumentManager {
 
 	public void ageScores(QueryParam param) throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(
-				param.updateQuery("UPDATE documents SET score = vote_count * EXP(POWER(time_to_sec(timediff(NOW(),update_time)) / 3600,2)/50000) WHERE score > 0"));
+				param.updateQuery("UPDATE documents SET score = vote_count * EXP(-1 * POWER(time_to_sec(timediff(NOW(),update_time)) / 3600,2)/50000) WHERE score > 0"));
 		ps.executeUpdate();
 	}
 }

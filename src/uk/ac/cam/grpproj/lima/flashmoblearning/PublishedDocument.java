@@ -95,6 +95,6 @@ public class PublishedDocument extends Document{
 	public double calculateScore()
 	{
 		double age = (System.currentTimeMillis() - creationTime)/3600000;
-		return (votes * Math.exp(age * age / 50000));
+		return (votes * Math.exp(-1 * age * age / 50000));
 	}
 }

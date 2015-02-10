@@ -128,6 +128,7 @@ public class Database {
 				"  featured_flag tinyint NOT NULL DEFAULT '0',\n" +
 				"  update_time timestamp NOT NULL,\n" +
 				"  vote_count int NOT NULL DEFAULT '0',\n" +
+				"  score float NOT NULL DEFAULT '0',\n" +
 				"  PRIMARY KEY (id)\n" +
 				")\n";
 

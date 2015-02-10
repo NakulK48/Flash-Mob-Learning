@@ -51,7 +51,7 @@ public class DocumentManager {
 
 	private PublishedDocument getPublishedDocumentFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
 		return new PublishedDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
-				rs.getString("title"), rs.getTimestamp("update_time").getTime(), rs.getInt("vote_count"));
+				rs.getString("title"), rs.getTimestamp("update_time").getTime(), rs.getInt("vote_count"), rs.getDouble("score"));
 	}
 
 	private WIPDocument getWIPDocumentFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
@@ -385,7 +385,7 @@ public class DocumentManager {
 		ps.setLong(2, d.getID());
 		ps.executeUpdate();
 
-		ps = m_Database.getConnection().prepareStatement("UPDATE documents SET vote_count = vote_count + 1 WHERE id = ?");
+		ps = m_Database.getConnection().prepareStatement("UPDATE documents SET vote_count = vote_count + 1, score = score + 1 WHERE id = ?");
 		ps.setLong(1, d.getID());
 		ps.executeUpdate();
 	}
@@ -401,5 +401,11 @@ public class DocumentManager {
 
 		if(!rs.next()) throw new NoSuchObjectException("revision " + revision.getID());
 		return rs.getString("content");
+	}
+
+	public void ageScores(QueryParam param) throws SQLException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(
+				param.updateQuery("UPDATE documents SET score = vote_count * EXP(POWER(time_to_sec(timediff(NOW(),update_time)) / 3600,2)/50000) WHERE score > 0"));
+		ps.executeUpdate();
 	}
 }

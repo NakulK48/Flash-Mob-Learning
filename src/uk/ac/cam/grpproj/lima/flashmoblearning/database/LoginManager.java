@@ -3,6 +3,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Student;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Teacher;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
+import uk.ac.cam.grpproj.lima.flashmoblearning.WIPDocument;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
@@ -10,6 +11,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitialized
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LoginManager {
@@ -31,10 +33,7 @@ public class LoginManager {
 		ResultSet rs = ps.executeQuery();
 
 		if(!rs.next()) throw new NoSuchObjectException("user " + username);
-		if(rs.getBoolean("teacher_flag"))
-			return new Teacher(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
-		else
-			return new Student(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
+		return getUserFromResultSet(rs);
 	}
 
 	/** Get a user by user id */
@@ -44,12 +43,25 @@ public class LoginManager {
 		ResultSet rs = ps.executeQuery();
 
 		if(!rs.next()) throw new NoSuchObjectException("user " + id);
+		return getUserFromResultSet(rs);
+	}
+
+	private List<User> getUsersFromResultSet(ResultSet rs) throws SQLException {
+		List<User> ret = new ArrayList<User>();
+
+		while(rs.next())
+			ret.add(getUserFromResultSet(rs));
+
+		return ret;
+	}
+
+	private User getUserFromResultSet(ResultSet rs) throws SQLException {
 		if(rs.getBoolean("teacher_flag"))
 			return new Teacher(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
 		else
 			return new Student(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
 	}
-	
+
 	/** Delete a user by username */
 	public void deleteUser(User user) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM users WHERE id = ?");
@@ -107,5 +119,13 @@ public class LoginManager {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("UPDATE settings SET setting_value = ? WHERE setting_name = 'login_banner'");
 		ps.setString(1, banner);
 		ps.executeUpdate();
+	}
+
+	/** Retrieves all the users */
+	public List<User> getAllUsers(QueryParam param) throws SQLException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM users"));
+		ResultSet rs = ps.executeQuery();
+
+		return getUsersFromResultSet(rs);
 	}
 }

@@ -86,8 +86,8 @@ public class PublishedDocument extends Document{
 	
 	public static double calculateScore(long age, int votes)
 	{
-		age /= 3600000;
-		return (votes * Math.exp(-8 * age * age));
+		age /= 3600000; //in hours
+		return (votes * Math.exp(age * age / 100000));
 	}
 	
 	/** Calculate the document's score */

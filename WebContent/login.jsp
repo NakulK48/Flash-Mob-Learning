@@ -6,10 +6,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Login - Flash Mob Learning</title>
+
+<link rel="stylesheet" href="LoginStyle.css" media="screen"
+	type="text/css" />
+
 </head>
 <body>
 	<%!
 		//init db on login page??
+		
 		public void jspInit(){
 			try{
 				Database.init();
@@ -18,34 +23,30 @@
 			}
 		}
 	%>
-	<form method="post" action="loginCheck.jsp">
-		<center>
-			<table border="1" width="30%" cellpadding="3">
-				<thead>
-					<tr>
-						<th colspan="2">Login Here</th>
-					</tr>
-				</thead>
+	<%
+		//Check if user already logged in.
+		if(session.getAttribute("uid")!=null){
+			response.sendRedirect("home.jsp");
+		}
+	%>
+	<center><%=LoginManager.getInstance().getLoginBanner() %></center>
+	<div class="login-card">
+		<h1>Login</h1>
+		<br>
+		<form method="post" action="loginCheck.jsp">
+			<input type="text" name="username" placeholder="Username" required> <input
+				type="password" name="pwd" placeholder="Password" required> <input
+				type="submit" class="login login-submit" value="Login">
+		</form>
 
-					<tr>
-						<td>User Name</td>
-						<td><input type="text" name="username" placeholder="Username"
-							required /></td>
-					</tr>
-					<tr>
-						<td>Password</td>
-						<td><input type="password" name="pwd" placeholder="Password"
-							required /></td>
-					</tr>
-					<tr>
-						<td><input type="submit" value="Login" /></td>
-					</tr>
-					<tr>
-						<td colspan="2">New user? <a href="reg.jsp">Register Now!</a></td>
-					</tr>
-				</tbody>
-			</table>
-		</center>
-	</form>
+		<div class="login-help">
+			<a href="reg.jsp">Register</a>
+		</div>
+	</div>
+
+	<!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
+
+	<script
+		src='http://codepen.io/assets/libs/fullpage/jquery_and_jqueryui.js'></script>
 </body>
 </html>

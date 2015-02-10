@@ -7,6 +7,13 @@
 <title>-Register - Flash Mob Learning</title>
 </head>
 <body>
+	<%
+		//Check if user already logged in.
+		if(session.getAttribute("uid")!=null){
+			response.sendRedirect("home.jsp");
+		}
+	%>
+
 	<form method="post" action="regCheck.jsp">
 		<center>
 			<table border="1" width="30%" cellpadding="3">

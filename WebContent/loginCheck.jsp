@@ -17,7 +17,6 @@
 		String username = request.getParameter("username");
 		String pwd = request.getParameter("pwd");
 		
-		//TODO: test database.
 		try{
 			LoginManager l = LoginManager.getInstance();
 			User u = l.getUser(username);
@@ -27,7 +26,8 @@
 			}else{
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 				response.getWriter().println("<center><font color=red>Password/Username does not match.</font></center>");
-				rd.include(request, response);			}
+				rd.include(request, response);			
+			}
 		}catch(Exception e){
 			response.sendRedirect("err.jsp");
 			e.printStackTrace();

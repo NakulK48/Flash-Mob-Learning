@@ -35,9 +35,30 @@
 </head>
 <body>
 <%
+
 	
-	LoginManager lm = LoginManager.getInstance();
+
+	/* LoginManager lm = LoginManager.getInstance();
 	DocumentManager dm = DocumentManager.getInstance();
+	
+	User u = lm.createUser("Bob", "password1", false);
+	
+	PublishedDocument pd1 = new PublishedDocument(-1, DocumentType.SKULPT, u, "ABC", System.currentTimeMillis(), 0);
+	PublishedDocument pd2 = new PublishedDocument(-1, DocumentType.SKULPT, u, "DEF", System.currentTimeMillis() - 36000000, 5);
+	PublishedDocument pd3 = new PublishedDocument(-1, DocumentType.SKULPT, u, "GHI", System.currentTimeMillis() - 72000000, 10);
+	
+	Tag t = Tag.create("Synergy");
+	
+	dm.createDocument(pd1);
+	dm.createDocument(pd2);
+	dm.createDocument(pd3);
+	
+	
+	dm.addTag(pd1, t);
+	dm.addTag(pd2, t);
+	dm.addTag(pd3, t);
+ */	
+
 
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
 	String doctype = request.getParameter("doctype"); //browsing text or skulpt?

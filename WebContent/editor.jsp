@@ -5,19 +5,19 @@
 <html> 
 <head> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="skulpt.min.js" type="text/javascript"></script>
-    <script src="skulpt-stdlib.js" type="text/javascript"></script> 
-    <script src="codemirror.js"></script>
+    <script src="js/skulpt.min.js" type="text/javascript"></script>
+    <script src="js/skulpt-stdlib.js" type="text/javascript"></script> 
+    <script src="js/codemirror.js"></script>
     <link rel="stylesheet" href="css/codemirror.css">
-    <script src="python.js"></script>
+    <script src="js/python.js"></script>
     <link  href="css/demo.css" rel="stylesheet" />
 
     <!-- Include jQuery.mmenu .css files -->
     <link  href="css/jquery.mmenu.all.css" rel="stylesheet" />
 
     <!-- Include jQuery and the jQuery.mmenu .js files -->
-    <script type="text/javascript" src="jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="jquery.mmenu.min.all.js"></script>
+    <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mmenu.min.all.js"></script>
 
     <!-- Fire the plugin onDocumentReady -->
     <script type="text/javascript">
@@ -121,8 +121,8 @@
 	<!-- The menu -->
 	<nav id="menu">
 	<ul>
-		<li><a href="landing.html">Home</a></li>
-		<li><a href="#">My Docs</a></li>
+		<li><a href="landing.jsp">Home</a></li>
+		<li><a href="hub.jsp">My Docs</a></li>
 		<li><a href="communityHub.html">Community Hub</a></li>
 		<li style="padding-top: 140%;"></li>
 		<li><a href="logout.html">Logout</a></li>

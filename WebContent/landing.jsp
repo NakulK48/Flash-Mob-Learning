@@ -18,7 +18,7 @@
       <h1>Flash Mob Learning</h1>
    </div>
    <div class="button_skulpt" width="device-width">
-      <a href="main_skulpt.html"> 
+      <a href="myDocs.html"> 
       <img src="static/skulptbutton.png" id="Skulpt" width="100%"></a>
    </div>
    <div class="button_text" width="device-width">

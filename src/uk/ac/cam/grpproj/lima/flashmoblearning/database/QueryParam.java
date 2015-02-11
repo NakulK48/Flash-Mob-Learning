@@ -48,6 +48,8 @@ public class QueryParam {
 			sql += " ORDER BY update_time " + (sortOrder == SortOrder.ASCENDING ? "ASC" : "DESC");
 		} else if(sortField == SortField.VOTES) {
 			sql += " ORDER BY vote_count " + (sortOrder == SortOrder.ASCENDING ? "ASC" : "DESC");
+		} else if(sortField == SortField.POPULARITY) {
+			sql += " ORDER BY score " + (sortOrder == SortOrder.ASCENDING ? "ASC" : "DESC");
 		}
 		if(limit > 0) sql += " LIMIT " + limit;
 		if(offset > 0) sql += " OFFSET " + offset;

@@ -39,7 +39,7 @@ public class DocumentManagerTests {
         m_TestUser2 = LoginManager.getInstance().createUser("test_user2", "test_password2", false);
 
         m_WIP_Document = new WIPDocument(-1, DocumentType.PLAINTEXT, m_TestUser, c_TestDocumentTitle + " (WIP)", 0);
-        m_Published_Document = new PublishedDocument(-1, DocumentType.PLAINTEXT, m_TestUser, c_TestDocumentTitle + " (PUBLISHED)", 0, 0);
+        m_Published_Document = new PublishedDocument(-1, DocumentType.PLAINTEXT, m_TestUser, c_TestDocumentTitle + " (PUBLISHED)", 0, 0, 0);
 
         /**
          * DOCUMENTS
@@ -47,13 +47,15 @@ public class DocumentManagerTests {
 
         // Insert WIP document
         PreparedStatement ps = m_Connection.prepareStatement("INSERT INTO " +
-                "documents (user_id, type, title, published_flag, featured_flag, update_time, vote_count) VALUES (?, ?, ?, ?, ?, NOW(), ?)", Statement.RETURN_GENERATED_KEYS);
+                "documents (user_id, type, title, published_flag, featured_flag, update_time, vote_count, score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
         ps.setLong(1, m_TestUser.getID());
         ps.setInt(2, 0);
         ps.setString(3, c_TestDocumentTitle + " (WIP)");
         ps.setInt(4, 0);
         ps.setInt(5, 0);
-        ps.setInt(6, 0);
+        ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+        ps.setInt(7, 0);
+        ps.setInt(8, 0);
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys(); rs.next();
         m_WIP_Document.setID(rs.getInt(1));
@@ -76,6 +78,9 @@ public class DocumentManagerTests {
         ps.setLong(1, m_TestUser.getID());
         ps.setString(3, c_TestDocumentTitle + " (FEATURED)");
         ps.setInt(5, 1);
+        ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()-86400000));
+        ps.setInt(7, 5);
+        ps.setInt(8, 5);
         ps.executeUpdate();
         rs = ps.getGeneratedKeys(); rs.next();
         int featured_ID = rs.getInt(1);
@@ -399,15 +404,29 @@ public class DocumentManagerTests {
 
     @Test
     public void testAddVote() throws Exception {
+        PublishedDocument featured = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0);
+        int oldVoteCount = featured.getVotes();
         DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0));
 
-        PublishedDocument featured = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0);
-        Assert.assertEquals("Featured document has 1 vote", 1, featured.getVotes());
+        featured = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0);
+        Assert.assertEquals("Featured document has (oldVoteCount+1) votes", oldVoteCount+1, featured.getVotes());
     }
 
     @Test(expected=SQLException.class)
     public void testAddTwoVotes() throws Exception {
         DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0));
         DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).get(0));
+    }
+
+    @Test
+    public void testAgingScores() throws Exception {
+        DocumentManager.getInstance().ageScores(QueryParam.UNSORTED);
+        List<PublishedDocument> published_with_votes = DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED);
+        PublishedDocument doc = published_with_votes.get(0);
+        double calculatedScore = doc.calculateScore();
+        double drift = Math.abs((doc.getScore() - calculatedScore)/doc.getScore());
+        System.out.println("Score has aged from " + doc.getVotes() + " to " + doc.getScore() + " calculated " + calculatedScore + ", drift: " + drift);
+        Assert.assertTrue("Expect score to have reduced", doc.getVotes() > doc.getScore());
+        Assert.assertTrue("Calculated and DB score should not be drift by more than 5%", drift < 0.05);
     }
 }

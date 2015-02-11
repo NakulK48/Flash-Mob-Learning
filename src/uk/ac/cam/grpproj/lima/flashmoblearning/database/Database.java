@@ -59,8 +59,7 @@ public class Database {
 
 	private static void createDefaultUser() throws SQLException {
 		// Check if there are any users, if not, create one.
-		ResultSet rs = m_Instance.getStatement().executeQuery("SELECT * FROM users LIMIT 1");
-		if(!rs.first()) {
+		if(LoginManager.getInstance().getAllUsers(new QueryParam(1)).size() == 0) {
             LoginManager lm = LoginManager.getInstance();
             try {
                 User teacher = lm.createUser(DEFAULT_TEACHER_USERNAME, "", true);
@@ -129,6 +128,7 @@ public class Database {
 				"  featured_flag tinyint NOT NULL DEFAULT '0',\n" +
 				"  update_time timestamp NOT NULL,\n" +
 				"  vote_count int NOT NULL DEFAULT '0',\n" +
+				"  score float NOT NULL DEFAULT '0',\n" +
 				"  PRIMARY KEY (id)\n" +
 				")\n";
 

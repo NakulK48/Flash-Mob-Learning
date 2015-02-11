@@ -10,11 +10,13 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.TestHelper;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 
+import javax.management.Query;
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Connection;
+import java.util.List;
 
 public class LoginManagerTests {
 
@@ -57,6 +59,12 @@ public class LoginManagerTests {
     public void testGetUser() throws Exception {
         Student student = (Student) LoginManager.getInstance().getUser(c_TestUsername);
         Assert.assertEquals("User retrieved", c_TestUsername, student.getName());
+    }
+
+    @Test
+    public void testGetAllUsers() throws Exception {
+        List<User> users = LoginManager.getInstance().getAllUsers(QueryParam.UNSORTED);
+        Assert.assertTrue("1 or more users retrieved", users.size() >= 1);
     }
 
     @Test

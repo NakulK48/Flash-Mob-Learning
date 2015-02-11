@@ -17,7 +17,7 @@ public class PublishedDocumentTest extends DocumentTestBase {
 	@Override
 	PublishedDocument create(long id, DocumentType docType, User owner, String title,
 			long time) {
-		return new PublishedDocument(id, docType, owner, title, time, 0);
+		return new PublishedDocument(id, docType, owner, title, time, 0, 0);
 	}
 
 	@Override

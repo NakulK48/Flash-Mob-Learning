@@ -69,7 +69,7 @@ function builtinRead(x) {
 // get a reference to your pre element for output
 // configure the output function
 // call Sk.importMainWithBody()
-function saveit() { 
+function saveit() { //DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
    mycodemirror.save();
    var mytext = document.getElementById("text").value; 
    <% 
@@ -86,7 +86,7 @@ function saveit() {
 	else{
 		Long docID = Long.parseLong((String)session.getAttribute("docID"));
 		Document doc = DocumentManager.getInstance().getDocumentById(docID);
-		User docOwner = doc.owner; //NEED TO DO THIS BETTER. NEW DB CALL ?
+		User docOwner = doc.owner; 
 		if((Long)session.getAttribute("uid")== docOwner.getID()){
 			DocumentManager.getInstance().addRevision(doc, date, request.getParameter("text"));
 		}
@@ -98,6 +98,7 @@ function saveit() {
 		}
 	}
    %>
+   document.location.href = "preview.jsp"
 } 
 
 function publishit() {

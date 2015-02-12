@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.AlreadyInitializedException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.IllegalDatabaseStateException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
@@ -51,6 +52,12 @@ public class Database {
 
 	/** Portable setup from an arbitrary JDBC URL */
 	public static void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
+		// Check if we already have an active connection, and throw an exception if we do.
+		if(m_Instance != null && m_Instance.getConnection() != null && !m_Instance.getConnection().isClosed()) {
+			throw new AlreadyInitializedException();
+		}
+		
+		// No active connection, either uninitialized/closed - start one.
 		Connection connection = DriverManager.getConnection(databaseURL, username, password);
 		setup(connection);
         m_Instance = new Database(connection);

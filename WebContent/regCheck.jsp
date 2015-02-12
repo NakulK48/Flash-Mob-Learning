@@ -33,7 +33,7 @@
 			LoginManager l = LoginManager.getInstance();
 			User u = l.createUser(name, pwd, false);
 			session.setAttribute("uid",String.valueOf(u.getID()));
-			response.sendRedirect("home.jsp");			
+			response.sendRedirect("landing.jsp");			
 		}catch(DuplicateNameException e){
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/reg.jsp");
 			response.getWriter().println("<center><font color=red>Username already exists.</font></center>");

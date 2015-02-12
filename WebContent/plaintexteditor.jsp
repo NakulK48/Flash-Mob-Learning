@@ -7,11 +7,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="skulpt-latest/skulpt.min.js" type="text/javascript"></script>
-    <script src="skulpt-latest/skulpt-stdlib.js" type="text/javascript"></script> 
     <script src="codemirror/lib/codemirror.js"></script>
     <link rel="stylesheet" href="codemirror/lib/codemirror.css">
-    <script src="codemirror/mode/python/python.js"></script>
     <link type="text/css" href="textpages.css" rel="stylesheet" />
 
     <!-- Include jQuery.mmenu .css files -->
@@ -31,8 +28,6 @@
           });
        });
     </script>
-
-
 </head >
 
 <body onload="loadCodeMirror()">
@@ -84,10 +79,10 @@ function runit() {
 
 
   </script>
-          <div class="header">
-          <a href="#menu"></a>
+  <div class="header">
+   <a href="#menu"></a>
           Text Editor
-        </div>
+  </div>
 
         <form action="demo_form.asp" id="tagtitlebox">
         <input type="text" value="Title" placeholder="Title"><br>
@@ -100,10 +95,12 @@ function runit() {
     <textarea class="textbox" id="text" ></textarea><br /> 
 
     <!-- complete these buttons-->
-    <button type="button" onclick="runit()">Save and View</button> 
-    <button type="button">Publish to Hub</button>
-  </div>
-      <!-- The page -->
+			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
+				<button class="fml_buttons" type="button" onclick="saveit()"
+					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Save</button>
+				<button class="fml_buttons" type="button" onclick="publishit()"
+					style="border-style: none; background: #7AA3CC;width:10%; min-width:50px;">Publish</button>
+			</div>
 
 
 

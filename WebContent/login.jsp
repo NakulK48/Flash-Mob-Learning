@@ -26,7 +26,7 @@
 	<%
 		//Check if user already logged in.
 		if(session.getAttribute("uid")!=null){
-			response.sendRedirect("home.jsp");
+			response.sendRedirect("landing.jsp");
 		}
 	%>
 	<div class="login-card">

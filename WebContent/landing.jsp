@@ -7,24 +7,47 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <link rel="stylesheet" href="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
    <link rel="stylesheet" href="static/homeattempt.css">
+       <link type="text/css" href="jquery.mmenu.all.css" rel="stylesheet" />
     <!--  change the jquery.js to a jquery.min.js before distribution -->
-    <script type="text/javascript" src="jquery.mobile-1.4.5/jquery-1.11.2.js"></script> 
+    <script type="text/javascript" src="jquery.mobile-1.4.5/jquery-2.1.3.min.js"></script> 
     <script type="text/javascript" src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="jQuery.mmenu-master/jquery.mmenu.min.all.js"></script>
+    
+    <script type="text/javascript">
+       $(document).ready(function() {
+          $("#menu").mmenu({
+             "slidingSubmenus": false,
+             "classes": "mm-white",
+             "searchfield": true
+          });
+       });
+    </script>
+</head >
+    
 <title>Home - Flash Mob Learning</title>
 </head>
 <body>
+	<%
+		
+		//Session check
+		if(session.getAttribute("uid")==null){
+			//session invalid
+			response.sendRedirect("login.jsp");
+		}
+	%>
 <div data-role="page">
    <div data-role="header">
-      <h1>Flash Mob Learning</h1>
-   </div>
+      <h1>Welcome, <%=session.getAttribute("username") %>! <a href="logout.jsp">Logout</a></h1>
+   </div> 
    <div class="button_skulpt" width="device-width">
-      <a href="myDocs.html"> 
+      <a href="hub.jsp"> <!--  CHANGE ME -->
       <img src="static/skulptbutton.png" id="Skulpt" width="100%"></a>
    </div>
    <div class="button_text" width="device-width">
-      <a href="main_text.html">
+      <a href="plaintexteditor.jsp"> <!-- CHANGE ME -->
       <img src="static/textbutton.png" id="Text" width="100%"></a>
    </div>
 </div>
+
 </body>
 </html>

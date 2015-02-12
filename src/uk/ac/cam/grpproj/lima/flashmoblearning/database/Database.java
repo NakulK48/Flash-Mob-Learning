@@ -206,7 +206,7 @@ public class Database {
 				 "ALTER TABLE votes ADD CONSTRAINT votes_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE"};
 		
 		String[] create_triggers = new String[]
-				{"CREATE TRIGGER add_vote AFTER INSERT ON votes FOR EACH ROW UPDATE documents SET vote_count = vote_count+1 WHERE id = NEW.document_id;"};
+				{"CREATE TRIGGER add_vote AFTER INSERT ON votes FOR EACH ROW UPDATE documents SET vote_count = vote_count+1, score = score+1 WHERE id = NEW.document_id;"};
 
 		String check_login_banner = "SELECT * FROM settings WHERE setting_name = 'login_banner'";
 		String create_login_banner = "INSERT INTO settings (setting_name, setting_value) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";

@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
- <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*"%>
+ <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*"%>
     
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -16,7 +18,7 @@
 
     <!-- Include jQuery and the jQuery.mmenu .js files -->
     <script type="text/javascript" src="jquery.mobile-1.4.5/jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="jQuery.mmenu-master/jquery.mmenu.min.all.js"></script>
+    <script type="text/javascript" src="jQuery.mmenu-master/src/js/jquery.mmenu.min.all.js"></script>
 
     <!-- Fire the plugin onDocumentReady -->
     <script type="text/javascript">
@@ -56,10 +58,6 @@ setTimeout(function () {
     });
 }, 100);
 
-function outf(text) { 
-    var mypre = document.getElementById("output"); 
-    mypre.innerHTML = mypre.innerHTML + text; 
-} 
 function builtinRead(x) {
     if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
             throw "File not found: '" + x + "'";
@@ -71,11 +69,23 @@ function builtinRead(x) {
 // get a reference to your pre element for output
 // configure the output function
 // call Sk.importMainWithBody()
-function runit() { 
+function saveit() { 
    mycodemirror.save();
    var mytext = document.getElementById("text").value; 
-   Sk.configure({output:outf, read:builtinRead}); 
+   <% 
+	LoginManager l = LoginManager.getInstance();
+	User u = l.getUser((String) session.getAttribute("username"));
+	String docTitle = request.getParameter("titleBox");
+	Date date = new Date();
+	
+	
+   DocumentManager.getInstance().createDocument(new Document(-1L, DocumentType.getValue(0), u, docTitle, date.getTime()));
+   %>
 } 
+
+function publishit() {
+	
+}
 
 
   </script>
@@ -85,8 +95,8 @@ function runit() {
   </div>
 
         <form action="demo_form.asp" id="tagtitlebox">
-        <input type="text" value="Title" placeholder="Title"><br>
-        <input type="text" value="Tags" placeholder="Tags"><br>
+        <input type="text" value="Title" id="titleBox" placeholder="Title" required><br>
+        <input type="text" value="Tags" placeholder="Tags" required><br>
         <input type="submit" value="Save">
         </form>
 

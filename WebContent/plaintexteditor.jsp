@@ -78,8 +78,25 @@ function saveit() {
 	String docTitle = request.getParameter("titleBox");
 	Date date = new Date();
 	
-	
-   DocumentManager.getInstance().createDocument(new Document(-1L, DocumentType.getValue(0), u, docTitle, date.getTime()));
+	if("1"==session.getAttribute("newDoc")){
+		WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(0), u, docTitle, date.getTime());
+		DocumentManager.getInstance().addRevision(doc, date, request.getParameter("text"));
+		session.setAttribute("docID", doc.getID());
+	}
+	else{
+		Long docID = Long.parseLong((String)session.getAttribute("docID"));
+		Document doc = DocumentManager.getInstance().getDocumentById(docID);
+		User docOwner = doc.owner; //NEED TO DO THIS BETTER. NEW DB CALL ?
+		if((Long)session.getAttribute("uid")== docOwner.getID()){
+			DocumentManager.getInstance().addRevision(doc, date, request.getParameter("text"));
+		}
+		else{
+			WIPDocument documt = WIPDocument.createDocument(DocumentType.getValue(0), u, docTitle, date.getTime());
+			DocumentManager.getInstance().addRevision(documt, date, request.getParameter("text"));
+			DocumentManager.getInstance().setParentDocument(documt, doc);
+			session.setAttribute("docID", documt.getID());
+		}
+	}
    %>
 } 
 

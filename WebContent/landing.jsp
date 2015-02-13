@@ -10,6 +10,15 @@
     <!--  change the jquery.js to a jquery.min.js before distribution -->
     <script type="text/javascript" src="jquery.mobile-1.4.5/jquery-1.11.2.js"></script> 
     <script type="text/javascript" src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+          <link type="text/css" href="css/demo.css" rel="stylesheet" />
+
+      <!-- Include jQuery.mmenu .css files -->
+      <link type="text/css" href="css/jquery.mmenu.all.css" rel="stylesheet" />
+
+      <!-- Include jQuery and the jQuery.mmenu .js files -->
+      <script type="text/javascript" src="jquery-2.1.3.min.js"></script>
+      <script type="text/javascript" src="jquery.mmenu.min.all.js"></script>
+    
 <title>Home - Flash Mob Learning</title>
 </head>
 <body>

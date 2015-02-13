@@ -5,19 +5,19 @@
 <html> 
 <head> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="js/skulpt.min.js" type="text/javascript"></script>
-    <script src="js/skulpt-stdlib.js" type="text/javascript"></script> 
-    <script src="js/codemirror.js"></script>
+    <script src="skulpt.min.js" type="text/javascript"></script>
+    <script src="skulpt-stdlib.js" type="text/javascript"></script> 
+    <script src="codemirror.js"></script>
     <link rel="stylesheet" href="css/codemirror.css">
-    <script src="js/python.js"></script>
+    <script src="python.js"></script>
     <link  href="css/demo.css" rel="stylesheet" />
 
     <!-- Include jQuery.mmenu .css files -->
     <link  href="css/jquery.mmenu.all.css" rel="stylesheet" />
 
     <!-- Include jQuery and the jQuery.mmenu .js files -->
-    <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="js/jquery.mmenu.min.all.js"></script>
+    <script type="text/javascript" src="jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="jquery.mmenu.min.all.js"></script>
 
     <!-- Fire the plugin onDocumentReady -->
     <script type="text/javascript">
@@ -89,12 +89,53 @@
 		function saveit() {
 
 		}
+		
+		function addTag(){
+			var newTag = document.getElementById('tags').value;
+			console.log(newTag);
+			var selectedTags = document.getElementById('selectedTags');
+			var removeTagList = document.getElementById('removeTagList');
+			if(selectedTags.innerText.indexOf(newTag) == -1){ // to prevent duplicate Tags
+				selectedTags.innerText += " "+newTag;
+				removeTagList.options[removeTagList.options.length] = new Option(newTag, newTag);
+			}
+			
+		}
+		
+		function removeTag(){
+			var option = document.getElementById('removeTagList').value;
+			$("#removeTagList option[value="+option+"]").remove();
+			
+		}
+		
 	</script>
 	<!-- The page -->
 	<div class="page">
 		<div class="header">
 			<a href="#menu"></a> Code Editor
 		</div>
+			<div style="padding-left: 10%;">
+			<label>Select Tag</label>
+			<input type="text" id="tags" list="tagOptions" />
+			<datalist id="tagOptions">
+			   <select onchange="$('#tags').val(this.value);">
+			    <option label="United Stated" value="USA"></option>
+			    <option label="United Kingdom" value="UK"></option>
+			    <option label="Uruguay" value="URU"></option>
+			    <option label="Brazil" value="BRA"></option>
+			    <option label="Russia" value="RUS"></option>
+			   </select>
+			</datalist>
+			<button type="button" onclick="addTag()">Add</button>
+			
+			</br>
+			
+			<label>Remove Tag</label>
+			<select id="removeTagList">
+			</select>
+			<button type="button" onclick="removeTag()">Remove</button>
+
+			</div>
 		<div class="codeEditor">
 			<div id="titleAndTags" style="padding-left: 30%;">
 				<input type="text" placeholder="Title"></input> </br> <input type="text"
@@ -104,13 +145,16 @@
 	<textarea class="textbox" id="code">print "hello world"</textarea>
 			<br />
 
+
+
+			
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
 				<button class="fml_buttons" type="button" onclick="runit()"
 					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Run</button>
 				<button class="fml_buttons" type="button" onclick="saveit()"
 					style="border-style: none; background: #7AA3CC;width:10%; min-width:50px;">Save</button>
 			</div>
-
+			<label id="selectedTags">Tags: </label>
 			<pre id="output"></pre>
 			<!-- If you want turtle graphics include a canvas -->
 			<canvas id="mycanvas">
@@ -123,7 +167,7 @@
 	<ul>
 		<li><a href="landing.jsp">Home</a></li>
 		<li><a href="hub.jsp">My Docs</a></li>
-		<li><a href="communityHub.html">Community Hub</a></li>
+		<li><a href="communityHub.jsp">Community Hub</a></li>
 		<li style="padding-top: 140%;"></li>
 		<li><a href="logout.html">Logout</a></li>
 	</ul>

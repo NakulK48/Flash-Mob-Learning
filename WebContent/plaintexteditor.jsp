@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
- <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*"%>
     
@@ -79,18 +79,13 @@ function saveit() { //DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TA
 		WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(0), u, docTitle, date.getTime());
 		doc.addRevision(date, request.getParameter("text"));
 		session.setAttribute("docID", doc.getID());
-	}
-	else{
+	}else{
 		Long docID = Long.parseLong((String)session.getAttribute("docID"));
 		Document doc = DocumentManager.getInstance().getDocumentById(docID);
 		User docOwner = doc.owner; 
-		if((Long)session.getAttribute("uid")== docOwner.getID()){ //Working on my own WIPDocument
-			DocumentManager.getInstance().addRevision(doc, date, request.getParameter("text"));
-		}
-		else{ //WIPDocument based on parent document
-			PublishedDocument pubdoc = (PublishedDocument) doc;
-			WIPDocument documt = pubdoc.fork(u);
-			session.setAttribute("docID", documt.getID());
+		if((Long)session.getAttribute("uid")== docOwner.getID()){ //Working on my own WIPDocument or a fork
+			WIPDocument wipdoc = (WIPDocument) doc;
+			wipdoc.addRevision(date, request.getParameter("text"));
 		}
 	}
    %>

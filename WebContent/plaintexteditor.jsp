@@ -88,9 +88,8 @@ function saveit() { //DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TA
 			DocumentManager.getInstance().addRevision(doc, date, request.getParameter("text"));
 		}
 		else{ //WIPDocument based on parent document
-			WIPDocument documt = WIPDocument.createDocument(DocumentType.getValue(0), u, docTitle, date.getTime());
-			DocumentManager.getInstance().addRevision(documt, date, request.getParameter("text"));
-			DocumentManager.getInstance().setParentDocument(documt, doc);
+			PublishedDocument pubdoc = (PublishedDocument) doc;
+			WIPDocument documt = pubdoc.fork(u);
 			session.setAttribute("docID", documt.getID());
 		}
 	}

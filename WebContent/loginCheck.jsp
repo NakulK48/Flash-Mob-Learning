@@ -23,11 +23,12 @@
 			User u = l.getUser(username);
 			if(u.checkPassword(pwd)){
 				session.setAttribute("uid",String.valueOf(u.getID()));
+				session.setAttribute("username",String.valueOf(u.getName()));
 				if((u.getID())==1){
 					System.out.println("Admin mode");
 					
 				}
-				response.sendRedirect("home.jsp");
+				response.sendRedirect("landing.jsp");
 			}else{
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 				response.getWriter().println("<center><font color=red>Password/Username does not match.</font></center>");

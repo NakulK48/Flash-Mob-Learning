@@ -384,10 +384,6 @@ public class DocumentManager {
 		ps.setLong(1, u.getID());
 		ps.setLong(2, d.getID());
 		ps.executeUpdate();
-
-		ps = m_Database.getConnection().prepareStatement("UPDATE documents SET vote_count = vote_count + 1, score = score + 1 WHERE id = ?");
-		ps.setLong(1, d.getID());
-		ps.executeUpdate();
 	}
 
 	/** Get the content of a Revision. This may be kept separately and fetched 

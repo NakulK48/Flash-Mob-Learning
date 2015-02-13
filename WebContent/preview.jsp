@@ -38,6 +38,22 @@
 		response.sendRedirect("login.jsp");
 	}
 %>
+
+function cloneit(){
+
+}
+
+function editit(){
+
+}
+
+function publishit(){
+
+}
+
+function upvoteit(){
+
+}
 	
           <div class="header">
           <a href="#menu"></a>
@@ -48,12 +64,14 @@
 <div>
     <textarea class="textbox" id="text" ></textarea><br /> 
 </div>
-<div>
-    <!-- complete these buttons-->
-    <button type="button" onclick="cloneit()">Clone</button> 
-    <button type="button"></button>
- </div>
-      <!-- The page -->
+<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
+	<button class="fml_buttons" type="button" onclick=<%if(session.getAttribute("myDoc")=="1"){%>"editit()"<%}else{%>"cloneit()"<%}%>
+		style="border-style: none; width:10%; min-width:50px;"><%if(session.getAttribute("myDoc")=="1"){%>Edit<%}else{%>Clone<%}%></button>
+	<%if(session.getAttribute("myDoc")=="1" && session.getAttribute("WIPDoc")=="1"){%>
+	<button class="fml_buttons" type="button" onclick="publishit()"
+		style="border-style: none; width:10%; min-width:50px;">Publish</button>
+	<%}%>
+</div>
 
 
 

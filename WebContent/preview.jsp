@@ -27,11 +27,11 @@
           });
        });
     </script>
-
+<title>Preview</title>
 
 </head >
 
-<body>
+<body onload="initialisepage()">
 <%		
 		//Session check
 	if(session.getAttribute("uid")==null){
@@ -42,14 +42,19 @@
 
 <script type="text/javascript"> 
 
-function cloneit(){
+function initialisepage(){
 	<%
 	LoginManager l = LoginManager.getInstance();
 	User u = l.getUser((String) session.getAttribute("username"));
 	Long docID = Long.parseLong((String)session.getAttribute("docID"));
+	%>
+}
+
+function cloneit(){
+	<%
 	PublishedDocument pubdoc = (PublishedDocument) DocumentManager.getInstance().getDocumentById(docID);
-	WIPDocument wipdoc = pubdoc.fork(u);
-	session.setAttribute("docID", wipdoc.getID());
+	WIPDocument wipdoc0 = pubdoc.fork(u);
+	session.setAttribute("docID", wipdoc0.getID());
 	session.setAttribute("WIPDoc", "1");
 	session.setAttribute("myDoc", "1");
 	session.setAttribute("newDoc","0");
@@ -58,11 +63,25 @@ function cloneit(){
 }
 
 function editit(){
-
+	<%
+	session.setAttribute("docID", docID);
+	session.setAttribute("WIPDoc", "1");
+	session.setAttribute("myDoc", "1");
+	session.setAttribute("newDoc","0");
+	%>
+	document.location.href = "plaintexteditor.jsp" 
 }
 
 function publishit(){
-
+	<%
+	WIPDocument wipdoc1 = (WIPDocument) DocumentManager.getInstance().getDocumentById(docID);
+	PublishedDocument pubdoc1 = wipdoc1.publish();
+	session.setAttribute("docID", pubdoc1.getID());
+	session.setAttribute("WIPDoc", "0");
+	session.setAttribute("myDoc", "0");
+	session.setAttribute("newDoc","0");
+	%>
+	document.location.href = "successfulpublish.jsp"
 }
 
 function upvoteit(){

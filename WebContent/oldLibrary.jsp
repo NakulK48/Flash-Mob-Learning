@@ -3,32 +3,9 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-   <head>
-
-      <title>Library - Flash Mob Learning</title>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link type="text/css" href="css/demo.css" rel="stylesheet" />
-
-      <!-- Include jQuery.mmenu .css files -->
-      <link type="text/css" href="css/jquery.mmenu.all.css" rel="stylesheet" />
-
-      <!-- Include jQuery and the jQuery.mmenu .js files -->
-      <script type="text/javascript" src="jquery-2.1.3.min.js"></script>
-      <script type="text/javascript" src="jquery.mmenu.min.all.js"></script>
-
-      <!-- Fire the plugin onDocumentReady -->
-      <script type="text/javascript">
-         $(document).ready(function() {
-            $("#menu").mmenu({
-               "slidingSubmenus": false,
-               "classes": "mm-white",
-               "searchfield": true
-            });
-         });
-      </script>
-      
-      <%!
+<head>
+<link rel="stylesheet" type="text/css" href="HubStyle.css">
+<%!
  	public void jspInit()
 	{
 		try
@@ -48,18 +25,11 @@
 
 	} 
 %>
-
-   </head>
-   <body>
-
-      <!-- The page -->
-      <div class="page">
-         <div class="header">
-            <a href="#menu"></a>
-            My Docs
-         </div>
-         <div class="content">
-            <h1>My Library</h1>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Library - Flash Mob Learning</title>
+</head>
+<body>
+<h1>My Library</h1>
 <%
 	
 	if(session.getAttribute("uid")==null){
@@ -130,8 +100,8 @@
 		//dm.deleteAllDocumentsByUser(jimmy);
 		//lm.deleteUser(jimmy);
 		
-		String previousURL = "library.jsp?page=" + previousPage;
-		String nextURL = "library.jsp?page=" + nextPage;
+		String previousURL = "hub.jsp?page=" + previousPage;
+		String nextURL = "hub.jsp?page=" + nextPage;
 		
 	%>
 	
@@ -141,25 +111,6 @@
 	<td id="next"><a href='<%=nextURL %>'>Next</a></td>
 	</tr>	
 </table>
-         </div>
-      </div>
 
-      <!-- The menu -->
-      <nav id="menu">
-         <ul>
-            <li><a href="landing.jsp">Home</a></li>
-            <li><a href="#">My Docs</a>
-               <ul>
-                  <li><a href="/about/history">History</a></li>
-                  <li><a href="/about/team">The team</a></li>
-                  <li><a href="/about/address">Our address</a></li>
-               </ul>
-            </li>
-            <li><a href="hub.jsp">Community Hub</a></li>
-          <div style="padding-top:60%;"><a href="logout.html">Logout</a></div>  
-         </ul>
-
-      </nav>
-
-   </body>
+</body>
 </html>

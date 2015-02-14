@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
- <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*"%>
     
@@ -47,10 +47,7 @@
 // to a pre element.
 var mycodemirror;
 function loadCodeMirror(){
-  mycodemirror = CodeMirror.fromTextArea(document.getElementById("text"), {
-    lineNumbers: false
-  });
-
+  mycodemirror = CodeMirror.fromTextArea(document.getElementById("text"), {lineNumbers: false});
 }
 setTimeout(function () {
     $('.textbox').css({
@@ -78,33 +75,24 @@ function saveit() { //DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TA
 	String docTitle = request.getParameter("titleBox");
 	Date date = new Date();
 	
-	if("1"==session.getAttribute("newDoc")){
+	if("1"==session.getAttribute("newDoc")){ //Completely new document
 		WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(0), u, docTitle, date.getTime());
-		DocumentManager.getInstance().addRevision(doc, date, request.getParameter("text"));
+		doc.addRevision(date, request.getParameter("text"));
 		session.setAttribute("docID", doc.getID());
-	}
-	else{
+	}else{
 		Long docID = Long.parseLong((String)session.getAttribute("docID"));
 		Document doc = DocumentManager.getInstance().getDocumentById(docID);
 		User docOwner = doc.owner; 
-		if((Long)session.getAttribute("uid")== docOwner.getID()){
-			DocumentManager.getInstance().addRevision(doc, date, request.getParameter("text"));
-		}
-		else{
-			WIPDocument documt = WIPDocument.createDocument(DocumentType.getValue(0), u, docTitle, date.getTime());
-			DocumentManager.getInstance().addRevision(documt, date, request.getParameter("text"));
-			DocumentManager.getInstance().setParentDocument(documt, doc);
-			session.setAttribute("docID", documt.getID());
+		if((Long)session.getAttribute("uid")== docOwner.getID()){ //Working on my own WIPDocument or a fork
+			WIPDocument wipdoc = (WIPDocument) doc;
+			wipdoc.addRevision(date, request.getParameter("text"));
 		}
 	}
    %>
+   session.setAttribute("myDoc", "1");
+   session.setAttribute("WIPDoc","1");
    document.location.href = "preview.jsp"
 } 
-
-function publishit() {
-	
-}
-
 
   </script>
   <div class="header">
@@ -126,8 +114,6 @@ function publishit() {
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
 				<button class="fml_buttons" type="button" onclick="saveit()"
 					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Save</button>
-				<button class="fml_buttons" type="button" onclick="publishit()"
-					style="border-style: none; background: #7AA3CC;width:10%; min-width:50px;">Publish</button>
 			</div>
 
 

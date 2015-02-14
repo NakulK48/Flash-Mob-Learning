@@ -105,6 +105,9 @@
 		function removeTag(){
 			var option = document.getElementById('removeTagList').value;
 			$("#removeTagList option[value="+option+"]").remove();
+			var selectedTagString = document.getElementById('selectedTags').innerText;
+			selectedTagString = selectedTagString.replace(option,'');
+			document.getElementById('selectedTags').innerText = selectedTagString;
 			
 		}
 		
@@ -115,6 +118,9 @@
 			<a href="#menu"></a> Code Editor
 		</div>
 			<div style="padding-left: 10%;">
+			<label>Title</label>
+			<input>
+			</br>
 			<label>Select Tag</label>
 			<input type="text" id="tags" list="tagOptions" />
 			<datalist id="tagOptions">
@@ -136,11 +142,9 @@
 			<button type="button" onclick="removeTag()">Remove</button>
 
 			</div>
+			</br>
 		<div class="codeEditor">
-			<div id="titleAndTags" style="padding-left: 30%;">
-				<input type="text" placeholder="Title"></input> </br> <input type="text"
-					placeholder="Tags"></input>
-			</div>
+
 
 	<textarea class="textbox" id="code">print "hello world"</textarea>
 			<br />

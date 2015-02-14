@@ -28,8 +28,11 @@ public class Database {
 	private static final String c_Password = "flashmoblearning";
 	private static final String c_JDBCURL = "jdbc:mysql://localhost/flashmoblearning";
 	
-	public static Database getInstance() {
-		return m_Instance;
+	public static Database getInstance() throws NotInitializedException {
+        if(m_Instance != null)
+            return m_Instance;
+        else
+            throw new NotInitializedException();
 	}
 	
 	public static final String DEFAULT_TEACHER_USERNAME = "Teacher";

@@ -170,10 +170,10 @@
 	<nav id="menu">
 	<ul>
 		<li><a href="landing.jsp">Home</a></li>
-		<li><a href="hub.jsp">My Docs</a></li>
-		<li><a href="communityHub.jsp">Community Hub</a></li>
+		<li><a href="library.jsp">My Docs</a></li>
+		<li><a href="hub.jsp">Community Hub</a></li>
 		<li style="padding-top: 140%;"></li>
-		<li><a href="logout.html">Logout</a></li>
+		<li><a href="logout.jsp">Logout</a></li>
 	</ul>
 
 	</nav>

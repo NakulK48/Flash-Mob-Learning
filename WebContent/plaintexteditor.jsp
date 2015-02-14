@@ -40,6 +40,10 @@
 		//session invalid
 		response.sendRedirect("login.jsp");
 	}
+
+LoginManager l = LoginManager.getInstance();
+User u = l.getUser((String) session.getAttribute("username"));
+//String body = DocumentManager.getInstance().getRevisionContent(doc.getLastRevision());
 %>
 	
 <script type="text/javascript"> 
@@ -70,8 +74,6 @@ function saveit() { //DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TA
    mycodemirror.save();
    var mytext = document.getElementById("text").value; 
    <% 
-	LoginManager l = LoginManager.getInstance();
-	User u = l.getUser((String) session.getAttribute("username"));
 	String docTitle = request.getParameter("titleBox");
 	Date date = new Date();
 	
@@ -101,14 +103,21 @@ function saveit() { //DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TA
   </div>
 
         <form action="demo_form.asp" id="tagtitlebox">
-        <input type="text" value="Title" id="titleBox" placeholder="Title" required><br>
-        <input type="text" value="Tags" placeholder="Tags" required><br>
-        <input type="submit" value="Save">
+        <input type="text" value=<%if(session.getAttribute("newDoc")=="1"){%><%=""%><%}
+    else{
+    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong((String)session.getAttribute("docID")));%>
+    	<%=document.getTitle()%>
+    <%}%> id="titleBox" maxlength="30" placeholder="Title" required><br>
+        <input type="text" placeholder="Tags" required><br>
         </form>
 
 
 
-    <textarea class="textbox" id="text" ></textarea><br /> 
+    <textarea class="textbox" id="text" ><%if(session.getAttribute("newDoc")=="1"){}
+    else{
+    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong((String)session.getAttribute("docID")));%>
+    	<%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%>
+    <%}%></textarea><br /> 
 
     <!-- complete these buttons-->
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">

@@ -47,6 +47,8 @@ function initialisepage(){
 	LoginManager l = LoginManager.getInstance();
 	User u = l.getUser((String) session.getAttribute("username"));
 	Long docID = Long.parseLong((String)session.getAttribute("docID"));
+	Document doc = DocumentManager.getInstance().getDocumentById(docID);
+	//String body = DocumentManager.getInstance().getRevisionContent(doc.getLastRevision());
 	%>
 }
 
@@ -94,10 +96,21 @@ function upvoteit(){
           Viewer
         </div>
 
-
 <div>
-    <textarea class="textbox" id="text" ></textarea><br /> 
+<h1 id="titlearea">
+     <%=doc.getTitle() %>
+</h1>
+<h2 id="parentdoctitle">
+	Based on "<%= doc.getParentDocument().getTitle() %>"</h2>
+<p id="bodyarea">
+	<%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
+</p>
+<p id="tagarea">
+	Tags : <%= doc.getTags() %>
+</p>
+<!-- TODO : upvote button qnd upvote count -->
 </div>
+
 <div id="buttons" style="padding-left: 40%; padding-right: 30%;">
 	<%if(session.getAttribute("myDoc")=="1"){%>
 		<button class="fml_buttons" type="button" onclick="editit()"
@@ -109,6 +122,8 @@ function upvoteit(){
 	<%}}else{%>
 		<button class="fml_buttons" type="button" onclick="cloneit()"
 				style="border-style: none; width:10%; min-width:50px;">Clone</button>
+		<button class="fml_buttons" type="button" onclick="upvoteit()"
+				style="border-style: none; width:10%; min-width:50px;">Upvote</button>
 	<%}%>
 </div>
 

@@ -41,7 +41,7 @@
       <img src="static/skulptbutton.png" id="Skulpt" width="100%"></a>
    </div>
    <div class="button_text" width="device-width">
-      <a href="plaintexteditor.jsp"> <!-- CHANGE ME -->
+      <a href="myDocs.jsp"> <!-- CHANGE ME -->
       <img src="static/textbutton.png" id="Text" width="100%"></a>
    </div>
 </div>

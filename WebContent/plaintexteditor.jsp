@@ -130,10 +130,10 @@ function saveit() { //DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TA
       <!-- The menu -->
       <nav id="menu">
          <ul>
-            <li><a href="home.html">Home</a></li>
-            <li><a href="#">My Docs</a></li>
-            <li><a href="communityHub.html">Community Hub</a></li>
-          <div style="padding-top:60%;"><a href="logout.html">Logout</a></div>  
+            <li><a href="home.jsp">Home</a></li>
+            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="hub.jsp">Community Hub</a></li>
+          <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>
 
       </nav>

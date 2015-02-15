@@ -156,7 +156,7 @@
                </ul>
             </li>
             <li><a href="hub.jsp">Community Hub</a></li>
-          <div style="padding-top:60%;"><a href="logout.html">Logout</a></div>  
+          <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>
 
       </nav>

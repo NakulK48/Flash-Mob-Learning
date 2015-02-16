@@ -67,6 +67,7 @@
 		response.sendRedirect("login.jsp");
 	}
 
+	//TODO: Check whether viewing Skulpt or Text
 	
 	long uid = 1;//(Long) session.getAttribute("uid");
 	//TODO: Remove above placeholder

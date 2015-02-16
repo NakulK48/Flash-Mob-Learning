@@ -59,6 +59,22 @@
          </div>
          <div class="content" style="padding-top:10px;">
 <%
+	/*DocumentManager dm = DocumentManager.getInstance();
+	LoginManager lm = LoginManager.getInstance();
+	User teacher = lm.getUser("Teacher");
+	PublishedDocument pd1 = new PublishedDocument(-1, DocumentType.SKULPT, teacher, "Animal Farm", System.currentTimeMillis(), 5, 5);
+	PublishedDocument pd2 = new PublishedDocument(-1, DocumentType.SKULPT, teacher, "1984", System.currentTimeMillis() - 36000000, 10, 8);
+	PublishedDocument pd3 = new PublishedDocument(-1, DocumentType.SKULPT, teacher, "Road to Wigan Pier", System.currentTimeMillis() - 72000000, 20, 18);
+	Tag t = Tag.create("Blob");
+	
+	dm.createDocument(pd1);
+	dm.createDocument(pd2);
+	dm.createDocument(pd3);
+	
+	dm.addTag(pd1, t);
+	dm.addTag(pd2, t);
+	dm.addTag(pd3, t);
+	*/
 
 
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote

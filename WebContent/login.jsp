@@ -30,7 +30,7 @@
 		}
 	%>
 	<div class="login-card">
-	<center><%=LoginManager.getInstance().getLoginBanner() %></center>
+	<center><%=LoginManager.getInstance().getLoginBanner()%></center><br>
 		<form method="post" action="loginCheck.jsp">
 			<input type="text" name="username" placeholder="Username" required> <input
 				type="password" name="pwd" placeholder="Password" required> <input

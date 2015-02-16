@@ -14,7 +14,6 @@
 <body>
 	<%
 		// get request parameters
-		//String userID = request.getParameter("uid");
 		String username = request.getParameter("username");
 		String pwd = request.getParameter("pwd");
 		
@@ -24,9 +23,9 @@
 			if(u.checkPassword(pwd)){
 				session.setAttribute("uid",String.valueOf(u.getID()));
 				session.setAttribute("username",String.valueOf(u.getName()));
-				if((u.getID())==1){
-					System.out.println("Admin mode");
-					
+				if(u instanceof Teacher){
+					//TODO redirect to admin landing page
+					System.out.println("Admin mode logged in!");
 				}
 				response.sendRedirect("landing.jsp");
 			}else{

@@ -67,9 +67,15 @@
 		response.sendRedirect("login.jsp");
 	}
 
-	//TODO: Check whether viewing Skulpt or Text
+	if (session.getAttribute("doctype") == null)
+	{
+		response.sendRedirect("landing.jsp");
+	}
+//TODO: Check whether viewing Skulpt or Text
+
+	DocumentType doctype = (DocumentType) session.getAttribute("doctype");
 	
-	long uid = 1;//(Long) session.getAttribute("uid");
+	long uid = (Long) session.getAttribute("uid");
 	//TODO: Remove above placeholder
 	LoginManager lm = LoginManager.getInstance();
 	DocumentManager dm = DocumentManager.getInstance();
@@ -91,6 +97,7 @@
 
 	QueryParam q = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	
+	//TODO: Change the below to take doctype into account
 	ArrayList<WIPDocument> docs = (ArrayList<WIPDocument>) dm.getWorkInProgressByUser(u, q);
 	
 %>

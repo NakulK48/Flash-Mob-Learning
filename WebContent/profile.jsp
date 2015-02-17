@@ -65,14 +65,6 @@ table {top:200px;}
 </head>
 <body>
 
-
-      <!-- The page -->
-      <div class="page">
-         <div class="header">
-            <a href="#menu"></a>
-            Profile
-         </div>
-         <div class="content" style="padding-top:10px;">
 <%
 	long userID = 0;
 	String userIDString = request.getParameter("id");
@@ -134,12 +126,19 @@ table {top:200px;}
 	
 %>
 
+      <!-- The page -->
+      <div class="page">
+         <div class="header">
+            <a href="#menu"></a>
+            Profile - <%= profileUser.getName() %>
+         </div>
+         <div class="content" style="padding-top:10px;">
+
 	<div id="orderHolder">
 		<a href='<%="profile.jsp?id=" + userIDString + "&sort=top"%>'><div class="order" id="left">Top</div></a>
 		<a href='<%="profile.jsp?id=" + userIDString + "&sort=new"%>'><div class="order" id="right">New</div></a>
 	</div>
 
-<h1>User: <%= profileUser.getName() %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
 <table>
 <%

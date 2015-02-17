@@ -48,13 +48,6 @@ table {top:200px;}
 </head>
 <body>
 
-      <!-- The page -->
-      <div class="page">
-         <div class="header">
-            <a href="#menu"></a>
-            Tag
-         </div>
-         <div class="content" style="padding-top:10px;">
 <%
 	String tagName = request.getParameter("name");
 	
@@ -105,12 +98,19 @@ table {top:200px;}
 	
 %>
 
+      <!-- The page -->
+      <div class="page">
+         <div class="header">
+            <a href="#menu"></a>
+            Tag - <%= tagName %>
+         </div>
+         <div class="content" style="padding-top:10px;">
+
 	<div id="orderHolder">
 		<a href='<%="tag.jsp?name=" + tagName + "&sort=top"%>'><div class="order" id="left">Top</div></a>
 		<a href='<%="tag.jsp?name=" + tagName + "&sort=new"%>'><div class="order" id="right">New</div></a>
 	</div>
 
-<h1>Tag: <%= tagName %></h1>
 <h2><%= capitalisedSortType %> Documents</h2>
 <table>
 <%

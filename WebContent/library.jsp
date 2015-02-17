@@ -5,7 +5,7 @@
 <html>
    <head>
 
-      <title>Library - Flash Mob Learning</title>
+      <title>Flash Mob Learning</title>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link type="text/css" href="css/demo.css" rel="stylesheet" />

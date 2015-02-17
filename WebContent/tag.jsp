@@ -1,11 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*,uk.ac.cam.grpproj.lima.flashmoblearning.database.*,java.util.ArrayList"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+    pageEncoding="ISO-8859-1" import="java.sql.*, java.util.ArrayList, uk.ac.cam.grpproj.lima.flashmoblearning.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*" %>
+
+<!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Tag - Flash Mob Learning</title>
-<link rel="stylesheet" type="text/css" href="HubStyle.css">
+   <head>
+
+      <title>Flash Mob Learning</title>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link type="text/css" href="css/demo.css" rel="stylesheet" />
+
+      <!-- Include jQuery.mmenu .css files -->
+      <link type="text/css" href="css/jquery.mmenu.all.css" rel="stylesheet" />
+
+      <!-- Include jQuery and the jQuery.mmenu .js files -->
+      <script type="text/javascript" src="jquery-2.1.3.min.js"></script>
+      <script type="text/javascript" src="jquery.mmenu.min.all.js"></script>
+
+      <!-- Fire the plugin onDocumentReady -->
+      <script type="text/javascript">
+         $(document).ready(function() {
+            $("#menu").mmenu({
+               "slidingSubmenus": false,
+               "classes": "mm-white",
+               "searchfield": true
+            });
+         });
+      </script>
+      <link rel="stylesheet" type="text/css" href="css/HubStyle.css">
 <%!
 	public void jspInit()
 	{
@@ -25,6 +47,14 @@ table {top:200px;}
 </style>
 </head>
 <body>
+
+      <!-- The page -->
+      <div class="page">
+         <div class="header">
+            <a href="#menu"></a>
+            Tag
+         </div>
+         <div class="content" style="padding-top:10px;">
 <%
 	String tagName = request.getParameter("name");
 	
@@ -127,5 +157,23 @@ table {top:200px;}
 	</tr>	
 </table>
 
-</body>
+	<div id="footer">	
+		<div style="bottom:0;float:left;"><a href='<%=previousURL %>'>Previous</a></div>
+		<div style="bottom:0;float:right;"><a href='<%=nextURL %>'>Next</a></div>
+		<div style="bottom:0;float:center;">Page <%=pageNumber %></div>
+	</div>	
+         </div>
+      </div>
+
+      <!-- The menu -->
+      <nav id="menu">
+         <ul>
+            <li><a href="landing.jsp">Home</a></li>
+            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="logout.jsp">Logout</a></li>
+         </ul>
+      </nav>
+
+   </body>
 </html>

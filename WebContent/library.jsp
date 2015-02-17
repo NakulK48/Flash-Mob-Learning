@@ -56,7 +56,7 @@
       <div class="page">
          <div class="header">
             <a href="#menu"></a>
-            My Docs
+            Library
          </div>
          <div class="content">
             <h1>My Library</h1>

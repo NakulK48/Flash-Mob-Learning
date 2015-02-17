@@ -128,7 +128,7 @@
 			String entry = 
 			"<tr class='lowerRow'>" + 
 			"<td></td>" + 
-			"<td class='title'> <a href='editor.jsp?id=" + Long.toString(doc.getID()) + "'>" + doc.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href='editor.jsp?docID=" + Long.toString(doc.getID()) + "'>" + doc.getTitle() 		+ "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>"; 
 			

@@ -141,7 +141,7 @@
 			"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >UP</button></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +

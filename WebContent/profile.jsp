@@ -113,7 +113,7 @@ table {top:200px;}
 			p = new QueryParam(25, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 		}
 
-		thisUserDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByUser(profileUser, p);
+		thisUserDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByUser(profileUser, DocumentType.ALL, p);
 	}
 	
 	catch (Exception e)

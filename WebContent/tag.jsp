@@ -86,7 +86,7 @@ table {top:200px;}
 			p = new QueryParam(25, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 		}
 
-		thisTagDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTag(tag, p);
+		thisTagDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTag(tag, DocumentType.ALL, p);
 	}
 	
 	catch (Exception e)

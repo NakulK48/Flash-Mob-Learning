@@ -82,7 +82,7 @@
 	{
 		//TODO: query Document database for matching titles
 		QueryParam p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
-		ArrayList<PublishedDocument> matchingDocs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTitle(searchQuery, p);
+		ArrayList<PublishedDocument> matchingDocs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTitle(searchQuery, DocumentType.ALL, p);
 		for (PublishedDocument pd : matchingDocs)
 		{
 

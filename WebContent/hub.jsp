@@ -97,7 +97,7 @@
 		p = new QueryParam(25, offset, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
 	}
 
-	ArrayList<PublishedDocument> subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
+	ArrayList<PublishedDocument> subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(DocumentType.ALL, p);
 
 	if (upvoted != null)
 	{

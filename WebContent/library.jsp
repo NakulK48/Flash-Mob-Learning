@@ -98,7 +98,7 @@
 	QueryParam q = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	
 	//TODO: Change the below to take doctype into account
-	ArrayList<WIPDocument> docs = (ArrayList<WIPDocument>) dm.getWorkInProgressByUser(u, q);
+	ArrayList<WIPDocument> docs = (ArrayList<WIPDocument>) dm.getWorkInProgressByUser(u, DocumentType.ALL, q);
 	
 %>
 

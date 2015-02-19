@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.Arrays;
 import java.util.List;
 
+import uk.ac.cam.grpproj.lima.flashmoblearning.Document;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.AlreadyInitializedException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
@@ -209,7 +210,7 @@ public class Database {
 				 "ALTER TABLE votes ADD CONSTRAINT votes_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE"};
 		
 		String[] create_triggers = new String[]
-				{"CREATE TRIGGER add_vote AFTER INSERT ON votes FOR EACH ROW UPDATE documents SET vote_count = vote_count+1, score = vote_count * EXP(-1 * POWER(time_to_sec(timediff(NOW(),update_time)) / 3600,2)/50000) WHERE id = NEW.document_id;"};
+				{"CREATE TRIGGER add_vote AFTER INSERT ON votes FOR EACH ROW UPDATE documents SET vote_count = vote_count+1, score = vote_count * EXP(-1 * POWER(time_to_sec(timediff(NOW(),update_time)) / 3600,2)/" + Document.AGING_CONSTANT + ") WHERE id = NEW.document_id;"};
 
 		String check_login_banner = "SELECT * FROM settings WHERE setting_name = 'login_banner'";
 		String create_login_banner = "INSERT INTO settings (setting_name, setting_value) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";

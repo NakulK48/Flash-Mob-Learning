@@ -62,7 +62,11 @@
 
 
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
-	String doctype = request.getParameter("doctype"); //browsing text or skulpt?
+	
+	DocumentType dt = DocumentType.ALL;
+	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
+	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
+			
 	String sortType = request.getParameter("sort");
 	String pageNumberString = request.getParameter("page");
 	if (pageNumberString == null) pageNumberString = "1";
@@ -97,7 +101,7 @@
 		p = new QueryParam(25, offset, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
 	}
 
-	ArrayList<PublishedDocument> subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(DocumentType.ALL, p);
+	ArrayList<PublishedDocument> subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(dt, p);
 
 	if (upvoted != null)
 	{

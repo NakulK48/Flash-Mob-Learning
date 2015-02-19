@@ -53,6 +53,10 @@ table {top:200px;}
 	
 	String sortType = request.getParameter("sort");
 	
+	DocumentType dt = DocumentType.ALL;
+	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
+	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
+	
 	
 	if (sortType == null ) sortType = "new";
 	if (!sortType.equals("new") && !sortType.equals("top")) sortType = "new";
@@ -86,7 +90,7 @@ table {top:200px;}
 			p = new QueryParam(25, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 		}
 
-		thisTagDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTag(tag, DocumentType.ALL, p);
+		thisTagDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTag(tag, dt, p);
 	}
 	
 	catch (Exception e)

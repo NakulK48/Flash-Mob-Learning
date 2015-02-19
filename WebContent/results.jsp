@@ -53,6 +53,10 @@
          </div>
          <div class="content" style="padding-top:10px;">
 <%
+	DocumentType dt = DocumentType.ALL;
+	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
+	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
+
 	String searchQuery = request.getParameter("query");
 	if (searchQuery == null) searchQuery = "";
 	String searchDomain = request.getParameter("domain"); //tag, document or user.
@@ -82,7 +86,7 @@
 	{
 		//TODO: query Document database for matching titles
 		QueryParam p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
-		ArrayList<PublishedDocument> matchingDocs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTitle(searchQuery, DocumentType.ALL, p);
+		ArrayList<PublishedDocument> matchingDocs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTitle(searchQuery, dt, p);
 		for (PublishedDocument pd : matchingDocs)
 		{
 

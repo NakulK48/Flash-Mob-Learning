@@ -147,13 +147,21 @@
 	<%
 		if (pageNumber == 1) 
 		{
-			out.println("<tr>Featured</tr>");
+			out.println("<tr><td>Featured</td></tr>");
 			if (showFeatured.equals("true"))
 			{
-				out.println("<a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'><td>(Hide)</td></a>");
-				out.println("<a href = 'hub.jsp?sort=" + sortType + "&showFeatured=only'><td>(View More)</td></a>");
+				out.println("<td><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'>(Hide) </a>");
+				out.println("<a href = 'hub.jsp?sort=" + sortType + "&showFeatured=only'> (View More)</td></a>");
 			}
-			else out.println("<a href = 'hub.jsp?sort=" + sortType + "&showFeatured=true'><td>(Show)</td></a>");
+			else if (showFeatured.equals("false"))
+			{
+				out.println("<a href = 'hub.jsp?sort=" + sortType + "&showFeatured=true'><td>(Show)</td></a>");
+			}
+			else //only
+			{
+				out.println("<td><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'>(Hide) </a>");
+			}
+
 		}
 		//TODO list featured documents
 		for (PublishedDocument pd : featuredSubs)
@@ -189,7 +197,7 @@
 		} 
 		
 
-		if (pageNumber == 1 && showFeatured.equals("true")) out.println("<tr>The Rest</tr>");
+		if (pageNumber == 1 && !showFeatured.equals("only")) out.println("<tr>The Rest</tr>");
 		for (PublishedDocument pd : subs)
 		{
 

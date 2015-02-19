@@ -55,7 +55,7 @@ public class TagTest {
 		Assert.assertEquals(1, tags.size());
 		Assert.assertTrue(tags.contains(t));
 		List<PublishedDocument> docs = 
-				DocumentManager.getInstance().getPublishedByTag(t, QueryParam.UNSORTED);
+				DocumentManager.getInstance().getPublishedByTag(t, DocumentType.ALL, QueryParam.UNSORTED);
 		Assert.assertEquals(1, docs.size());
 		Assert.assertEquals(published, docs.get(0));
 	}
@@ -77,7 +77,7 @@ public class TagTest {
 		Assert.assertEquals(1, tags.size());
 		Assert.assertTrue(tags.contains(t));
 		List<PublishedDocument> docs = 
-				DocumentManager.getInstance().getPublishedByTag(t, QueryParam.UNSORTED);
+				DocumentManager.getInstance().getPublishedByTag(t, DocumentType.ALL, QueryParam.UNSORTED);
 		Assert.assertEquals(1, docs.size());
 		Assert.assertEquals(published, docs.get(0));
 		t.setBanned(true);
@@ -86,7 +86,7 @@ public class TagTest {
 		Assert.assertTrue(DocumentManager.getInstance().getTag(tagName1).getBanned());
 		// Deletes references.
 		docs = 
-				DocumentManager.getInstance().getPublishedByTag(t, QueryParam.UNSORTED);
+				DocumentManager.getInstance().getPublishedByTag(t, DocumentType.ALL, QueryParam.UNSORTED);
 		Assert.assertEquals(0, docs.size());
 		published = (PublishedDocument) DocumentManager.getInstance().getDocumentById(published.getID());
 		Assert.assertEquals(0, published.getTags().size());
@@ -111,7 +111,7 @@ public class TagTest {
 		Assert.assertEquals(1, tags.size());
 		Assert.assertTrue(tags.contains(t));
 		List<PublishedDocument> docs = 
-				DocumentManager.getInstance().getPublishedByTag(t, QueryParam.UNSORTED);
+				DocumentManager.getInstance().getPublishedByTag(t, DocumentType.ALL, QueryParam.UNSORTED);
 		Assert.assertEquals(1, docs.size());
 		Assert.assertEquals(published, docs.get(0));
 		DocumentManager.getInstance().deleteTag(t);
@@ -123,7 +123,7 @@ public class TagTest {
 		}
 		// Deletes references.
 		docs = 
-				DocumentManager.getInstance().getPublishedByTag(t, QueryParam.UNSORTED);
+				DocumentManager.getInstance().getPublishedByTag(t, DocumentType.ALL, QueryParam.UNSORTED);
 		Assert.assertEquals(0, docs.size());
 		published = (PublishedDocument) DocumentManager.getInstance().getDocumentById(published.getID());
 		Assert.assertEquals(0, published.getTags().size());

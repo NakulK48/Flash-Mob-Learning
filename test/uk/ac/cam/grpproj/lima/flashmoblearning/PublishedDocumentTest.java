@@ -17,13 +17,13 @@ public class PublishedDocumentTest extends DocumentTestBase {
 	@Override
 	PublishedDocument create(long id, DocumentType docType, User owner, String title,
 			long time) {
-		return new PublishedDocument(id, docType, owner, title, time, 0);
+		return new PublishedDocument(id, docType, owner, title, time, 0, 0);
 	}
 
 	@Override
 	List<? extends Document> getByTitle(String title)
 			throws NotInitializedException, SQLException, NoSuchObjectException {
-		return DocumentManager.getInstance().getPublishedByExactTitle(title, QueryParam.UNSORTED);
+		return DocumentManager.getInstance().getPublishedByExactTitle(title, DocumentType.ALL, QueryParam.UNSORTED);
 	}
 
 	@Test
@@ -31,13 +31,13 @@ public class PublishedDocumentTest extends DocumentTestBase {
     	PublishedDocument doc = create(-1, docType, owner, titleSimple, 
     			System.currentTimeMillis());
     	DocumentManager.getInstance().createDocument(doc);
-    	Assert.assertEquals(0, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).size());
+    	Assert.assertEquals(0, DocumentManager.getInstance().getFeatured(DocumentType.ALL, QueryParam.UNSORTED).size());
     	doc.setFeatured(true);
     	List<PublishedDocument> docsFeatured = 
-    			DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED);
+    			DocumentManager.getInstance().getFeatured(DocumentType.ALL, QueryParam.UNSORTED);
     	Assert.assertEquals(1, docsFeatured.size());
     	Assert.assertEquals(doc, docsFeatured.get(0));
     	doc.setFeatured(false);
-    	Assert.assertEquals(0, DocumentManager.getInstance().getFeatured(QueryParam.UNSORTED).size());
+    	Assert.assertEquals(0, DocumentManager.getInstance().getFeatured(DocumentType.ALL, QueryParam.UNSORTED).size());
 	}
 }

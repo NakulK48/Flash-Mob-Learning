@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.AlreadyInitializedException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.IllegalDatabaseStateException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
@@ -27,8 +28,11 @@ public class Database {
 	private static final String c_Password = "flashmoblearning";
 	private static final String c_JDBCURL = "jdbc:mysql://localhost/flashmoblearning";
 	
-	public static Database getInstance() {
-		return m_Instance;
+	public static Database getInstance() throws NotInitializedException {
+        if(m_Instance != null)
+            return m_Instance;
+        else
+            throw new NotInitializedException();
 	}
 	
 	public static final String DEFAULT_TEACHER_USERNAME = "Teacher";
@@ -51,6 +55,12 @@ public class Database {
 
 	/** Portable setup from an arbitrary JDBC URL */
 	public static void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
+		// Check if we already have an active connection, and throw an exception if we do.
+		if(m_Instance != null && m_Instance.getConnection() != null && !m_Instance.getConnection().isClosed()) {
+			throw new AlreadyInitializedException();
+		}
+		
+		// No active connection, either uninitialized/closed - start one.
 		Connection connection = DriverManager.getConnection(databaseURL, username, password);
 		setup(connection);
         m_Instance = new Database(connection);
@@ -59,8 +69,7 @@ public class Database {
 
 	private static void createDefaultUser() throws SQLException {
 		// Check if there are any users, if not, create one.
-		ResultSet rs = m_Instance.getStatement().executeQuery("SELECT * FROM users LIMIT 1");
-		if(!rs.first()) {
+		if(LoginManager.getInstance().getAllUsers(new QueryParam(1)).size() == 0) {
             LoginManager lm = LoginManager.getInstance();
             try {
                 User teacher = lm.createUser(DEFAULT_TEACHER_USERNAME, "", true);
@@ -129,6 +138,7 @@ public class Database {
 				"  featured_flag tinyint NOT NULL DEFAULT '0',\n" +
 				"  update_time timestamp NOT NULL,\n" +
 				"  vote_count int NOT NULL DEFAULT '0',\n" +
+				"  score float NOT NULL DEFAULT '0',\n" +
 				"  PRIMARY KEY (id)\n" +
 				")\n";
 
@@ -196,7 +206,10 @@ public class Database {
 				 "ALTER TABLE document_parents ADD CONSTRAINT document_parents_ibfk_1 FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE",
 				 "ALTER TABLE revisions ADD CONSTRAINT revisions_ibfk_1 FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE",
 				 "ALTER TABLE votes ADD CONSTRAINT votes_ibfk_2 FOREIGN KEY (document_id) REFERENCES documents (id) ON DELETE CASCADE",
-				 "ALTER TABLE votes ADD CONSTRAINT votes_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE"};		
+				 "ALTER TABLE votes ADD CONSTRAINT votes_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE"};
+		
+		String[] create_triggers = new String[]
+				{"CREATE TRIGGER add_vote AFTER INSERT ON votes FOR EACH ROW UPDATE documents SET vote_count = vote_count+1, score = vote_count * EXP(-1 * POWER(time_to_sec(timediff(NOW(),update_time)) / 3600,2)/50000) WHERE id = NEW.document_id;"};
 
 		String check_login_banner = "SELECT * FROM settings WHERE setting_name = 'login_banner'";
 		String create_login_banner = "INSERT INTO settings (setting_name, setting_value) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";
@@ -244,10 +257,19 @@ public class Database {
 			} catch (SQLException e) {
 			}
 		}
+		
 		// Create foreign keys - will throw an exception if they already exist, which can be ignored.
 		for (String create_fk : create_fks) {
 			try {
 				statement.execute(create_fk);
+			} catch (SQLException e) {
+			}
+		}
+		
+		// Create triggers - will throw an exception if they already exist, which can be ignored.
+		for (String create_trigger : create_triggers) {
+			try {
+				statement.execute(create_trigger);
 			} catch (SQLException e) {
 			}
 		}

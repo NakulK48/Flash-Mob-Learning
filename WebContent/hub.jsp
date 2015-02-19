@@ -1,17 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="java.sql.*, java.util.ArrayList, uk.ac.cam.grpproj.lima.flashmoblearning.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
-<head>
-<style>
+   <head>
 
+      <title>Flash Mob Learning</title>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link type="text/css" href="css/demo.css" rel="stylesheet" />
 
+      <!-- Include jQuery.mmenu .css files -->
+      <link type="text/css" href="css/jquery.mmenu.all.css" rel="stylesheet" />
 
-</style>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Hub - Flash Mob Learning</title>
-<link rel="stylesheet" type="text/css" href="HubStyle.css">
+      <!-- Include jQuery and the jQuery.mmenu .js files -->
+      <script type="text/javascript" src="jquery-2.1.3.min.js"></script>
+      <script type="text/javascript" src="jquery.mmenu.min.all.js"></script>
+
+      <!-- Fire the plugin onDocumentReady -->
+      <script type="text/javascript">
+         $(document).ready(function() {
+            $("#menu").mmenu({
+               "slidingSubmenus": false,
+               "classes": "mm-white",
+               "searchfield": true
+            });
+         });
+      </script>
+      <link rel="stylesheet" type="text/css" href="css/HubStyle.css">
 <%!
  	public void jspInit()
 	{
@@ -32,12 +48,18 @@
 
 	} 
 %>
-</head>
-<body>
+   </head>
+   <body>
+
+      <!-- The page -->
+      <div class="page">
+         <div class="header">
+            <a href="#menu"></a>
+            Community Hub
+         </div>
+         <div class="content" style="padding-top:10px;">
 <%
-	
-	LoginManager lm = LoginManager.getInstance();
-	DocumentManager dm = DocumentManager.getInstance();
+
 
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
 	String doctype = request.getParameter("doctype"); //browsing text or skulpt?
@@ -75,7 +97,7 @@
 		p = new QueryParam(25, offset, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
 	}
 
-	ArrayList<PublishedDocument> subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
+	ArrayList<PublishedDocument> subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(DocumentType.ALL, p);
 
 	if (upvoted != null)
 	{
@@ -85,7 +107,7 @@
 	}
 	
 %>
-	<div id="orderHolder">
+	<div id="orderHolder" >
 		<a href='<%="hub.jsp?sort=hot"%>'><div class="order" id="left">Hot</div></a>
 		<a href='<%="hub.jsp?sort=top"%>'><div class="order" id="centre">Top</div></a>
 		<a href='<%="hub.jsp?sort=new"%>'><div class="order" id="right">New</div></a>
@@ -110,7 +132,8 @@
 			else
 			{
 				int ageInDays = ageInHours / 24;
-				ageString = ageInDays + " days ago";
+				if (ageInDays == 1) ageString = "yesterday";
+				else ageString = ageInDays + " days ago";
 			}
 			
 			String entry = 
@@ -118,7 +141,7 @@
 			"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >UP</button></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
@@ -137,12 +160,26 @@
 		String nextURL = "hub.jsp?sort=" + sortType + "&page=" + nextPage;
 		
 	%>
-	
-	<tr id="pageHolder">	
-	<td id="previous"><a href='<%=previousURL %>'>Previous</a></td>
-	<td id="current">Page <%=pageNumber %></td>
-	<td id="next"><a href='<%=nextURL %>'>Next</a></td>
-	</tr>	
+
+
 </table>
-</body>
+	<div id="footer">	
+		<div style="bottom:0;float:left;"><a href='<%=previousURL %>'>Previous</a></div>
+		<div style="bottom:0;float:right;"><a href='<%=nextURL %>'>Next</a></div>
+		<div style="bottom:0;float:center;">Page <%=pageNumber %></div>
+	</div>	
+         </div>
+      </div>
+
+      <!-- The menu -->
+      <nav id="menu">
+         <ul>
+            <li><a href="landing.jsp">Home</a></li>
+            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="logout.jsp">Logout</a></li>
+         </ul>
+      </nav>
+
+   </body>
 </html>

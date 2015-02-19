@@ -1,51 +1,39 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>-Register - Flash Mob Learning</title>
+<link rel="stylesheet" href="LoginStyle.css" media="screen"
+	type="text/css" />
 </head>
 <body>
-	<form method="post" action="regCheck.jsp">
-		<center>
-			<table border="1" width="30%" cellpadding="3">
-				<thead>
-					<tr>
-						<th colspan="2">Register Here</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tbody>
-					<tr>
-						<td>First Name</td>
-						<td><input type="text" name="fn" placeholder="First Name"
-							required /></td>
-					</tr>
-					<tr>
-						<td>Last Name</td>
-						<td><input type="text" name="ln" placeholder="Last Name"
-							required /></td>
-					</tr>
-					<tr>
-						<td>Password</td>
-						<td><input type="password" name="pwd" placeholder="Password" required/></td>
-					</tr>
-										<tr>
-						<td>Repeat Password</td>
-						<td><input type="password" name="rpwd" placeholder="Password" required/></td>
-					</tr>
-					
-					<tr>
-						<td><input type="submit" value="Register" /></td>
-					</tr>
-					<tr>
-						<td>Or <a href="login.jsp">login</a>. </td>
-					</tr>
-				</tbody>
-			</table>
-		</center>
-	</form>
+	<%
+		//Check if user already logged in.
+		if(session.getAttribute("uid")!=null){
+			response.sendRedirect("home.jsp");
+		}
+	%>
+	<div class="login-card">
+	<center><%=LoginManager.getInstance().getLoginBanner() %></center></br>
+		<form method="post" action="regCheck.jsp">
+			<input type="text" name="username" placeholder="Username" required> 
+			<input type="password" name="pwd" placeholder="Password" required> 
+			<input type="password" name="rpwd" placeholder="Repeat Password" required>
+			<input type="submit" class="login login-submit" value="Register">
+		</form>
 
+		<div class="login-help">
+			<a href="login.jsp">Login</a>
+		</div>
+	</div>
+
+	<!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
+
+	<script
+		src='http://codepen.io/assets/libs/fullpage/jquery_and_jqueryui.js'></script>
+	
 </body>
 </html>

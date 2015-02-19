@@ -1,11 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="uk.ac.cam.grpproj.lima.flashmoblearning.*,uk.ac.cam.grpproj.lima.flashmoblearning.database.*,java.util.ArrayList,java.util.TreeSet"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+    pageEncoding="ISO-8859-1" import="java.sql.*, java.util.ArrayList, uk.ac.cam.grpproj.lima.flashmoblearning.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*" %>
+
+<!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Search Results - Flash Mob Learning</title>
-<link rel="stylesheet" type="text/css" href="HubStyle.css">
+   <head>
+
+      <title>Flash Mob Learning</title>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link type="text/css" href="css/demo.css" rel="stylesheet" />
+
+      <!-- Include jQuery.mmenu .css files -->
+      <link type="text/css" href="css/jquery.mmenu.all.css" rel="stylesheet" />
+
+      <!-- Include jQuery and the jQuery.mmenu .js files -->
+      <script type="text/javascript" src="jquery-2.1.3.min.js"></script>
+      <script type="text/javascript" src="jquery.mmenu.min.all.js"></script>
+
+      <!-- Fire the plugin onDocumentReady -->
+      <script type="text/javascript">
+         $(document).ready(function() {
+            $("#menu").mmenu({
+               "slidingSubmenus": false,
+               "classes": "mm-white",
+               "searchfield": true
+            });
+         });
+      </script>
+      <link rel="stylesheet" type="text/css" href="css/HubStyle.css">
 <%!
 	public void jspInit()
 	{
@@ -22,6 +44,14 @@
 %>
 </head>
 <body>
+
+      <!-- The page -->
+      <div class="page">
+         <div class="header">
+            <a href="#menu"></a>
+            Search Results
+         </div>
+         <div class="content" style="padding-top:10px;">
 <%
 	String searchQuery = request.getParameter("query");
 	if (searchQuery == null) searchQuery = "";
@@ -52,7 +82,7 @@
 	{
 		//TODO: query Document database for matching titles
 		QueryParam p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
-		ArrayList<PublishedDocument> matchingDocs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTitle(searchQuery, p);
+		ArrayList<PublishedDocument> matchingDocs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTitle(searchQuery, DocumentType.ALL, p);
 		for (PublishedDocument pd : matchingDocs)
 		{
 
@@ -64,7 +94,8 @@
 			else
 			{
 				int ageInDays = ageInHours / 24;
-				ageString = ageInDays + " days ago";
+				if (ageInDays == 1) ageString = "yesterday";
+				else ageString = ageInDays + " days ago";
 			}
 			
 			String entry = 
@@ -72,7 +103,7 @@
 			"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >UP</button></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='preview.jsp?id=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
@@ -122,6 +153,20 @@
 %>
 </table>
 
+	<div id="footer">	
+	</div>	
+         </div>
+      </div>
 
-</body>
+      <!-- The menu -->
+      <nav id="menu">
+         <ul>
+            <li><a href="landing.jsp">Home</a></li>
+            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="logout.jsp">Logout</a></li>
+         </ul>
+      </nav>
+
+   </body>
 </html>

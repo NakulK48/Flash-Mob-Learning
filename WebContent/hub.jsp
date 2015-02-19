@@ -62,6 +62,8 @@
 
 
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
+	String showFeatured = request.getParameter("showFeatured");
+	if (showFeatured == null) showFeatured = "true";
 	
 	DocumentType dt = DocumentType.ALL;
 	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
@@ -85,23 +87,42 @@
 	if (!sortType.equals("new") && !sortType.equals("top") && !sortType.equals("hot")) sortType = "hot";
 	
 	QueryParam p;
+	QueryParam pf;
+	
+	int featuredCount = 5;
+	if (showFeatured.equals("only")) featuredCount = 25;
 	
 	if (sortType.equals("new"))
 	{
 		p = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+		pf = new QueryParam(featuredCount, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	}
 	
 	else if (sortType.equals("top"))
 	{
 		p = new QueryParam(25, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
+		pf = new QueryParam(featuredCount, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 	}
 	
 	else // "hot"
 	{
 		p = new QueryParam(25, offset, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
+		pf = new QueryParam(featuredCount, 0, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
+	}
+	
+	ArrayList<PublishedDocument> featuredSubs = new ArrayList<PublishedDocument>();
+	ArrayList<PublishedDocument> subs = new ArrayList<PublishedDocument>();
+
+	if (pageNumber == 1 && (showFeatured.equals("true") || showFeatured.equals("only"))) 
+	{
+		featuredSubs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getFeatured(dt, p);
+	}
+	
+	if (!showFeatured.equals("only"))
+	{
+		subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(dt, p);
 	}
 
-	ArrayList<PublishedDocument> subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(dt, p);
 
 	if (upvoted != null)
 	{
@@ -124,7 +145,51 @@
 		<td class='heading' id='ageHeading'></td>
 	</tr>
 	<%
-	
+		if (pageNumber == 1) 
+		{
+			out.println("<tr>Featured</tr>");
+			if (showFeatured.equals("true"))
+			{
+				out.println("<a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'><td>(Hide)</td></a>");
+				out.println("<a href = 'hub.jsp?sort=" + sortType + "&showFeatured=only'><td>(View More)</td></a>");
+			}
+			else out.println("<a href = 'hub.jsp?sort=" + sortType + "&showFeatured=true'><td>(Show)</td></a>");
+		}
+		//TODO list featured documents
+		for (PublishedDocument pd : featuredSubs)
+		{
+
+			String ageString;
+			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
+			if (ageInHours < 1) ageString = "Less than an hour ago";
+			else if (ageInHours < 2) ageString = "An hour ago";
+			else if (ageInHours < 24) ageString = ageInHours + " hours ago";
+			else
+			{
+				int ageInDays = ageInHours / 24;
+				if (ageInDays == 1) ageString = "yesterday";
+				else ageString = ageInDays + " days ago";
+			}
+			
+			String entry = 
+			"<tr class='upperRow'>" + 
+			"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >UP</button></td>" + //upvote
+			//TODO: Replace with upvote sprite
+			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
+			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='age'>" + ageString + "</td>" + //age
+			"</tr>" + 
+			"<tr class='lowerRow'>" +
+			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
+			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
+			"<td></td>" +
+			"</tr>"; 
+			
+			out.println(entry);
+		} 
+		
+
+		if (pageNumber == 1 && showFeatured.equals("true")) out.println("<tr>The Rest</tr>");
 		for (PublishedDocument pd : subs)
 		{
 

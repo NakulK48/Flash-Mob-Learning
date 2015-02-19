@@ -1,12 +1,12 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
-import java.sql.SQLException;
-import java.util.*;
-
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
+
+import java.sql.SQLException;
+import java.util.*;
 
 /** Base class for Document's. */
 public class Document {

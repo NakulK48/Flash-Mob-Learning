@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.ac.cam.grpproj.lima.flashmoblearning.*;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 
 import java.sql.*;
 import java.util.*;
@@ -351,6 +352,12 @@ public class DocumentManagerTests {
         Assert.assertEquals("Expecting dynamic tag in database", c_TestTagTitle + " (DYNAMIC)", retrieved.name);
     }
 
+    @Test(expected=DuplicateEntryException.class)
+    public void testAddExistingTag() throws Exception {
+        DocumentManager.getInstance().createTag("DUPLICATE TAG", false);
+        DocumentManager.getInstance().createTag("DUPLICATE TAG", false);
+    }
+
     @Test
     public void testAddTagToDocument() throws Exception {
         DocumentManager.getInstance().addTag(m_WIP_Document, m_BannedTag);
@@ -420,7 +427,7 @@ public class DocumentManagerTests {
         Assert.assertEquals("Featured document has (oldVoteCount+1) votes", oldVoteCount+1, featured.getVotes());
     }
 
-    @Test(expected=SQLException.class)
+    @Test(expected=DuplicateEntryException.class)
     public void testAddTwoVotes() throws Exception {
         DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(DocumentType.ALL, QueryParam.UNSORTED).get(0));
         DocumentManager.getInstance().addVote(m_TestUser, DocumentManager.getInstance().getFeatured(DocumentType.ALL, QueryParam.UNSORTED).get(0));

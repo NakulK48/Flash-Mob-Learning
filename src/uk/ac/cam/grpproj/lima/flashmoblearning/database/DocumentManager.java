@@ -1,6 +1,7 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.*;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
@@ -390,9 +391,10 @@ public class DocumentManager {
      * @throws SQLException an error has occurred in the database.
      */
 	public void setParentDocument(Document document, Document parentDoc) throws SQLException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_parents (document_id, parent_document_id) VALUES (?, ?)");
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_parents (document_id, parent_document_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE parent_document_id = ?");
 		ps.setLong(1, document.getID());
 		ps.setLong(2, parentDoc.getID());
+        ps.setLong(3, parentDoc.getID());
 		ps.executeUpdate();
 	}
 
@@ -535,13 +537,21 @@ public class DocumentManager {
      * @return The created tag, along with its' tag ID.
      * @throws SQLException an error has occurred in the database.
      * @throws NoSuchObjectException tag creation failed, and thus cannot be retrieved.
+     * @throws DuplicateEntryException tag with the same name already exists.
      */
-	public Tag createTag(String name, boolean isBanned) throws SQLException, NoSuchObjectException {
+	public Tag createTag(String name, boolean isBanned) throws SQLException, NoSuchObjectException, DuplicateEntryException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
 				("INSERT INTO tags (name, banned_flag) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
 		ps.setString(1, name);
 		ps.setBoolean(2, isBanned);
-		ps.executeUpdate();
+
+        try {
+		    ps.executeUpdate();
+        } catch (SQLException e) {
+            // Catch any duplicate name exceptions and throw our own.
+            DuplicateEntryException.handle(e);
+        }
+
 		ResultSet rs = ps.getGeneratedKeys();
 		if(rs.next())
 			return new Tag(rs.getLong(1), name, isBanned);
@@ -556,10 +566,10 @@ public class DocumentManager {
      * @throws SQLException an error has occurred in the database.
      */
 	public void addTag(Document document, Tag tag) throws SQLException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_tags (tag_id, document_id) VALUES (?, ?)");
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT IGNORE INTO document_tags (tag_id, document_id) VALUES (?, ?)");
 		ps.setLong(1, tag.getID());
 		ps.setLong(2, document.getID());
-		ps.executeUpdate();
+        ps.executeUpdate();
 	}
 
     /**
@@ -583,15 +593,21 @@ public class DocumentManager {
      * @param tag tag to update.
      * @throws SQLException an error has occurred in the database.
      * @throws NoSuchObjectException tag not found.
+     * @throws DuplicateEntryException a tag with the same name already exists.
      */
-	public void updateTag(Tag tag) throws SQLException, NoSuchObjectException {
+	public void updateTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateEntryException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
 				("UPDATE tags SET name = ?, banned_flag = ? where id = ?");
 		ps.setString(1, tag.name);
 		ps.setBoolean(2, tag.getBanned());
 		ps.setLong(3, tag.getID());
-		int affected_rows = ps.executeUpdate();
-		if(affected_rows < 1) throw new NoSuchObjectException("tag " + tag.getID());
+        try {
+            int affected_rows = ps.executeUpdate();
+            if (affected_rows < 1) throw new NoSuchObjectException("tag " + tag.getID());
+        } catch (SQLException e) {
+            // Catch any duplicate name exceptions and throw our own.
+            DuplicateEntryException.handle(e);
+        }
 	}
 
     /**
@@ -624,12 +640,18 @@ public class DocumentManager {
      * @param user user who added the vote.
      * @param document document to add the vote to.
      * @throws SQLException an error has occurred in the database.
+     * @throws DuplicateEntryException the user has already voted for the document.
      */
- 	public void addVote(User user, PublishedDocument document) throws SQLException {
+ 	public void addVote(User user, PublishedDocument document) throws SQLException, DuplicateEntryException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO votes (user_id, document_id) VALUES (?, ?)");
 		ps.setLong(1, user.getID());
 		ps.setLong(2, document.getID());
-		ps.executeUpdate();
+        try {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+        // Catch any duplicate name exceptions and throw our own.
+            DuplicateEntryException.handle(e);
+        }
 	}
 
     /**

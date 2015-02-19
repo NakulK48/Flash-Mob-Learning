@@ -120,7 +120,7 @@ public class LoginManager {
 	 * @return The user object after creation.
 	 * @throws SQLException an error has occurred in the database.
 	 * @throws NoSuchObjectException the user was not found.
-	 * @throws uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException the username already exists.
+	 * @throws DuplicateEntryException the username already exists.
 	 */
 	public User createUser(String username, String saltedPassword, boolean teacher) throws SQLException, DuplicateEntryException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO users (username, password, teacher_flag) VALUES (?, ?, ?)");
@@ -128,13 +128,12 @@ public class LoginManager {
 		ps.setString(2, saltedPassword);
 		ps.setBoolean(3, teacher);
 
-		// Catch any duplicate name exceptions and throw our own.
 		try {
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			if(e.getMessage().toLowerCase().contains("duplicate")) throw new DuplicateEntryException();
-			else throw e;
-		}
+            // Catch any duplicate name exceptions and throw our own.
+            DuplicateEntryException.handle(e);
+        }
 
 		try {
 			return getUser(username);
@@ -150,7 +149,7 @@ public class LoginManager {
 	 * @param user user to modify (by user id)
 	 * @throws SQLException an error has occurred in the database.
 	 * @throws NoSuchObjectException the user was not found.
-	 * @throws uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException the username already exists.
+	 * @throws DuplicateEntryException the username already exists.
 	 */
 	public void modifyUser(User user) throws SQLException, NoSuchObjectException, DuplicateEntryException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("UPDATE users SET username = ?, password = ?, teacher_flag = ? WHERE id = ?");
@@ -159,8 +158,13 @@ public class LoginManager {
 		ps.setBoolean(3, user instanceof Teacher); // TODO
 		ps.setLong(4, user.getID());
 
-		int affected_rows = ps.executeUpdate();
-		if(affected_rows < 1) throw new NoSuchObjectException("user " + user.getID());
+        try {
+            int affected_rows = ps.executeUpdate();
+            if (affected_rows < 1) throw new NoSuchObjectException("user " + user.getID());
+        } catch (SQLException e) {
+            // Catch any duplicate name exceptions and throw our own.
+            DuplicateEntryException.handle(e);
+        }
 	}
 
 	

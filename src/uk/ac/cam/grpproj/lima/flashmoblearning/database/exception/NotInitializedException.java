@@ -3,7 +3,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.database.exception;
 import java.sql.SQLException;
 
 /**
- * Created by Spencer on 29/1/2015.
+ * This error occurs when database operations are attempted prior to initialization.
  */
 public class NotInitializedException extends SQLException {
 }

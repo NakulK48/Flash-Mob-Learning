@@ -10,7 +10,8 @@ public class QueryParam {
 	public static QueryParam UNSORTED = new QueryParam(0);
 
 	/**
-	 * @param limit Limits the number of rows to return. 0 or less means no limit.
+	 * Constructs a new query parameter with limit.
+	 * @param limit limits the number of rows to return. 0 or less means no limit.
 	 */
 	public QueryParam(int limit) {
 		this.limit = limit;
@@ -20,8 +21,9 @@ public class QueryParam {
 	}
 
 	/**
-	 * @param limit Limits the number of rows to return. 0 or less means no limit.
-	 * @param offset Retrieves records from offset to offset + limit.
+	 * Constructs a new query parameter with limit and offset.
+	 * @param limit limits the number of rows to return. 0 or less means no limit.
+	 * @param offset the offset/start of the results to return.
 	 */
 	public QueryParam(int limit, int offset) {
 		this.limit = limit;
@@ -32,9 +34,11 @@ public class QueryParam {
 
 
 	/**
-	 * @param limit Limits the number of rows to return. 0 or less means no limit.
-	 * @param sortField The field to sort by, TIME for all documents and POPULARITY for published documents.
-	 * @param sortOrder Ascending or Descending, ignored if sort is irrelevant.
+	 * Constructs a new query parameter with limit, offset and sort.
+	 * @param limit limits the number of rows to return. 0 or less means no limit.
+	 * @param offset the offset/start of the results to return.
+	 * @param sortField the field to sort by, TIME for all documents and POPULARITY for published documents.
+	 * @param sortOrder ascending or descending, ignored if sort is irrelevant.
 	 */
 	public QueryParam(int limit, int offset, SortField sortField, SortOrder sortOrder) {
 		this.limit = limit;
@@ -43,6 +47,11 @@ public class QueryParam {
 		this.sortOrder = sortOrder;
 	}
 
+	/**
+	 * Updates a given SQL query with the limits/offset/sort specified by this query parameter.
+	 * @param sql the SQL query to modify
+	 * @return The updated SQL query with limits/offset/sort specified.
+	 */
 	public String updateQuery(String sql) {
 		if(sortField == SortField.TIME) {
 			sql += " ORDER BY update_time " + (sortOrder == SortOrder.ASCENDING ? "ASC" : "DESC");

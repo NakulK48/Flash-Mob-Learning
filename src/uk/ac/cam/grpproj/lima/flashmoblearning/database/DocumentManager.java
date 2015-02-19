@@ -23,14 +23,31 @@ public class DocumentManager {
 
 	private Database m_Database;
 
+	/**
+	 * Creates a new DocumentManager instance with given database.
+	 * @param database an initialised database.
+	 */
 	protected DocumentManager(Database database) {
 		m_Database = database;
 	}
 
+	/**
+	 * Obtain the static DocumentManager instance.
+	 * @return The static DocumentManager instance.
+	 * @throws NotInitializedException the static DocumentManager instance isn't initialised.
+	 */
 	public static DocumentManager getInstance() throws NotInitializedException {
 		return Database.getInstance().getDocumentManager();
 	}
 
+	/**
+	 * Returns a list of Published Documents from a result set obtained from a document query.
+	 * @param rs ResultSet of Published Documents.
+	 * @param u owner of documents (if known, otherwise pass in null).
+	 * @return The list of Published Documents from the result set.
+	 * @throws SQLException an error has occurred in the database.
+	 * @throws NoSuchObjectException unable to load the user for a document.
+	 */
 	private List<PublishedDocument> getPublishedDocumentsFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
 		List<PublishedDocument> ret = new ArrayList<PublishedDocument>();
 
@@ -40,6 +57,14 @@ public class DocumentManager {
 		return ret;
 	}
 
+	/**
+	 * Returns a list of Work-In-Progress Documents from a result set obtained from a document query.
+	 * @param rs ResultSet of Work-In-Progress Documents.
+	 * @param u owner of documents (if known, otherwise pass in null).
+	 * @return The list of Published Documents from the result set.
+	 * @throws SQLException an error has occurred in the database.
+	 * @throws NoSuchObjectException unable to load the user for a document.
+	 */
 	private List<WIPDocument> getWIPDocumentsFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
 		List<WIPDocument> ret = new ArrayList<WIPDocument>();
 
@@ -49,16 +74,40 @@ public class DocumentManager {
 		return ret;
 	}
 
+	/**
+	 * Returns a single Published Document from a result set obtained from a document query.
+	 * @param rs ResultSet of Published Documents.
+	 * @param u owner of documents (if known, otherwise pass in null).
+	 * @return A Published Document from the result set.
+	 * @throws SQLException an error has occurred in the database.
+	 * @throws NoSuchObjectException unable to load the user for a document.
+	 */
 	private PublishedDocument getPublishedDocumentFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
 		return new PublishedDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
 				rs.getString("title"), rs.getTimestamp("update_time").getTime(), rs.getInt("vote_count"), rs.getDouble("score"));
 	}
 
+	/**
+	 * Returns a single Work-In-Progress Document from a result set obtained from a document query.
+	 * @param rs ResultSet of Work-In-Progress Documents.
+	 * @param u owner of documents (if known, otherwise pass in null).
+	 * @return A Work-In-Progress Document from the result set.
+	 * @throws SQLException an error has occurred in the database.
+	 * @throws NoSuchObjectException unable to load the user for a document.
+	 */
 	private WIPDocument getWIPDocumentFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
 		return new WIPDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
                 rs.getString("title"), rs.getTimestamp("update_time").getTime());
 	}
 
+	/**
+	 * Returns a single Document from a result set obtained from a document query.
+	 * @param rs ResultSet of Documents.
+	 * @param u owner of documents (if known, otherwise pass in null).
+	 * @return A Document from the result set.
+	 * @throws SQLException an error has occurred in the database.
+	 * @throws NoSuchObjectException unable to load the user for a document.
+	 */
 	private Document getDocumentFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
 		if(rs.getBoolean("published_flag")) {
 			return getPublishedDocumentFromResultSet(rs, u);
@@ -67,6 +116,19 @@ public class DocumentManager {
 		}
 	}
 
+	/**
+	 * @param rs
+	 * @param d
+	 * @return
+	 * @throws SQLException
+	 */
+	/**
+	 * Returns a list of Revisions from a result set obtained from a revision query.
+	 * @param rs ResultSet of Revisions.
+	 * @param d document Revisions belong to.
+	 * @return The list of Revisions from the result set.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	private LinkedList<Revision> getRevisionsFromResultSet(ResultSet rs, Document d) throws SQLException {
 		LinkedList<Revision> ret = new LinkedList<Revision>();
 

@@ -29,6 +29,11 @@ public class Database {
 	private static final String c_Password = "flashmoblearning";
 	private static final String c_JDBCURL = "jdbc:mysql://localhost/flashmoblearning";
 	
+	/**
+	 * Obtain the static Database instance.
+	 * @return The static Database instance.
+	 * @throws NotInitializedException the static Database instance isn't initialised.
+	 */
 	public static Database getInstance() throws NotInitializedException {
         if(m_Instance != null)
             return m_Instance;
@@ -45,29 +50,45 @@ public class Database {
 			"something like \"Welcome to coding at XYZ school! Please create " +
 			"an account with your real name.\".";
 
-	/** Initializes and tests a MySQL database connection, setting up the 
-	 * database if necessary, and exiting if it is incorrectly setup.
-	 * REQUIREMENTS: An external mysql server with username and password as above,
-	 * a database called flashmoblearning and appropriate permissions. **/
+	/**
+	 * Initialises the database with the default MySQL connection parameters.
+	 * Defaults: localhost, username/password flashmoblearning.
+	 * @throws ClassNotFoundException unable to load the MySQL driver.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	public static void init() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
         init(c_JDBCURL, c_Username, c_Password);
 	}
 
 	/** Portable setup from an arbitrary JDBC URL */
-	public static synchronized void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
+	/**
+	 * Initialises the database given a JDBC URL, username and password.
+	 * This method is thread-safe.
+	 * This method will return silently if the database is already initialised.
+	 * @param databaseURL database JDBC URL.
+	 * @param username database username.
+	 * @param password database password.
+	 * @throws SQLException an error has occurred in the database.
+	 */
+	public static synchronized void init(String databaseURL, String username, String password) throws SQLException {
 		// Check if we already have an active connection, and return if we do.
 		if(m_Instance != null && m_Instance.getConnection() != null && !m_Instance.getConnection().isClosed()) {
 			return;
 		}
 		
-		// No active connection, either uninitialized/closed - start one.
+		// No active connection, either uninitialised/closed - start one.
 		Connection connection = DriverManager.getConnection(databaseURL, username, password);
 		setup(connection);
         m_Instance = new Database(connection);
 		createDefaultUser();
 	}
 
+	/**
+	 * Creates the default user and updates the login banner to set a password-change nag.
+	 * Should only be called internally on setup, if no users exist.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	private static void createDefaultUser() throws SQLException {
 		// Check if there are any users, if not, create one.
 		if(LoginManager.getInstance().getAllUsers(new QueryParam(1)).size() == 0) {
@@ -86,23 +107,38 @@ public class Database {
         }
 	}
 
+	/**
+	 * Creates a new Database instance with given connection.
+	 * @param connection an initialised connection.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	private Database(Connection connection) throws SQLException {
 		m_Connection = connection;
 		m_LoginManagerInstance = new LoginManager(this);
 		m_DocumentManagerInstance = new DocumentManager(this);
 	}
 
-	/** Obtain database connection **/
+	/**
+	 * Obtains the existing database connection.
+	 * @return The backing database connection.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	public Connection getConnection() throws SQLException {
 		return m_Connection;
 	}
 
-	/** Obtain a new statement, ready for execution **/
+	/**
+	 * Obtains a new statement, ready for execution
+	 * @return new database statement.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	public Statement getStatement() throws SQLException {
 		return m_Connection.createStatement();
 	}
 
-	/** Shutdown the database */
+	/**
+	 * Shuts down the database and closes the connection.
+	 */
 	public void close() {
 		try {
 			m_Connection.close();
@@ -111,7 +147,11 @@ public class Database {
 		}
 	}
 
-	/** Get the DocumentManager */
+	/**
+	 * Obtain the static DocumentManager instance.
+	 * @return The static DocumentManager instance.
+	 * @throws NotInitializedException the static DocumentManager instance isn't initialised.
+	 */
 	public DocumentManager getDocumentManager() throws NotInitializedException {
 		if(m_DocumentManagerInstance != null)
 			return m_DocumentManagerInstance;
@@ -119,7 +159,11 @@ public class Database {
 			throw new NotInitializedException();
 	}
 
-	/** Get the LoginManager */
+	/**
+	 * Obtain the static LoginManager instance.
+	 * @return The static LoginManager instance.
+	 * @throws NotInitializedException the static LoginManager instance isn't initialised.
+	 */
 	public LoginManager getLoginManager() throws NotInitializedException {
 		if(m_LoginManagerInstance != null)
 			return m_LoginManagerInstance;
@@ -127,8 +171,12 @@ public class Database {
 			throw new NotInitializedException();
 	}
 
-	/** Creates all necessary tables if they do not exist.
-	 * @return True if we created tables. **/
+	/**
+	 * Creates all necessary tables if they do not exist.
+	 * If the database is not empty but incomplete, it is deemed corrupt and setup fails with an exception.
+	 * @param connection connection to run table setup.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	private static void setup(Connection connection) throws SQLException {
         String create_documents = "CREATE TABLE documents (\n" +
 				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
@@ -274,10 +322,5 @@ public class Database {
 			} catch (SQLException e) {
 			}
 		}
-	}
-	
-	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
-		init();
-		System.out.println("Success!");
 	}
 }

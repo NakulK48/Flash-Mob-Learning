@@ -213,7 +213,7 @@ public class Database {
 
 		String create_tags = "CREATE TABLE tags (\n" +
 				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
-				"  name text NOT NULL,\n" +
+				"  name varchar(255) NOT NULL,\n" +
 				"  banned_flag tinyint NOT NULL DEFAULT '0',\n" +
 				"  PRIMARY KEY (id)\n" +
 				")";
@@ -244,7 +244,8 @@ public class Database {
 				  "CREATE INDEX revisions_document_id on revisions(document_id)",
 				  "CREATE UNIQUE INDEX users_username on users(username)",
 				  "CREATE INDEX votes_document_id on votes(document_id)",
-				  "CREATE UNIQUE INDEX setting_name on settings(setting_name)"
+				  "CREATE UNIQUE INDEX setting_name on settings(setting_name)",
+                  "CREATE UNIQUE INDEX tag_name on tags(name)",
 				};
 		
 		String[] create_fks = new String[]

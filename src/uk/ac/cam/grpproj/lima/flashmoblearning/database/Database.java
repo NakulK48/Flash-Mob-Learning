@@ -55,10 +55,10 @@ public class Database {
 	}
 
 	/** Portable setup from an arbitrary JDBC URL */
-	public static void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
-		// Check if we already have an active connection, and throw an exception if we do.
+	public static synchronized void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
+		// Check if we already have an active connection, and return if we do.
 		if(m_Instance != null && m_Instance.getConnection() != null && !m_Instance.getConnection().isClosed()) {
-			throw new AlreadyInitializedException();
+			return;
 		}
 		
 		// No active connection, either uninitialized/closed - start one.

@@ -3,7 +3,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Student;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Teacher;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
@@ -120,9 +120,9 @@ public class LoginManager {
 	 * @return The user object after creation.
 	 * @throws SQLException an error has occurred in the database.
 	 * @throws NoSuchObjectException the user was not found.
-	 * @throws DuplicateNameException the username already exists.
+	 * @throws uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException the username already exists.
 	 */
-	public User createUser(String username, String saltedPassword, boolean teacher) throws SQLException, DuplicateNameException {
+	public User createUser(String username, String saltedPassword, boolean teacher) throws SQLException, DuplicateEntryException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO users (username, password, teacher_flag) VALUES (?, ?, ?)");
 		ps.setString(1, username);
 		ps.setString(2, saltedPassword);
@@ -132,7 +132,7 @@ public class LoginManager {
 		try {
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			if(e.getMessage().toLowerCase().contains("duplicate")) throw new DuplicateNameException();
+			if(e.getMessage().toLowerCase().contains("duplicate")) throw new DuplicateEntryException();
 			else throw e;
 		}
 
@@ -150,9 +150,9 @@ public class LoginManager {
 	 * @param user user to modify (by user id)
 	 * @throws SQLException an error has occurred in the database.
 	 * @throws NoSuchObjectException the user was not found.
-	 * @throws DuplicateNameException the username already exists.
+	 * @throws uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException the username already exists.
 	 */
-	public void modifyUser(User user) throws SQLException, NoSuchObjectException, DuplicateNameException {
+	public void modifyUser(User user) throws SQLException, NoSuchObjectException, DuplicateEntryException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("UPDATE users SET username = ?, password = ?, teacher_flag = ? WHERE id = ?");
 		ps.setString(1, user.getName());
 		ps.setString(2, user.getEncryptedPassword());

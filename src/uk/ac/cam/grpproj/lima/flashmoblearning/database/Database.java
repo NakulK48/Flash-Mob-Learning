@@ -2,7 +2,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.Document;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.IllegalDatabaseStateException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
@@ -99,7 +99,7 @@ public class Database {
                 lm.modifyUser(teacher);
                 lm.setLoginBanner(LOGIN_PASSWORD_NAG);
                 System.out.println("Created default user and set login banner");
-            } catch (DuplicateNameException e) {
+            } catch (DuplicateEntryException e) {
                 throw new IllegalStateException("Duplicate name in spite of empty database?!", e);
             } catch (NoSuchObjectException e) {
                 throw new IllegalStateException("Impossible setting up database: "+e, e);

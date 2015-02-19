@@ -34,7 +34,7 @@
 			User u = l.createUser(name, pwd, false);
 			session.setAttribute("uid",String.valueOf(u.getID()));
 			response.sendRedirect("landing.jsp");			
-		}catch(DuplicateNameException e){
+		}catch(DuplicateEntryException e){
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/reg.jsp");
 			response.getWriter().println("<center><font color=red>Username already exists.</font></center>");
 			rd.include(request, response);

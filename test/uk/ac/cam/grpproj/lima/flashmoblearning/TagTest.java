@@ -13,7 +13,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.Database;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
@@ -39,7 +39,7 @@ public class TagTest {
 	final String payloadSimple = "Test payload";
 
 	@Test
-	public void testCreateAndFetch() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException, IDAlreadySetException {
+	public void testCreateAndFetch() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 
@@ -61,7 +61,7 @@ public class TagTest {
 	}
 
 	@Test
-	public void testBanTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException, IDAlreadySetException {
+	public void testBanTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 
@@ -95,7 +95,7 @@ public class TagTest {
 	}
 
 	@Test
-	public void testDeleteTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException, IDAlreadySetException {
+	public void testDeleteTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 
@@ -132,7 +132,7 @@ public class TagTest {
 	}
 	
 	@Test
-	public void testDeleteTagFromDocument() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException, IDAlreadySetException {
+	public void testDeleteTagFromDocument() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 

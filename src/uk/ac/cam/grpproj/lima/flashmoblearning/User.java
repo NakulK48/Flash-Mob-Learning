@@ -3,7 +3,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
 import java.sql.SQLException;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
@@ -18,7 +18,7 @@ public class User {
 		return name;
 	}
 	
-	public void setName(String n) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
+	public void setName(String n) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException {
 		name = n;
 		LoginManager.getInstance().modifyUser(this);
 	}
@@ -52,11 +52,11 @@ public class User {
 	}
 	
 	/** Set password 
-	 * @throws DuplicateNameException 
+	 * @throws uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public void setPassword(String newPassword) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
+	public void setPassword(String newPassword) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException {
 		// FIXME SECURITY: Hash passwords with a salt, use MessageDigest.isEqual etc.
 		if(this.encryptedPassword.equals(newPassword)) return;
 		encryptedPassword = newPassword;

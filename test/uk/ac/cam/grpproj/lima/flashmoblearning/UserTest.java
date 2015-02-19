@@ -6,9 +6,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.Database;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
@@ -47,7 +46,7 @@ public class UserTest {
     }
     
 	@Test
-	public void testSetPassword() throws NotInitializedException, SQLException, DuplicateNameException, NoSuchObjectException {
+	public void testSetPassword() throws NotInitializedException, SQLException, DuplicateEntryException, NoSuchObjectException {
 		Student s = (Student) LoginManager.getInstance().createUser(testUser, "", false);
 		Assert.assertNotSame(s.getID(), -1);
 		Assert.assertEquals(s, LoginManager.getInstance().getUser(s.getID()));
@@ -61,7 +60,7 @@ public class UserTest {
 	}
 
 	@Test
-	public void testSetPasswordTeacher() throws NotInitializedException, SQLException, DuplicateNameException, NoSuchObjectException {
+	public void testSetPasswordTeacher() throws NotInitializedException, SQLException, DuplicateEntryException, NoSuchObjectException {
 		Teacher s = (Teacher) LoginManager.getInstance().createUser(testUser, "", true);
 		Assert.assertNotSame(s.getID(), -1);
 		Assert.assertEquals(s, LoginManager.getInstance().getUser(s.getID()));
@@ -75,7 +74,7 @@ public class UserTest {
 	}
 
 	@Test
-	public void testChangeName() throws NotInitializedException, SQLException, DuplicateNameException, NoSuchObjectException {
+	public void testChangeName() throws NotInitializedException, SQLException, DuplicateEntryException, NoSuchObjectException {
 		Student s = (Student) LoginManager.getInstance().createUser(testUser, "", false);
 		Assert.assertNotSame(s.getID(), -1);
 		Assert.assertEquals(s, LoginManager.getInstance().getUser(s.getID()));

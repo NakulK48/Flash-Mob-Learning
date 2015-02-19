@@ -3,7 +3,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
 import java.sql.SQLException;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
@@ -19,7 +19,7 @@ public class Tag {
 	private boolean banned;
 	
 	/** Create a tag and store it to the database */
-	public static Tag create(String name) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
+	public static Tag create(String name) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException {
 		return DocumentManager.getInstance().createTag(name, false);
 	}
 
@@ -52,11 +52,11 @@ public class Tag {
 	}
 	
 	/** Ban or unban the tag 
-	 * @throws DuplicateNameException 
+	 * @throws uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public void setBanned(boolean b) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
+	public void setBanned(boolean b) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException {
 		if(banned == b) return;
 		banned = b;
 		DocumentManager.getInstance().updateTag(this);

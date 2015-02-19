@@ -25,6 +25,8 @@ public class Document {
 	/** Title of the document. Mutable. */
 	private String title;
 	
+	public static final int AGING_CONSTANT = 50000;
+	
 	/** Create a Document.
 	 * @param id If loaded from the database, this is a (non-negative) ID for 
 	 * the document. If it hasn't been stored yet this should be -1.

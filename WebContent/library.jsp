@@ -67,10 +67,9 @@
 		response.sendRedirect("login.jsp");
 	}
 
-	if (session.getAttribute("doctype") == null)
-	{
-		response.sendRedirect("landing.jsp");
-	}
+	DocumentType dt = DocumentType.ALL;
+	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
+	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
 //TODO: Check whether viewing Skulpt or Text
 
 	DocumentType doctype = (DocumentType) session.getAttribute("doctype");
@@ -98,7 +97,7 @@
 	QueryParam q = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	
 	//TODO: Change the below to take doctype into account
-	ArrayList<WIPDocument> docs = (ArrayList<WIPDocument>) dm.getWorkInProgressByUser(u, DocumentType.ALL, q);
+	ArrayList<WIPDocument> docs = (ArrayList<WIPDocument>) dm.getWorkInProgressByUser(u, dt, q);
 	
 %>
 

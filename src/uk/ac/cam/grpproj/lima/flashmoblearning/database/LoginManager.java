@@ -3,7 +3,6 @@ package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Student;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Teacher;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
-import uk.ac.cam.grpproj.lima.flashmoblearning.WIPDocument;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
@@ -14,6 +13,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The login manager provides read and write access to users and the login banner within
+ * the database. All search, create and listing functionality is implemented here as well.
+ */
 public class LoginManager {
 
 	private Database m_Database;

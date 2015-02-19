@@ -1,5 +1,9 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
+/**
+ * The QueryParam class provides the framework for adding parameters to any database
+ * query, including result limits, offsets, sort field and order.
+ */
 public class QueryParam {
 
 	// A limit of 0 or less implies no limit.

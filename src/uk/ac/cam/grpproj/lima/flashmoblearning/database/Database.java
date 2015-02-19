@@ -1,21 +1,21 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.*;
-import java.util.Arrays;
-import java.util.List;
-
 import uk.ac.cam.grpproj.lima.flashmoblearning.Document;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.AlreadyInitializedException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.IllegalDatabaseStateException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
-/** Singleton class which opens the database connection, and deals with global config and Tags.
- * Most of the work is done by DocumentManager and LoginManager.
+import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * The database class is responsible for initialising the database, setting up the tables (if database is empty),
+ * and maintaining the static instances of Login Manager and Document Manager.
+ *
+ * A copy of the database schema is stored in the setup(connection) method.
  */
 public class Database {
 	

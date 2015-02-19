@@ -1,23 +1,16 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
+import uk.ac.cam.grpproj.lima.flashmoblearning.*;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
+
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
 
-import uk.ac.cam.grpproj.lima.flashmoblearning.*;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
-
-/** Searches for documents in the database via various keys. Singleton. All database access for
- * documents is through this class, so we can change the schema here.
- * 
- * Rough schema:
- * Published documents (single table, including content and vote count)
- * Works in progress
- * Revisions of works in progress
- * Votes
- * Tags (a single document [ID] can have many tags)
+/**
+ * The document manager provides read and write access to documents, revisions, tags and votes within
+ * the database. All search, create and listing functionality is implemented here as well.
  */
 public class DocumentManager {
 

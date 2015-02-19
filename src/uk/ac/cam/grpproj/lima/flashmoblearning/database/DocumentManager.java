@@ -43,16 +43,16 @@ public class DocumentManager {
 	/**
 	 * Returns a list of Published Documents from a result set obtained from a document query.
 	 * @param rs ResultSet of Published Documents.
-	 * @param u owner of documents (if known, otherwise pass in null).
+	 * @param user owner of documents (if known, otherwise pass in null).
 	 * @return The list of Published Documents from the result set.
 	 * @throws SQLException an error has occurred in the database.
 	 * @throws NoSuchObjectException unable to load the user for a document.
 	 */
-	private List<PublishedDocument> getPublishedDocumentsFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
+	private List<PublishedDocument> getPublishedDocumentsFromResultSet(ResultSet rs, User user) throws SQLException, NoSuchObjectException {
 		List<PublishedDocument> ret = new ArrayList<PublishedDocument>();
 
 		while(rs.next())
-			ret.add(getPublishedDocumentFromResultSet(rs, u));
+			ret.add(getPublishedDocumentFromResultSet(rs, user));
 
 		return ret;
 	}
@@ -60,16 +60,16 @@ public class DocumentManager {
 	/**
 	 * Returns a list of Work-In-Progress Documents from a result set obtained from a document query.
 	 * @param rs ResultSet of Work-In-Progress Documents.
-	 * @param u owner of documents (if known, otherwise pass in null).
+	 * @param user owner of documents (if known, otherwise pass in null).
 	 * @return The list of Published Documents from the result set.
 	 * @throws SQLException an error has occurred in the database.
 	 * @throws NoSuchObjectException unable to load the user for a document.
 	 */
-	private List<WIPDocument> getWIPDocumentsFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
+	private List<WIPDocument> getWIPDocumentsFromResultSet(ResultSet rs, User user) throws SQLException, NoSuchObjectException {
 		List<WIPDocument> ret = new ArrayList<WIPDocument>();
 
 		while(rs.next())
-			ret.add(getWIPDocumentFromResultSet(rs, u));
+			ret.add(getWIPDocumentFromResultSet(rs, user));
 
 		return ret;
 	}
@@ -77,63 +77,57 @@ public class DocumentManager {
 	/**
 	 * Returns a single Published Document from a result set obtained from a document query.
 	 * @param rs ResultSet of Published Documents.
-	 * @param u owner of documents (if known, otherwise pass in null).
+	 * @param user owner of documents (if known, otherwise pass in null).
 	 * @return A Published Document from the result set.
 	 * @throws SQLException an error has occurred in the database.
 	 * @throws NoSuchObjectException unable to load the user for a document.
 	 */
-	private PublishedDocument getPublishedDocumentFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
-		return new PublishedDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
+	private PublishedDocument getPublishedDocumentFromResultSet(ResultSet rs, User user) throws SQLException, NoSuchObjectException {
+		return new PublishedDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), user == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : user,
 				rs.getString("title"), rs.getTimestamp("update_time").getTime(), rs.getInt("vote_count"), rs.getDouble("score"));
 	}
 
 	/**
 	 * Returns a single Work-In-Progress Document from a result set obtained from a document query.
 	 * @param rs ResultSet of Work-In-Progress Documents.
-	 * @param u owner of documents (if known, otherwise pass in null).
+	 * @param user owner of documents (if known, otherwise pass in null).
 	 * @return A Work-In-Progress Document from the result set.
 	 * @throws SQLException an error has occurred in the database.
 	 * @throws NoSuchObjectException unable to load the user for a document.
 	 */
-	private WIPDocument getWIPDocumentFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
-		return new WIPDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), u == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : u,
+	private WIPDocument getWIPDocumentFromResultSet(ResultSet rs, User user) throws SQLException, NoSuchObjectException {
+		return new WIPDocument(rs.getLong("id"), DocumentType.getValue(rs.getInt("type")), user == null ? LoginManager.getInstance().getUser(rs.getLong("user_id")) : user,
                 rs.getString("title"), rs.getTimestamp("update_time").getTime());
 	}
 
 	/**
 	 * Returns a single Document from a result set obtained from a document query.
 	 * @param rs ResultSet of Documents.
-	 * @param u owner of documents (if known, otherwise pass in null).
+	 * @param user owner of documents (if known, otherwise pass in null).
 	 * @return A Document from the result set.
 	 * @throws SQLException an error has occurred in the database.
 	 * @throws NoSuchObjectException unable to load the user for a document.
 	 */
-	private Document getDocumentFromResultSet(ResultSet rs, User u) throws SQLException, NoSuchObjectException {
+	private Document getDocumentFromResultSet(ResultSet rs, User user) throws SQLException, NoSuchObjectException {
 		if(rs.getBoolean("published_flag")) {
-			return getPublishedDocumentFromResultSet(rs, u);
+			return getPublishedDocumentFromResultSet(rs, user);
 		} else {
-			return getWIPDocumentFromResultSet(rs, u);
+			return getWIPDocumentFromResultSet(rs, user);
 		}
 	}
 
 	/**
-	 * @param rs
-	 * @param d
-	 * @return
-	 * @throws SQLException
-	 */
-	/**
 	 * Returns a list of Revisions from a result set obtained from a revision query.
 	 * @param rs ResultSet of Revisions.
-	 * @param d document Revisions belong to.
+	 * @param document document Revisions belong to.
 	 * @return The list of Revisions from the result set.
 	 * @throws SQLException an error has occurred in the database.
 	 */
-	private LinkedList<Revision> getRevisionsFromResultSet(ResultSet rs, Document d) throws SQLException {
+	private LinkedList<Revision> getRevisionsFromResultSet(ResultSet rs, Document document) throws SQLException {
 		LinkedList<Revision> ret = new LinkedList<Revision>();
 
 		while(rs.next())
-			ret.add(new Revision(rs.getLong("id"), rs.getDate("update_time"), d));
+			ret.add(new Revision(rs.getLong("id"), rs.getDate("update_time"), document));
 
 		return ret;
 	}
@@ -143,32 +137,64 @@ public class DocumentManager {
         else return " AND type = " + type.getId();
     }
 
-	/** Get the documents a user has published */
-	public List<PublishedDocument> getPublishedByUser(User u, DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
+    /**
+     * Get the list of Published Documents by a particular user.
+     * @param user owner of document
+     * @param documentType type of document
+     * @param param query parameter to filter/sort the results.
+     * @return The list of Published Documents by a particular user.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException unable to load the user for a document.
+     */
+	public List<PublishedDocument> getPublishedByUser(User user, DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE user_id = ? AND published_flag = true" + getDocumentTypeSQL(documentType)));
-		ps.setLong(1, u.getID());
+		ps.setLong(1, user.getID());
 		ResultSet rs = ps.executeQuery();
-		return getPublishedDocumentsFromResultSet(rs, u);
+		return getPublishedDocumentsFromResultSet(rs, user);
 	}
 
-	/** Get the documents a user is working on */
-	public List<WIPDocument> getWorkInProgressByUser(User u, DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
+    /**
+     * Get the list of Work-In-Progress Documents by a particular user.
+     * @param user owner of document
+     * @param documentType type of document
+     * @param param query parameter to filter/sort the results.
+     * @return The list of Work-In-Progress Documents by a particular user.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException unable to load the user for a document.
+     */
+	public List<WIPDocument> getWorkInProgressByUser(User user, DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE user_id = ? AND published_flag = false" + getDocumentTypeSQL(documentType)));
-		ps.setLong(1, u.getID());
+		ps.setLong(1, user.getID());
 		ResultSet rs = ps.executeQuery();
-		return getWIPDocumentsFromResultSet(rs, u);
+		return getWIPDocumentsFromResultSet(rs, user);
 	}
 
-	/** Get documents by tag */
-	public List<PublishedDocument> getPublishedByTag(Tag t, DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
+    /**
+     * Get the list of Published Documents by a particular tag.
+     * @param tag tag to search for
+     * @param documentType type of document
+     * @param param query parameter to filter/sort the results.
+     * @return The list of Published Documents by a particular tag.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException unable to load the user for a document.
+     */
+	public List<PublishedDocument> getPublishedByTag(Tag tag, DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(
 				param.updateQuery("SELECT * FROM documents LEFT JOIN document_tags ON (documents.id = document_tags.document_id) WHERE document_tags.tag_id = ? AND documents.published_flag = true" + getDocumentTypeSQL(documentType)));
-		ps.setLong(1, t.getID());
+		ps.setLong(1, tag.getID());
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}
-	
-	/** Search for published documents by title */
+
+    /**
+     * Get the list of Published Documents by a particular title (case-insensitive).
+     * @param title title to search for
+     * @param documentType type of document
+     * @param param query parameter to filter/sort the results.
+     * @return The list of Published Documents by a particular title (case-insensitive).
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException unable to load the user for a document.
+     */
 	public List<PublishedDocument> getPublishedByTitle(String title, DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE LOWER(title) LIKE ? AND published_flag = true" + getDocumentTypeSQL(documentType)));
 		ps.setString(1, "%" + title.toLowerCase() + "%");
@@ -176,7 +202,15 @@ public class DocumentManager {
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}
 
-	/** Search for published documents by title */
+    /**
+     * Get the list of Published Documents by a particular title (case-sensitive).
+     * @param title title to search for
+     * @param documentType type of document
+     * @param param query parameter to filter/sort the results.
+     * @return The list of Published Documents by a particular title (case-sensitive).
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException unable to load the user for a document.
+     */
 	public List<PublishedDocument> getPublishedByExactTitle(String title, DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE title = ? AND published_flag = true" + getDocumentTypeSQL(documentType)));
 		ps.setString(1, title);
@@ -184,7 +218,15 @@ public class DocumentManager {
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}
 
-	/** Search for in-progress documents by title */
+    /**
+     * Get the list of Work-In-Progress Documents by a particular title (case-sensitive).
+     * @param title title to search for
+     * @param documentType type of document
+     * @param param query parameter to filter/sort the results.
+     * @return The list of Work-In-Progress Documents by a particular title (case-sensitive).
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException unable to load the user for a document.
+     */
 	public List<WIPDocument> getWIPByExactTitle(String title, DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE title = ? AND published_flag = false" + getDocumentTypeSQL(documentType)));
 		ps.setString(1, title);
@@ -192,67 +234,116 @@ public class DocumentManager {
 		return getWIPDocumentsFromResultSet(rs, null);
 	}
 
-	/** Get featured documents */
-	public List<PublishedDocument> getFeatured(DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
+    /**
+     * Get the list of featured documents.
+     * @param documentType type of document
+     * @param param query parameter to filter/sort the results.
+     * @return The list of featured documents.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException unable to load the user for a document.
+     */
+    public List<PublishedDocument> getFeatured(DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE featured_flag = true" + getDocumentTypeSQL(documentType)));
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}
 
-	/** Get all featured documents by tag */
-	public List<PublishedDocument> getFeaturedByTag(Tag t, QueryParam param) throws SQLException, NoSuchObjectException {
+    /**
+     * Get the list of featured documents by tag.
+     * @param tag tag to search for.
+     * @param param query parameter to filter/sort the results.
+     * @return The list of featured documents by tag.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException unable to load the user for a document.
+     */
+	public List<PublishedDocument> getFeaturedByTag(Tag tag, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(
 				param.updateQuery("SELECT * FROM documents LEFT JOIN document_tags ON (documents.id = document_tags.document_id) WHERE document_tags.tag_id = ? AND documents.featured_flag = true"));
-		ps.setLong(1, t.getID());
+		ps.setLong(1, tag.getID());
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}
 
-	/** Get all documents published. Should then be sorted by the ResultList. */
+    /**
+     * Get the list of Published Documents.
+     * @param documentType type of document
+     * @param param query parameter to filter/sort the results.
+     * @return The list of Published Documents.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException unable to load the user for a document.
+     */
 	public List<PublishedDocument> getPublished(DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE published_flag = true") + getDocumentTypeSQL(documentType));
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}
 
-	/** Delete all documents owned by a user. Called by Login.deleteUser(). */
-	public void deleteAllDocumentsByUser(User u) throws SQLException {
+    /**
+     * Deletes all documents owned by a particular user.
+     * @param user user whose documents to delete.
+     * @throws SQLException an error has occurred in the database.
+     */
+	public void deleteAllDocumentsByUser(User user) throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM documents WHERE user_id = ?");
-		ps.setLong(1, u.getID());
+		ps.setLong(1, user.getID());
 		ps.executeUpdate();
 	}
 
-	/** Get all revisions of a given document; published documents will have a single revision */
-	public LinkedList<Revision> getRevisions(Document d, QueryParam param) throws SQLException, NoSuchObjectException {
+    /**
+     * Get all revisions of a given document; published documents will have a single revision.
+     * The content of the revision is not retrieved here, but is rather done on-demand/lazily.
+     * @param document document to obtain revisions for.
+     * @param param query parameter to filter/sort the results.
+     * @return The revisions of a given document.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException unable to load any revision.
+     */
+	public LinkedList<Revision> getRevisions(Document document, QueryParam param) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT id, document_id, update_time FROM revisions WHERE document_id = ?"));
-		ps.setLong(1, d.getID());
+		ps.setLong(1, document.getID());
 		ResultSet rs = ps.executeQuery();
-		return getRevisionsFromResultSet(rs, d);
+		return getRevisionsFromResultSet(rs, document);
 	}
 
-	/** Delete a work-in-progress document. */
-	public void deleteDocument(Document d) throws SQLException, NoSuchObjectException {
+    /**
+     * Delete a given document.
+     * @param document document to delete.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException document does not exist.
+     */
+	public void deleteDocument(Document document) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM documents WHERE id = ?");
-		ps.setLong(1, d.getID());
+		ps.setLong(1, document.getID());
 
 		int affected_rows = ps.executeUpdate();
-		if(affected_rows < 1) throw new NoSuchObjectException("document " + d.getID());
+		if(affected_rows < 1) throw new NoSuchObjectException("document " + document.getID());
 	}
 
-	/** Called when a revision is added to a document.
-	 * @param payload The actual content of the revision, which is not stored 
-	 * in the Revision object. */
-	public Revision addRevision(Document doc, Date d, String payload) throws SQLException, NoSuchObjectException {
+    /**
+     * Add a revision to a given document.
+     * @param document document to add revision to.
+     * @param date date revision is created.
+     * @param payload the actual content of the revision, which is not stored in the Revision object.
+     * @return The created Revision after insertion into the database.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException document does not exist.
+     */
+ 	public Revision addRevision(Document document, Date date, String payload) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO revisions (document_id, update_time, content) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-		ps.setLong(1, doc.getID());
-		ps.setTimestamp(2, new Timestamp(d.getTime()));
+		ps.setLong(1, document.getID());
+		ps.setTimestamp(2, new Timestamp(date.getTime()));
 		ps.setString(3, payload);
 		ps.executeUpdate();
 		ResultSet rs = ps.getGeneratedKeys(); rs.next();
-		return new Revision(rs.getLong(1), d, doc);
+		return new Revision(rs.getLong(1), date, document);
 	}
 
-	/** Called when a document is deleted or published */
+    /**
+     * Delete revision(s) from a document, typically called when documents are deleted or published.
+     * @param revisions list of revisions to delete
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException revision does not exist.
+     */
 	public void deleteRevision(List<Revision> revisions) throws SQLException, NoSuchObjectException {
 		for(Revision r : revisions) {
 			PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM revisions WHERE id = ?");
@@ -263,7 +354,13 @@ public class DocumentManager {
 		}
 	}
 
-	/** Get a given Document by ID */
+    /**
+     * Get a document by its' document ID.
+     * @param id id of document to retrieve.
+     * @return The document corresponding to the requested ID.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException document does not exist.
+     */
 	public Document getDocumentById(long id) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM documents WHERE id = ?");
 		ps.setLong(1, id);
@@ -275,7 +372,13 @@ public class DocumentManager {
 		}
 	}
 
-	/** Get the parent document for a given Document. Null if there is no parent. */
+    /**
+     * Get the parent document of a given document.
+     * @param document document whose parent to retrieve.
+     * @return The parent document of a the given document, null if one does not exist.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException the document exists, but failed to load.
+     */
 	public Document getParentDocument(Document document) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT parent_document_id FROM document_parents WHERE document_id = ?");
 		ps.setLong(1, document.getID());
@@ -287,54 +390,78 @@ public class DocumentManager {
 		}
 	}
 
-	/** Set the parent document for a given document. */
-	public void setParentDocument(Document d, Document parentDoc) throws SQLException, NoSuchObjectException {
+    /**
+     * Sets the parent document of a given document.
+     * @param document document whose parent to set.
+     * @param parentDoc the parent document to set.
+     * @throws SQLException an error has occurred in the database.
+     */
+	public void setParentDocument(Document document, Document parentDoc) throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_parents (document_id, parent_document_id) VALUES (?, ?)");
-		ps.setLong(1, d.getID());
+		ps.setLong(1, document.getID());
 		ps.setLong(2, parentDoc.getID());
 		ps.executeUpdate();
 	}
 
-	/** Add a new document, either with no revisions or with a single revision based on another Document. */
-	public void createDocument(Document d) throws SQLException, IDAlreadySetException {
+    /**
+     * Creates a new document in the database, and updates the given document's ID.
+     * @param document document to create.
+     * @throws SQLException an error has occurred in the database.
+     * @throws IDAlreadySetException the given document's ID has already been set.
+     */
+	public void createDocument(Document document) throws SQLException, IDAlreadySetException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
 				("INSERT INTO documents (user_id, type, title, published_flag, featured_flag, update_time, vote_count) VALUES (?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-		ps.setLong(1, d.owner.getID());
-		ps.setInt(2, d.docType.getId());
-		ps.setString(3, d.getTitle());
-		ps.setBoolean(4, d instanceof PublishedDocument);
-		ps.setBoolean(5, d instanceof PublishedDocument && ((PublishedDocument)d).getFeatured());
-		ps.setTimestamp(6, new Timestamp(d.creationTime));
+		ps.setLong(1, document.owner.getID());
+		ps.setInt(2, document.docType.getId());
+		ps.setString(3, document.getTitle());
+		ps.setBoolean(4, document instanceof PublishedDocument);
+		ps.setBoolean(5, document instanceof PublishedDocument && ((PublishedDocument)document).getFeatured());
+		ps.setTimestamp(6, new Timestamp(document.creationTime));
 		ps.setInt(7, 0);
 		ps.executeUpdate();
 		ResultSet rs = ps.getGeneratedKeys(); rs.next();
-		d.setID(rs.getLong(1));
+		document.setID(rs.getLong(1));
 	}
 
-	/** Update a document's metadata (not revisions). Not including votes and count. **/
-	/** If a document's status changes from unpublished to published, all revisions but the latest is truncated **/
-	public void updateDocument(Document d) throws SQLException, NoSuchObjectException {
+    /**
+     * Updates the given document's metadata, including owner, type, title, published/featured flags and update time.
+     * @param document document to update.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException document does not exist.
+     */
+	public void updateDocument(Document document) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
 				("UPDATE documents SET user_id = ?, type = ?, title = ?, published_flag = ?, featured_flag = ?, update_time = ? where id = ?");
-		ps.setLong(1, d.owner.getID());
-		ps.setInt(2, d.docType.getId());
-		ps.setString(3, d.getTitle());
-		ps.setBoolean(4, d instanceof PublishedDocument);
-		ps.setBoolean(5, d instanceof PublishedDocument && ((PublishedDocument) d).getFeatured());
-		ps.setTimestamp(6, new Timestamp(d.creationTime));
-		ps.setLong(7, d.getID());
+		ps.setLong(1, document.owner.getID());
+		ps.setInt(2, document.docType.getId());
+		ps.setString(3, document.getTitle());
+		ps.setBoolean(4, document instanceof PublishedDocument);
+		ps.setBoolean(5, document instanceof PublishedDocument && ((PublishedDocument) document).getFeatured());
+		ps.setTimestamp(6, new Timestamp(document.creationTime));
+		ps.setLong(7, document.getID());
 
 		int affected_rows = ps.executeUpdate();
-		if(affected_rows < 1) throw new NoSuchObjectException("document " + d.getID());
+		if(affected_rows < 1) throw new NoSuchObjectException("document " + document.getID());
 	}
 
-	/** List all tags. */
-	public Set<Tag> getTags() throws SQLException, NoSuchObjectException {
+    /**
+     * Gets the set of all tags in the database.
+     * @return The set of all tags in the database (no duplicates).
+     * @throws SQLException an error has occurred in the database.
+     */
+	public Set<Tag> getTags() throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM tags");
 		ResultSet rs = ps.executeQuery();
 		return getTagsFromResultSet(rs);
 	}
 
+    /**
+     * Returns a set of tags from a result set obtained from a tag query.
+     * @param rs ResultSet of tags.
+     * @return The set of tags from the result set.
+     * @throws SQLException an error has occurred in the database.
+     */
 	private Set<Tag> getTagsFromResultSet(ResultSet rs) throws SQLException {
 		Set<Tag> ret = new HashSet<Tag>();
 
@@ -344,25 +471,45 @@ public class DocumentManager {
 		return ret;
 	}
 
+    /**
+     * Returns a single tag from a result set obtained from a tag query.
+     * @param rs ResultSet of tags.
+     * @return A single tag from the result set.
+     * @throws SQLException an error has occurred in the database.
+     */
 	private Tag getTagFromResultSet(ResultSet rs) throws SQLException {
 		return new Tag(rs.getLong("id"), rs.getString("name"), rs.getBoolean("banned_flag"));
 	}
 
-	/** List all tags which have documents (for browsing by tag). */
-	public Set<Tag> getTagsNotEmpty() throws SQLException, NoSuchObjectException {
+    /**
+     * Get the set of tags in the database which are in use.
+     * @return The set of tags in the database which are in use.
+     * @throws SQLException an error has occurred in the database.
+     */
+	public Set<Tag> getTagsNotEmpty() throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM tags INNER JOIN document_tags on document_tags.tag_id = tags.id GROUP BY tags.id");
 		ResultSet rs = ps.executeQuery();
 		return getTagsFromResultSet(rs);
 	}
-	
-	/** List all tags which exist but have not been banned (for adding a tag). */
+
+    /**
+     * Get the set of tags in the database which are not banned/available for use.
+     * @return The set of tags in the database which are not banned/available for use.
+     * @throws SQLException an error has occurred in the database.
+     */
 	public Set<Tag> getTagsNotBanned() throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM tags WHERE banned_flag = false");
 		ResultSet rs = ps.executeQuery();
 		return getTagsFromResultSet(rs);
 	}
-	
-	/** Get tag by name */
+
+    /**
+     * Get a tag by name (case-sensitive).
+     * @param name name of tag.
+     * @return The tag corresponding to the name given.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException the tag with the given name does not exist.
+     */
 	public Tag getTag(String name) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM tags WHERE name = ?");
 		ps.setString(1, name);
@@ -375,7 +522,12 @@ public class DocumentManager {
 		}
 	}
 
-	/** Get all tags for a particular document */
+    /**
+     * Get all tags for a given document.
+     * @param document document whose tags to retrieve.
+     * @return The set of tags for a given document.
+     * @throws SQLException an error has occurred in the database.
+     */
 	public Set<Tag> getTags(Document document) throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT * FROM document_tags INNER JOIN tags on document_tags.tag_id = tags.id WHERE document_id = ?");
 		ps.setLong(1, document.getID());
@@ -383,40 +535,63 @@ public class DocumentManager {
 		return getTagsFromResultSet(rs);
 	}
 
-	/** Create tag, or return an existing Tag of the same name, atomically. **/
-	public Tag createTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException {
+    /**
+     * Creates a tag in the database.
+     * @param name name of tag to create.
+     * @param isBanned true if tag is banned, false otherwise.
+     * @return The created tag, along with its' tag ID.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException tag creation failed, and thus cannot be retrieved.
+     */
+	public Tag createTag(String name, boolean isBanned) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
 				("INSERT INTO tags (name, banned_flag) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
-		ps.setString(1, tag.name);
-		ps.setBoolean(2, tag.getBanned());
+		ps.setString(1, name);
+		ps.setBoolean(2, isBanned);
 		ps.executeUpdate();
 		ResultSet rs = ps.getGeneratedKeys();
 		if(rs.next())
-			return new Tag(rs.getLong(1), tag.name, tag.getBanned());
+			return new Tag(rs.getLong(1), name, isBanned);
 		else
-			throw new NoSuchObjectException("failed to create tag " + tag.name);
+			throw new NoSuchObjectException("failed to create tag " + name);
 	}
 
-	/** Add a tag to a document. Throws if the tag is already attached. */
-	public void addTag(Document doc, Tag tag) throws SQLException {
+    /**
+     * Add a tag to a given document.
+     * @param document document to add a tag to.
+     * @param tag tag to add.
+     * @throws SQLException an error has occurred in the database.
+     */
+	public void addTag(Document document, Tag tag) throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_tags (tag_id, document_id) VALUES (?, ?)");
 		ps.setLong(1, tag.getID());
-		ps.setLong(2, doc.getID());
+		ps.setLong(2, document.getID());
 		ps.executeUpdate();
 	}
 
-	/** Remove a tag from a document. Throws if the tag is not present. */
-	public void deleteTag(Document doc, Tag tag) throws SQLException, NoSuchObjectException {
+    /**
+     * Deletes a tag from a given document.
+     * @param document document to delete a tag from.
+     * @param tag tag to delete.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException tag cannot be found on given document.
+     */
+	public void deleteTag(Document document, Tag tag) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM document_tags WHERE tag_id = ? AND document_id = ?");
 		ps.setLong(1, tag.getID());
-		ps.setLong(2, doc.getID());
+		ps.setLong(2, document.getID());
 
 		int affected_rows = ps.executeUpdate();
-		if(affected_rows < 1) throw new NoSuchObjectException("tag " + tag.getID() + " on " + doc.getID());
+		if(affected_rows < 1) throw new NoSuchObjectException("tag " + tag.getID() + " on " + document.getID());
 	}
 
-	/** Update a tag. I.e. it may go from banned to unbanned or vice versa. */
-	public void updateTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateNameException {
+    /**
+     * Updates a given tag's metadata, such as name and banned flag.
+     * @param tag tag to update.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException tag not found.
+     */
+	public void updateTag(Tag tag) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
 				("UPDATE tags SET name = ?, banned_flag = ? where id = ?");
 		ps.setString(1, tag.name);
@@ -426,7 +601,12 @@ public class DocumentManager {
 		if(affected_rows < 1) throw new NoSuchObjectException("tag " + tag.getID());
 	}
 
-	/** Delete a tag. Database will delete references from all documents to this tag. */
+    /**
+     * Deletes a given tag from the database.
+     * @param tag tag to delete
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException tag not found.
+     */
 	public void deleteTag(Tag tag) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM tags WHERE id = ?");
 		ps.setLong(1, tag.getID());
@@ -435,29 +615,40 @@ public class DocumentManager {
 		if(affected_rows < 1) throw new NoSuchObjectException("tag " + tag.getID());
 	}
 
-	/** Delete all references from documents to a given tag. Will be called internally by
-	 * deleteTag() but also useful when a tag is banned. */
-	public void deleteTagReferences(Tag tag) throws SQLException {
+    /**
+     * Delete all document references to a tag, particularly useful when a tag is banned.
+     * @param tag tag to delete all document references from.
+     * @throws SQLException an error has occurred in the database.
+     */
+ 	public void deleteTagReferences(Tag tag) throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM document_tags WHERE tag_id = ?");
 		ps.setLong(1, tag.getID());
 		ps.executeUpdate();
 	}
-	
-	/** Add a (positive) vote on a given document. Updates the total vote count and score
-	 * on the document (by statically calling PublishedDocument.getScore(votes,...).
-	 * Returns true if succesful, false if failed (user has already voted) */
-	public void addVote(User u, PublishedDocument d) throws SQLException, NoSuchObjectException {
+
+    /**
+     * Add a (positive) vote on a given document. The total vote count/score is also updated through triggers.
+     * @param user user who added the vote.
+     * @param document document to add the vote to.
+     * @throws SQLException an error has occurred in the database.
+     */
+ 	public void addVote(User user, PublishedDocument document) throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO votes (user_id, document_id) VALUES (?, ?)");
-		ps.setLong(1, u.getID());
-		ps.setLong(2, d.getID());
+		ps.setLong(1, user.getID());
+		ps.setLong(2, document.getID());
 		ps.executeUpdate();
 	}
 
-	/** Get the content of a Revision. This may be kept separately and fetched 
-	 * lazily, given its size, and given that we mostly don't need all the 
-	 * revisions for all the documents; in particular, we DON'T want to preload
-	 * every revision of every document when browsing the index! */
-	public String getRevisionContent(Revision revision) throws SQLException, NoSuchObjectException {
+    /**
+     * Get the content of a revision on-the-fly. The content is kept separately and fetched lazily.
+     * This design is due to the size of the content and the fact that we don't need all revisions for
+     * all documents, especially when trying to load pages of documents.
+     * @param revision revision whose content to retrieve.
+     * @return The contents of the given revision.
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException revision does not exist.
+     */
+ 	public String getRevisionContent(Revision revision) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("SELECT content FROM revisions WHERE id = ?");
 		ps.setLong(1, revision.getID());
 		ResultSet rs = ps.executeQuery();
@@ -466,6 +657,12 @@ public class DocumentManager {
 		return rs.getString("content");
 	}
 
+    /**
+     * Age all the scores in the database; this should be done on a scheduled basis.
+     * To speed up the process, all scores currently <= 0 are ignored.
+     * @param param query parameter to filter/sort the results.
+     * @throws SQLException an error has occurred in the database.
+     */
 	public void ageScores(QueryParam param) throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(
 				param.updateQuery("UPDATE documents SET score = vote_count * EXP(-1 * POWER(time_to_sec(timediff(NOW(),update_time)) / 3600,2)/" + Document.AGING_CONSTANT + ") WHERE score > 0"));

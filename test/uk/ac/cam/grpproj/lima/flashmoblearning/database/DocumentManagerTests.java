@@ -345,8 +345,7 @@ public class DocumentManagerTests {
 
     @Test
     public void testCreateTag() throws Exception {
-        Tag tag = new Tag(-1, c_TestTagTitle + " (DYNAMIC)", false);
-        DocumentManager.getInstance().createTag(tag);
+        DocumentManager.getInstance().createTag(c_TestTagTitle + " (DYNAMIC)", false);
 
         Tag retrieved = DocumentManager.getInstance().getTag(c_TestTagTitle + " (DYNAMIC)");
         Assert.assertEquals("Expecting dynamic tag in database", c_TestTagTitle + " (DYNAMIC)", retrieved.name);

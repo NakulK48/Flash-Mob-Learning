@@ -20,8 +20,7 @@ public class Tag {
 	
 	/** Create a tag and store it to the database */
 	public static Tag create(String name) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
-		Tag t = new Tag(-1, name, false);
-		return DocumentManager.getInstance().createTag(t);
+		return DocumentManager.getInstance().createTag(name, false);
 	}
 
 	/** Called by database */

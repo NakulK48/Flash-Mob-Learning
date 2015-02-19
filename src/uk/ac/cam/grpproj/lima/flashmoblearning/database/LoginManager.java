@@ -67,6 +67,12 @@ public class LoginManager {
 		return getUserFromResultSet(rs);
 	}
 
+    /**
+     * Returns a list of users from the result set obtained from a user query.
+     * @param rs ResultSet of users.
+     * @return The list of users in the result set.
+     * @throws SQLException an error has occurred in the database.
+     */
 	private List<User> getUsersFromResultSet(ResultSet rs) throws SQLException {
 		List<User> ret = new ArrayList<User>();
 
@@ -76,6 +82,12 @@ public class LoginManager {
 		return ret;
 	}
 
+    /**
+     * Return a user from the result set obtained from a user query.
+     * @param rs ResultSet of users.
+     * @return The user in the result set.
+     * @throws SQLException an error has occurred in the database.
+     */
 	private User getUserFromResultSet(ResultSet rs) throws SQLException {
 		if(rs.getBoolean("teacher_flag"))
 			return new Teacher(rs.getLong("id"), rs.getString("username"), rs.getString("password"));

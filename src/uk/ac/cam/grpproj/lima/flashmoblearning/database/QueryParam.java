@@ -70,21 +70,35 @@ public class QueryParam {
 	}
 
 	public static enum SortField {
-		
-		// No sorting, defaults to sort by insertion time.
-		NONE,	
-		// Sort by creation time - limited to Documents.
-		TIME,	
-		// Sorts by popularity - limited to PublishedDocuments.
+
+        /**
+         * No sorting, defaults to sort by insertion time.
+         */
+		NONE,
+        /**
+         * Sort by creation time - limited to Documents.
+         */
+		TIME,
+        /**
+         * Sorts by popularity - limited to PublishedDocuments.
+         */
 		POPULARITY,
-		// Sorts by votes - limited to PublishedDocuments.
+        /**
+         * Sorts by votes - limited to PublishedDocuments.
+         */
 		VOTES
 		
 	}
 
 	public static enum SortOrder {
 
+        /**
+         * Sort in ascending order.
+         */
 		ASCENDING,
+        /**
+         * Sort in descending order.
+         */
 		DESCENDING
 		
 	}

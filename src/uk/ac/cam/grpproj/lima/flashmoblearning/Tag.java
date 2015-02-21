@@ -12,10 +12,11 @@ public class Tag {
 	/** Tag name */
 	public final String name;
 	/** Every tag has a unique ID which never changes.
-	 * This must be set by the database when the document is first stored. It cannot be changed
+	 * This must be set by the database when the tag is first stored. It cannot be changed
 	 * after that point. */
 	private long id;
 	
+	/** Has the tag been banned? If so it may not be added to documents. */
 	private boolean banned;
 	
 	/** Create a tag and store it to the database */
@@ -23,7 +24,7 @@ public class Tag {
 		return DocumentManager.getInstance().createTag(name, false);
 	}
 
-	/** Called by database */
+	/** Get the tag ID. Called by database */
 	public long getID() {
 		return id;
 	}
@@ -51,8 +52,7 @@ public class Tag {
 		return banned;
 	}
 	
-	/** Ban or unban the tag 
-	 * @throws uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException
+	/** Ban or unban the tag. Updates the database.
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */

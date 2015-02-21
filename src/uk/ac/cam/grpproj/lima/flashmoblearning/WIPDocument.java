@@ -15,7 +15,9 @@ public class WIPDocument extends Document {
 		super(-1, forked.docType, newOwner, forked.getTitle(), System.currentTimeMillis());
 	}
 
-    /** For everyone who wishes to create a document */
+    /** Create a new empty document from scratch. Caller must then add a 
+     * Revision. If the document is based on another Document, you should call
+     * fork() / publish() on that Document instead. */
     public static WIPDocument createDocument(DocumentType doctype, User owner, String title, long time) throws SQLException {
         WIPDocument doc = new WIPDocument(-1, doctype, owner, title, time);
         try {
@@ -43,6 +45,7 @@ public class WIPDocument extends Document {
 		return d;
 	}
 	
+	/** Add a Revision to a Document. */
 	public void addRevision(Date d, String content) throws NotInitializedException, SQLException, NoSuchObjectException {
 		super.addRevision(d, content);
 	}

@@ -10,14 +10,16 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitialized
 /** Base of Student and Teacher. */
 public class User {
 	
-	/** Name of the user.
-	 * FIXME Consider ability (for teacher?) to change user names. */
+	/** Name of the user. Can be changed by administrator. */
 	private String name;
 
+	/** Get the user's name. */
 	public String getName() {
 		return name;
 	}
-	
+
+	/** Change the user's name.
+	 * @throw DuplicateEntryException There is already another user with the new name. */
 	public void setName(String n) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException {
 		name = n;
 		LoginManager.getInstance().modifyUser(this);
@@ -27,6 +29,7 @@ public class User {
 	 * set by the database when the document is first stored, and cannot be 
 	 * changed after that. */
 	private long id;
+	/** Password, may be hashed/salted. */
 	private String encryptedPassword;
 	
 	/** Called by database */
@@ -52,7 +55,8 @@ public class User {
 	}
 	
 	/** Set password 
-	 * @throws uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException
+	 * @throws DuplicateEntryException Should not happen unless there are 
+	 * renames happening at the same time.
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
@@ -63,6 +67,7 @@ public class User {
 		LoginManager.getInstance().modifyUser(this);
 	}
 
+	/** Only called by database tests */
 	public String getEncryptedPassword() {
 		return encryptedPassword;
 	}

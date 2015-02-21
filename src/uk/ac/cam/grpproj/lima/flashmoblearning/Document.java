@@ -37,7 +37,7 @@ public class Document {
 	 * @param title Title of the document. Can change.
 	 * @param time Creation time.
 	 */
-	public Document(long id, DocumentType docType, User owner,
+	Document(long id, DocumentType docType, User owner,
 			String title, long time) {
 		this.id = id;
 		this.docType = docType;

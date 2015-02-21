@@ -91,12 +91,6 @@ public class PublishedDocument extends Document{
 		DocumentManager.getInstance().updateDocument(this);
 	}
 	
-	public static double calculateScore(long age, int votes)
-	{
-		age /= 3600000; //in hours
-		return (votes * Math.exp(age * age / PublishedDocument.AGING_CONSTANT));
-	}
-	
 	/** Calculate the document's age-adjusted popularity score. This uses an 
 	 * algorithm similar to that used by Reddit's "Hot" ranking. */
 	public double calculateScore()

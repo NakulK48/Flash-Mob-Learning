@@ -56,10 +56,10 @@ public class Tag {
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public void setBanned(boolean b) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException {
+	public void setBanned(boolean b) throws NotInitializedException, SQLException, NoSuchObjectException {
 		if(banned == b) return;
 		banned = b;
-		DocumentManager.getInstance().updateTag(this);
+		DocumentManager.getInstance().updateTagBanned(this);
 		if(b)
 			DocumentManager.getInstance().deleteTagReferences(this);
 	}

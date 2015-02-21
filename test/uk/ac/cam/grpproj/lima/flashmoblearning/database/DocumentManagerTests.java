@@ -381,7 +381,7 @@ public class DocumentManagerTests {
     @Test
     public void testUpdateTag() throws Exception {
         Tag banned = new Tag(m_BannedTag.getID(), m_BannedTag.name, false);
-        DocumentManager.getInstance().updateTag(banned);
+        DocumentManager.getInstance().updateTagBanned(banned);
 
         Tag retrieved = DocumentManager.getInstance().getTag(c_TestTagTitle + " (BANNED)");
         Assert.assertEquals("Expecting unbanned tag in database", false, retrieved.getBanned());

@@ -17,7 +17,7 @@ public enum DocumentType {
 	 * add more document types and remove old ones and everything will work, as
 	 * long as we never change an ID for a document type we are using.
 	 */
-	DocumentType(final boolean r, int i) {
+	private DocumentType(final boolean r, int i) {
 		runnable = r;
 		id = i;
 	}

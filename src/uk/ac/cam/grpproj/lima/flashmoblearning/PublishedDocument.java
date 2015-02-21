@@ -16,6 +16,8 @@ public class PublishedDocument extends Document{
 	private int votes;
 	/** Will be set by database */
 	private double score;
+	/** Parameter for ageing algorithm for document scores */
+	public static final int AGING_CONSTANT = 50000;
 	
 	/** Get the total number of votes ever cast for this document, including
 	 * those cast by users who have now been deleted. */
@@ -92,7 +94,7 @@ public class PublishedDocument extends Document{
 	public static double calculateScore(long age, int votes)
 	{
 		age /= 3600000; //in hours
-		return (votes * Math.exp(age * age / 50000));
+		return (votes * Math.exp(age * age / PublishedDocument.AGING_CONSTANT));
 	}
 	
 	/** Calculate the document's age-adjusted popularity score. This uses an 
@@ -100,6 +102,6 @@ public class PublishedDocument extends Document{
 	public double calculateScore()
 	{
 		double age = (System.currentTimeMillis() - creationTime)/3600000;
-		return (votes * Math.exp(-1 * age * age / 50000));
+		return (votes * Math.exp(-1 * age * age / PublishedDocument.AGING_CONSTANT));
 	}
 }

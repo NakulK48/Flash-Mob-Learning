@@ -26,9 +26,6 @@ public class Document {
 	/** Title of the document (can be changed). */
 	private String title;
 
-	/** Parameter for ageing algorithm for document scores */
-	public static final int AGING_CONSTANT = 50000;
-	
 	/** Create a Document.
 	 * @param id If loaded from the database, this is a (non-negative) ID for 
 	 * the document. If it hasn't been stored yet this should be -1.

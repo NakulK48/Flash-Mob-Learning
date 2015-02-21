@@ -569,12 +569,18 @@ public class DocumentManager {
      * @param document document to add a tag to.
      * @param tag tag to add.
      * @throws SQLException an error has occurred in the database.
+     * @throws DuplicateEntryException If the tag has already been added to the document.
      */
-	public void addTag(Document document, Tag tag) throws SQLException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT IGNORE INTO document_tags (tag_id, document_id) VALUES (?, ?)");
+	public void addTag(Document document, Tag tag) throws SQLException, DuplicateEntryException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_tags (tag_id, document_id) VALUES (?, ?)");
 		ps.setLong(1, tag.getID());
 		ps.setLong(2, document.getID());
-        ps.executeUpdate();
+		try {
+			ps.executeUpdate();
+		} catch (SQLException e) {
+            // Catch any duplicate name exceptions and throw our own.
+            DuplicateEntryException.handle(e);
+		}
 	}
 
     /**

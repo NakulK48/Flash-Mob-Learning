@@ -73,8 +73,13 @@ public class Document {
 	 * @throws NoSuchObjectException If the Document has not been stored.
 	 * @throws SQLException 
 	 * @throws NotInitializedException If the database has not been initialised. */
-	public void addTag(Tag t) throws NotInitializedException, SQLException, NoSuchObjectException {
-		DocumentManager.getInstance().addTag(this, t);
+	public boolean addTag(Tag t) throws NotInitializedException, SQLException, NoSuchObjectException {
+		try {
+			DocumentManager.getInstance().addTag(this, t);
+			return true;
+		} catch (DuplicateEntryException e) {
+			return false;
+		}
 	}
 	
 	/** Remove a tag.

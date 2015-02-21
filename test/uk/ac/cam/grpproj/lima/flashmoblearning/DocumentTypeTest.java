@@ -15,7 +15,7 @@ public class DocumentTypeTest {
 	
 	@Test
 	public void testInvalid() {
-		Assert.assertEquals(DocumentType.PLAINTEXT, DocumentType.getValue(-1));
+		Assert.assertEquals(DocumentType.PLAINTEXT, DocumentType.getValue(-2));
 	}
 
 }

@@ -10,6 +10,7 @@ import org.junit.Test;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.Database;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
@@ -101,7 +102,7 @@ public abstract class DocumentTestBase {
     }
     
     @Test
-    public void testSetParentDocument() throws NotInitializedException, SQLException, IDAlreadySetException, NoSuchObjectException {
+    public void testSetParentDocument() throws NotInitializedException, SQLException, IDAlreadySetException, NoSuchObjectException, DuplicateEntryException {
     	Document doc = create(-1, docType, owner, titleSimple, 
     			System.currentTimeMillis());
     	DocumentManager.getInstance().createDocument(doc);
@@ -116,7 +117,7 @@ public abstract class DocumentTestBase {
     }
     
     @Test
-    public void testNoResetNullParentDocument() throws NotInitializedException, SQLException, NoSuchObjectException, IDAlreadySetException {
+    public void testNoResetNullParentDocument() throws NotInitializedException, SQLException, NoSuchObjectException, IDAlreadySetException, DuplicateEntryException {
     	Document doc = create(-1, docType, owner, titleSimple, 
     			System.currentTimeMillis());
     	DocumentManager.getInstance().createDocument(doc);
@@ -133,11 +134,14 @@ public abstract class DocumentTestBase {
     		Assert.fail("Should throw here");
     	} catch (NullPointerException e) {
     		// FIXME this should be an SQL error.
-    	}
+    	} catch (DuplicateEntryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     @Test
-    public void testNoResetParentDocument() throws NotInitializedException, SQLException, NoSuchObjectException, IDAlreadySetException {
+    public void testNoResetParentDocument() throws NotInitializedException, SQLException, NoSuchObjectException, IDAlreadySetException, DuplicateEntryException {
     	Document doc = create(-1, docType, owner, titleSimple, 
     			System.currentTimeMillis());
     	DocumentManager.getInstance().createDocument(doc);
@@ -157,11 +161,13 @@ public abstract class DocumentTestBase {
     		Assert.fail("Should throw here");
     	} catch (SQLException e) {
     		// OK.
-    	}
+    	} catch (DuplicateEntryException e) {
+    		// OK.
+		}
     }
     
     @Test
-    public void testDeleteParentDocument() throws NotInitializedException, SQLException, IDAlreadySetException, NoSuchObjectException {
+    public void testDeleteParentDocument() throws NotInitializedException, SQLException, IDAlreadySetException, NoSuchObjectException, DuplicateEntryException {
     	Document doc = create(-1, docType, owner, titleSimple, 
     			System.currentTimeMillis());
     	DocumentManager.getInstance().createDocument(doc);

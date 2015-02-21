@@ -385,17 +385,22 @@ public class DocumentManager {
 	}
 
     /**
-     * Sets the parent document of a given document.
+     * Sets the parent document of a given document. (Can only be set once!)
      * @param document document whose parent to set.
      * @param parentDoc the parent document to set.
      * @throws SQLException an error has occurred in the database.
+     * @throws DuplicateEntryException If the parent has already been set for this document.
      */
-	public void setParentDocument(Document document, Document parentDoc) throws SQLException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_parents (document_id, parent_document_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE parent_document_id = ?");
+	public void setParentDocument(Document document, Document parentDoc) throws SQLException, DuplicateEntryException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_parents (document_id, parent_document_id) VALUES (?, ?)");
 		ps.setLong(1, document.getID());
 		ps.setLong(2, parentDoc.getID());
-        ps.setLong(3, parentDoc.getID());
-		ps.executeUpdate();
+        try {
+        	ps.executeUpdate();
+        } catch (SQLException e) {
+            // Catch any duplicate name exceptions and throw our own.
+            DuplicateEntryException.handle(e);
+        }
 	}
 
     /**

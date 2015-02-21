@@ -2,6 +2,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
@@ -144,7 +145,7 @@ public class Document {
 		return DocumentManager.getInstance().getParentDocument(this);
 	}
 
-	public void setParentDocument(Document parent) throws SQLException, NoSuchObjectException {
+	public void setParentDocument(Document parent) throws SQLException, NoSuchObjectException, DuplicateEntryException {
 		DocumentManager.getInstance().setParentDocument(this, parent);
 	}
 	
@@ -162,6 +163,8 @@ public class Document {
 			if(newParent != null)
 				DocumentManager.getInstance().setParentDocument(d, newParent);
 		} catch (IDAlreadySetException e) {
+			throw new IllegalStateException("ID already set but just created?!");
+		} catch (DuplicateEntryException e) {
 			throw new IllegalStateException("ID already set but just created?!");
 		}
 		Revision.createRevision(d, new Date(), content);

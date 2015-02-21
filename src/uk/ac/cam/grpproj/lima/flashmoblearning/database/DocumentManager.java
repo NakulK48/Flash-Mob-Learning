@@ -601,25 +601,18 @@ public class DocumentManager {
 	}
 
     /**
-     * Updates a given tag's metadata, such as name and banned flag.
+     * Updates a given tag's banned flag.
      * @param tag tag to update.
      * @throws SQLException an error has occurred in the database.
      * @throws NoSuchObjectException tag not found.
-     * @throws DuplicateEntryException a tag with the same name already exists.
      */
-	public void updateTag(Tag tag) throws SQLException, NoSuchObjectException, DuplicateEntryException {
+	public void updateTagBanned(Tag tag) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement
-				("UPDATE tags SET name = ?, banned_flag = ? where id = ?");
-		ps.setString(1, tag.name);
-		ps.setBoolean(2, tag.getBanned());
-		ps.setLong(3, tag.getID());
-        try {
-            int affected_rows = ps.executeUpdate();
-            if (affected_rows < 1) throw new NoSuchObjectException("tag " + tag.getID());
-        } catch (SQLException e) {
-            // Catch any duplicate name exceptions and throw our own.
-            DuplicateEntryException.handle(e);
-        }
+				("UPDATE tags SET banned_flag = ? where id = ?");
+		ps.setBoolean(1, tag.getBanned());
+		ps.setLong(2, tag.getID());
+        int affected_rows = ps.executeUpdate();
+        if (affected_rows < 1) throw new NoSuchObjectException("tag " + tag.getID());
 	}
 
     /**

@@ -19,13 +19,14 @@ public class Document {
 	/** Time and date of creation of the document */
 	public final long creationTime;
 
-	/** Every work-in-progress document has a unique ID which never changes.
-	 * This must be set by the database when the document is first stored. It cannot be changed
-	 * after that point. */
+	/** Every document has a unique ID which never changes.
+	 * This is initially -1, and set to its permanent value by the database 
+	 * when the document is first stored. */
 	private long id;
-	/** Title of the document. Mutable. */
+	/** Title of the document (can be changed). */
 	private String title;
-	
+
+	/** Parameter for ageing algorithm for document scores */
 	public static final int AGING_CONSTANT = 50000;
 	
 	/** Create a Document.
@@ -106,22 +107,25 @@ public class Document {
 		DocumentManager.getInstance().updateDocument(this);
 	}
 	
+	/** Get the list of revisions.
+	 * @param param How many revisions, in what order etc.
+	 * @throws NoSuchObjectException 
+	 * @throws SQLException 
+	 * @throws NotInitializedException */
 	public List<Revision> getRevisions(QueryParam param) throws NotInitializedException, SQLException, NoSuchObjectException {
 		List<Revision> r = Collections.unmodifiableList(new ArrayList<Revision>(innerGetRevisions(param)));
 		return r;
 	}
 	
-	/** Find all revisions 
-	 * @throws NoSuchObjectException 
-	 * @throws SQLException 
-	 * @throws NotInitializedException */
+	/** Get the list of revisions without copying them */
 	private List<Revision> innerGetRevisions(QueryParam param) throws NotInitializedException, SQLException, NoSuchObjectException {
 		List<Revision> revisions =
 				DocumentManager.getInstance().getRevisions(this, param);
 		assert(revisionsBelongToMe(revisions));
 		return revisions;
 	}
-	
+
+	/** Sanity check that the revisions belong to this document */
 	private boolean revisionsBelongToMe(Collection<Revision> revisions) {
 		for(Revision r : revisions) {
 			if(r.document != this) return false;
@@ -142,10 +146,13 @@ public class Document {
 	private static final QueryParam LAST_REVISION_QUERY = 
 			new QueryParam(1, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	
+	/** Get the most recent revision only */
 	public Revision getLastRevision() throws NotInitializedException, SQLException, NoSuchObjectException {
 		return getRevisions(LAST_REVISION_QUERY).get(0);
 	}
-	
+
+	/** Get the parent document, if any, that this document was forked from. 
+	 * Preserved when publishing, updated when forking. */
 	public Document getParentDocument() throws SQLException, NoSuchObjectException {
 		return DocumentManager.getInstance().getParentDocument(this);
 	}

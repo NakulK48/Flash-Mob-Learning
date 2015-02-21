@@ -157,10 +157,6 @@ public class Document {
 		return DocumentManager.getInstance().getParentDocument(this);
 	}
 
-	public void setParentDocument(Document parent) throws SQLException, NoSuchObjectException, DuplicateEntryException {
-		DocumentManager.getInstance().setParentDocument(this, parent);
-	}
-	
 	/** Copy the last revision, tags and any other mutable metadata to a new 
 	 * document. Used by fork() and publish().
 	 * @param d A new document which hasn't been stored yet.

@@ -385,7 +385,8 @@ public class DocumentManager {
 	}
 
     /**
-     * Sets the parent document of a given document. (Can only be set once!)
+     * Sets the parent document of a given document. Can only be set once, 
+     * usually in fork() or publish().
      * @param document document whose parent to set.
      * @param parentDoc the parent document to set.
      * @throws SQLException an error has occurred in the database.

@@ -11,15 +11,17 @@
 </head>
 <body>
 	    <h1>Cloning the document, please wait</h1>
+<script>
     <%
 		LoginManager l = LoginManager.getInstance();
-		User u = l.getUser((String) session.getAttribute("username"));
+		User u = LoginManager.getInstance().getUser((String) session.getAttribute("username"));
 		Long docID = Long.parseLong(request.getParameter("docid"));
 		Document doc = DocumentManager.getInstance().getDocumentById(docID);
 		PublishedDocument pubdoc = (PublishedDocument) DocumentManager.getInstance().getDocumentById(docID);
 		WIPDocument wipdoc = pubdoc.fork(u);
 		Long wipdocid = wipdoc.getID();
 	%>
-	document.location.href = "plaintexteditor.jsp?docid="+<%=Long.toString(wipdocid)%>+"&newdoc=1&mydoc=1&wipdoc=1" 
+	document.location.href = "plaintexteditor.jsp?docid="+<%= Long.toString(wipdocid) %> +"&newdoc=1&mydoc=1&wipdoc=1" 
+</script>
 </body>
 </html>

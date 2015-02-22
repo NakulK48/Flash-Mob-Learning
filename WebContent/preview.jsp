@@ -70,35 +70,19 @@
 	%>
 
 function cloneit(){
-	session.setAttribute("docID", wipdoc0.getID());
-	session.setAttribute("WIPDoc", "1");
-	session.setAttribute("myDoc", "1");
-	session.setAttribute("newDoc","0");	
-	document.location.href = "fork.jsp?docid="+request.getParameter("docid") 
+	document.location.href = "fork.jsp?docid="+request.getParameter("docid")
 }
 
 function editit(){
-	session.setAttribute("docID", docID);
-	session.setAttribute("WIPDoc", "1");
-	session.setAttribute("myDoc", "1");
-	session.setAttribute("newDoc","0");
-	document.location.href = "plaintexteditor.jsp" 
+	document.location.href = "plaintexteditor.jsp?docID="+request.getParameter("docID")+"&WIPDoc=1&myDoc=1"
 }
 
 function publishit(){
-	<%
-	WIPDocument wipdoc1 = (WIPDocument) DocumentManager.getInstance().getDocumentById(docID);
-	PublishedDocument pubdoc1 = wipdoc1.publish();
-	session.setAttribute("docID", pubdoc1.getID());
-	session.setAttribute("WIPDoc", "0");
-	session.setAttribute("myDoc", "0");
-	session.setAttribute("newDoc","0");
-	%>
-	document.location.href = "publish.jsp?docID="
+	document.location.href = "publish.jsp?docID="+request.getParameter("docID");
 }
 
 function upvoteit(){
-
+ <!-- TODO -->
 }
 
 </script>

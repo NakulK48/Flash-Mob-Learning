@@ -77,7 +77,7 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
 	   mycodemirror.save();
 	   var mytext = document.getElementById("text").value; 
         jQuery.ajax({
-            type: "GET",
+            type: "POST",
             url: "plaintextfunctions.jsp",
             data: {
                 docID: <%=docID%>,
@@ -87,7 +87,7 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
             },
             dataType: "script"
         }).done(function( response ) {
-            <!-- TODO, and also find way to return value in the plaintextfunction servlet-->
+            <!-- TODO error and success-->
         });
 
   </script>

@@ -32,7 +32,9 @@
 		try{
 			LoginManager l = LoginManager.getInstance();
 			User u = l.createUser(name, pwd, false);
-			session.setAttribute("uid",String.valueOf(u.getID()));
+			session.setAttribute(Attribute.USERID,String.valueOf(u.getID()));
+			session.setAttribute(Attribute.USERNAME, u.getName());
+			session.setAttribute(Attribute.PRIVILEGE, "user");
 			response.sendRedirect("landing.jsp");			
 		}catch(DuplicateEntryException e){
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/reg.jsp");

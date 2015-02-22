@@ -18,9 +18,6 @@
 		}
 		int offset = 0;
 		for(int i=offset; i<offset+10; i++){
-			%>
-			<div><%=session.getAttribute("uid")%>,<%=(LoginManager.getInstance()).getUser(Long.parseLong((String) session.getAttribute("uid"))).getName()%></div>	
-			<%
 		}
 
 	%>

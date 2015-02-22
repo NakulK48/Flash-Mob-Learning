@@ -334,16 +334,16 @@ public class DocumentManager {
  	
     /**
      * Delete a revision from a document, e.g. for housekeeping.
-     * @param revisions list of revisions to delete
+     * @param revision list of revisions to delete
      * @throws SQLException an error has occurred in the database.
      * @throws NoSuchObjectException revision does not exist.
      */
-	public void deleteRevision(Revision r) throws SQLException, NoSuchObjectException {
+	public void deleteRevision(Revision revision) throws SQLException, NoSuchObjectException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM revisions WHERE id = ?");
-		ps.setLong(1, r.getID());
+		ps.setLong(1, revision.getID());
 		
 		int affected_rows = ps.executeUpdate();
-		if(affected_rows < 1) throw new NoSuchObjectException("revision " + r.getID());
+		if(affected_rows < 1) throw new NoSuchObjectException("revision " + revision.getID());
 	}
 
     /**

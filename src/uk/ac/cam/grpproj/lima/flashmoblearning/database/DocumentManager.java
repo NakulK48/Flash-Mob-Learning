@@ -331,7 +331,7 @@ public class DocumentManager {
 		ResultSet rs = ps.getGeneratedKeys(); rs.next();
 		return new Revision(rs.getLong(1), date, document);
 	}
-
+ 	
     /**
      * Delete revision(s) from a document, typically called when documents are deleted or published.
      * @param revisions list of revisions to delete
@@ -340,12 +340,22 @@ public class DocumentManager {
      */
 	public void deleteRevision(List<Revision> revisions) throws SQLException, NoSuchObjectException {
 		for(Revision r : revisions) {
-			PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM revisions WHERE id = ?");
-			ps.setLong(1, r.getID());
-
-			int affected_rows = ps.executeUpdate();
-			if(affected_rows < 1) throw new NoSuchObjectException("revision " + r.getID());
+			deleteRevision(r);
 		}
+	}
+
+    /**
+     * Delete revision(s) from a document, typically called when documents are deleted or published.
+     * @param revisions list of revisions to delete
+     * @throws SQLException an error has occurred in the database.
+     * @throws NoSuchObjectException revision does not exist.
+     */
+	public void deleteRevision(Revision r) throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM revisions WHERE id = ?");
+		ps.setLong(1, r.getID());
+		
+		int affected_rows = ps.executeUpdate();
+		if(affected_rows < 1) throw new NoSuchObjectException("revision " + r.getID());
 	}
 
     /**

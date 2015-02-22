@@ -10,6 +10,8 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitialized
 import java.sql.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * The database class is responsible for initialising the database, setting up the tables (if database is empty),
@@ -82,6 +84,7 @@ public class Database {
 		setup(connection);
         m_Instance = new Database(connection);
 		createDefaultUser();
+		startAgeing();
 	}
 
 	/**
@@ -324,4 +327,33 @@ public class Database {
 			}
 		}
 	}
+	
+	private static final Timer ageingTimer = new Timer();
+	
+	static final int TIMER_DELAY = 10*1000;
+	static final int TIMER_PERIOD = 60*60*1000;
+	
+	private static void startAgeing() {
+		ageingTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				// FIXME OPT / FIXME SCALABILITY consider progressive update.
+				// For now this is a single transaction.
+				try {
+					System.out.println("Ageing old documents...");
+					int updated = DocumentManager.getInstance().ageScores(new QueryParam(0));
+					System.out.println("Ageing completed, updated "+updated+" documents.");
+				} catch (NotInitializedException e) {
+					System.err.println("Impossible: Not initialised!");
+				} catch (SQLException e) {
+					System.err.println("Ageing failed: "+e);
+					e.printStackTrace();
+				}
+			}
+			
+		}, TIMER_DELAY, TIMER_PERIOD);
+	}
+
+
 }

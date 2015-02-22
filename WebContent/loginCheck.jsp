@@ -25,7 +25,11 @@
 				session.setAttribute("username",String.valueOf(u.getName()));
 				if(u instanceof Teacher){
 					//TODO redirect to admin landing page
-					System.out.println("Admin mode logged in!");
+					System.out.println("Admin logged in!");
+					session.setAttribute("privaledge","admin");
+				}
+				else{
+					session.setAttribute("privaledge","user");
 				}
 				response.sendRedirect("landing.jsp");
 			}else{

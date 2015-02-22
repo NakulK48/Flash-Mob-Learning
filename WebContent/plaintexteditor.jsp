@@ -70,17 +70,10 @@ function builtinRead(x) {
 // get a reference to your pre element for output
 // configure the output function
 // call Sk.importMainWithBody()
-function saveit() { //DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
-   mycodemirror.save();
-   var mytext = document.getElementById("text").value; 
-   session.setAttribute("myDoc", "1");
-   session.setAttribute("WIPDoc","1");
-   document.location.href = "preview.jsp"
-} 
 
 	<% String docID = request.getParameter("docID");%>
 
-function saveit() {
+function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
 	   mycodemirror.save();
 	   var mytext = document.getElementById("text").value; 
         jQuery.ajax({

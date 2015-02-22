@@ -29,7 +29,7 @@ public class Document {
 	/** Create a Document.
 	 * @param id If loaded from the database, this is a (non-negative) ID for 
 	 * the document. If it hasn't been stored yet this should be -1.
-	 * @param docType Document type e.g. Skulpt.
+	 * @param docType Document type e.g. Skulpt. Cannot be ALL.
 	 * @param owner All documents are owned by a single user.
 	 * @param title Title of the document. Can change.
 	 * @param time Creation time.

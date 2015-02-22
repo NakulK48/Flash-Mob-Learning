@@ -36,6 +36,8 @@ public class Document {
 	 */
 	Document(long id, DocumentType docType, User owner,
 			String title, long time) {
+		if(docType == null || docType == DocumentType.ALL)
+			throw new IllegalArgumentException();
 		this.id = id;
 		this.docType = docType;
 		this.owner = owner;

@@ -51,7 +51,7 @@
 
 </head >
 
-<body onload="initialisepage()">
+<body>
 <%		
 		//Session check
 	if(session.getAttribute("uid")==null){
@@ -62,35 +62,26 @@
 
 <script type="text/javascript"> 
 
-function initialisepage(){
 	<%
 	LoginManager l = LoginManager.getInstance();
 	User u = l.getUser((String) session.getAttribute("username"));
 	Long docID = Long.parseLong(request.getParameter("docID"));
 	Document doc = DocumentManager.getInstance().getDocumentById(docID);
-	//String body = DocumentManager.getInstance().getRevisionContent(doc.getLastRevision());
 	%>
-}
 
 function cloneit(){
-	<%
-	PublishedDocument pubdoc = (PublishedDocument) DocumentManager.getInstance().getDocumentById(docID);
-	WIPDocument wipdoc0 = pubdoc.fork(u);
 	session.setAttribute("docID", wipdoc0.getID());
 	session.setAttribute("WIPDoc", "1");
 	session.setAttribute("myDoc", "1");
-	session.setAttribute("newDoc","0");
-	%>
-	document.location.href = "plaintexteditor.jsp" 
+	session.setAttribute("newDoc","0");	
+	document.location.href = "fork.jsp?docid="+request.getParameter("docid") 
 }
 
 function editit(){
-	<%
 	session.setAttribute("docID", docID);
 	session.setAttribute("WIPDoc", "1");
 	session.setAttribute("myDoc", "1");
 	session.setAttribute("newDoc","0");
-	%>
 	document.location.href = "plaintexteditor.jsp" 
 }
 
@@ -103,7 +94,7 @@ function publishit(){
 	session.setAttribute("myDoc", "0");
 	session.setAttribute("newDoc","0");
 	%>
-	document.location.href = "successfulpublish.jsp"
+	document.location.href = "publish.jsp?docID="
 }
 
 function upvoteit(){

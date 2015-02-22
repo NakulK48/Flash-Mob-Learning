@@ -73,28 +73,29 @@ function builtinRead(x) {
 function saveit() { //DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
    mycodemirror.save();
    var mytext = document.getElementById("text").value; 
-   <% 
-	String docTitle = request.getParameter("titleBox");
-	Date date = new Date();
-	
-	if("1"==session.getAttribute("newDoc")){ //Completely new document
-		WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(0), u, docTitle, date.getTime());
-		doc.addRevision(date, request.getParameter("text"));
-		session.setAttribute("docID", doc.getID());
-	}else{
-		Long docID = Long.parseLong((String)session.getAttribute("docID"));
-		Document doc = DocumentManager.getInstance().getDocumentById(docID);
-		User docOwner = doc.owner; 
-		if((Long)session.getAttribute("uid")== docOwner.getID()){ //Working on my own WIPDocument or a fork
-			WIPDocument wipdoc = (WIPDocument) doc;
-			wipdoc.addRevision(date, request.getParameter("text"));
-		}
-	}
-   %>
    session.setAttribute("myDoc", "1");
    session.setAttribute("WIPDoc","1");
    document.location.href = "preview.jsp"
 } 
+
+	<% String docID = request.getParameter("docID");%>
+
+function saveit() {
+	   mycodemirror.save();
+	   var mytext = document.getElementById("text").value; 
+        jQuery.ajax({
+            type: "GET",
+            url: "plaintextfunctions.jsp",
+            data: {
+                docID: <%=docID%>,
+        		text: mytext,
+        		newDoc: request.getParameter("newDoc")
+        		
+            },
+            dataType: "script"
+        }).done(function( response ) {
+            <!-- TODO, and also find way to return value in the plaintextfunction servlet-->
+        });
 
   </script>
   <div class="header">

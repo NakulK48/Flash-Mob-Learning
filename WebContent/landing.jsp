@@ -37,7 +37,7 @@
       <h1>Welcome, <%=session.getAttribute("username") %>! <a href="logout.jsp">Logout</a></h1>
    </div> 
    <div class="button_skulpt" width="device-width">
-      <a href="hub.jsp"> <!--  CHANGE ME -->
+      <a href="mydocs.jsp"> <!--  CHANGE ME -->
       <img src="static/skulptbutton.png" id="Skulpt" width="100%"></a>
    </div>
    <div class="button_text" width="device-width">

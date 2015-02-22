@@ -21,7 +21,7 @@
 			LoginManager l = LoginManager.getInstance();
 			User u = l.getUser(username);
 			if(u.checkPassword(pwd)){
-				session.setAttribute(Attribute.USERID,String.valueOf(u.getID()));
+				session.setAttribute(Attribute.USERID,(u.getID()));
 				session.setAttribute(Attribute.USERNAME,String.valueOf(u.getName()));
 				if(u instanceof Teacher){
 					//TODO redirect to admin landing page

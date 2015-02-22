@@ -14,7 +14,6 @@
 <body>
 	<%!
 		//init db on login page??
-		
 		public void jspInit(){
 			try{
 				Database.init();

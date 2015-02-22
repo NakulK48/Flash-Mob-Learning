@@ -32,7 +32,7 @@
 		try{
 			LoginManager l = LoginManager.getInstance();
 			User u = l.createUser(name, pwd, false);
-			session.setAttribute(Attribute.USERID,String.valueOf(u.getID()));
+			session.setAttribute(Attribute.USERID,u.getID());
 			session.setAttribute(Attribute.USERNAME, u.getName());
 			session.setAttribute(Attribute.PRIVILEGE, "user");
 			response.sendRedirect("landing.jsp");			

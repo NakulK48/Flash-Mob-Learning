@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*,uk.ac.cam.grpproj.lima.flashmoblearning.*"%>
 <%@ page import="javax.servlet.*"%>
 <%@ page import="java.io.PrintWriter"%>
 
@@ -13,11 +13,11 @@
 <body>
 	<%
 	//Session check
-	if(session.getAttribute("uid")==null){
+	if(session.getAttribute(Attribute.USERID)==null){
 		//session invalid
 		response.sendRedirect("login.jsp");
-	}else if(session.getAttribute("privaledge")==null||
-			!session.getAttribute("privaledge").equals("admin")){
+	}else if(session.getAttribute(Attribute.PRIVILEGE)==null||
+			!session.getAttribute(Attribute.PRIVILEGE).equals("admin")){
 		response.sendRedirect("landing.jsp");
 	}
 	%>

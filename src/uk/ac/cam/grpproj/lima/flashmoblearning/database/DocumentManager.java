@@ -331,21 +331,19 @@ public class DocumentManager {
 		ResultSet rs = ps.getGeneratedKeys(); rs.next();
 		return new Revision(rs.getLong(1), date, document);
 	}
-
+ 	
     /**
-     * Delete revision(s) from a document, typically called when documents are deleted or published.
-     * @param revisions list of revisions to delete
+     * Delete a revision from a document, e.g. for housekeeping.
+     * @param revision list of revisions to delete
      * @throws SQLException an error has occurred in the database.
      * @throws NoSuchObjectException revision does not exist.
      */
-	public void deleteRevision(List<Revision> revisions) throws SQLException, NoSuchObjectException {
-		for(Revision r : revisions) {
-			PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM revisions WHERE id = ?");
-			ps.setLong(1, r.getID());
-
-			int affected_rows = ps.executeUpdate();
-			if(affected_rows < 1) throw new NoSuchObjectException("revision " + r.getID());
-		}
+	public void deleteRevision(Revision revision) throws SQLException, NoSuchObjectException {
+		PreparedStatement ps = m_Database.getConnection().prepareStatement("DELETE FROM revisions WHERE id = ?");
+		ps.setLong(1, revision.getID());
+		
+		int affected_rows = ps.executeUpdate();
+		if(affected_rows < 1) throw new NoSuchObjectException("revision " + revision.getID());
 	}
 
     /**
@@ -683,9 +681,9 @@ public class DocumentManager {
      * @param param query parameter to filter/sort the results.
      * @throws SQLException an error has occurred in the database.
      */
-	public void ageScores(QueryParam param) throws SQLException {
+	public int ageScores(QueryParam param) throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(
 				param.updateQuery("UPDATE documents SET score = vote_count * EXP(-1 * POWER(time_to_sec(timediff(NOW(),update_time)) / 3600,2)/" + PublishedDocument.AGING_CONSTANT + ") WHERE score > 0"));
-		ps.executeUpdate();
+		return ps.executeUpdate();
 	}
 }

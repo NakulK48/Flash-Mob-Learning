@@ -244,6 +244,12 @@ public class DocumentManagerTests {
     }
 
     @Test
+    public void testGetPublishedWithQueryParams() throws Exception {
+        List<PublishedDocument> published = DocumentManager.getInstance().getPublished(DocumentType.SKULPT, new QueryParam(1));
+        Assert.assertEquals("Expect 1 published document", 1, published.size());
+    }
+
+    @Test
     public void testDeleteAllDocumentsByUser() throws Exception {
         DocumentManager.getInstance().deleteAllDocumentsByUser(m_TestUser2);
         Assert.assertEquals("Expect no documents for user after deletion", 0, DocumentManager.getInstance().getPublishedByUser(m_TestUser2, DocumentType.ALL, QueryParam.UNSORTED).size());

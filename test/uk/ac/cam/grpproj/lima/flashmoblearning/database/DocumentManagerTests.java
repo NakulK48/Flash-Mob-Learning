@@ -274,7 +274,7 @@ public class DocumentManagerTests {
     @Test
     public void testDeleteRevision() throws Exception {
         Revision revision = Revision.createRevision(m_WIP_Document, new Date(), c_TestRevisionContent + " (DYNAMIC)");
-        DocumentManager.getInstance().deleteRevision(Arrays.asList(new Revision[] { revision }));
+        DocumentManager.getInstance().deleteRevision(revision);
         List<Revision> revisions = DocumentManager.getInstance().getRevisions(m_WIP_Document, QueryParam.UNSORTED);
         Assert.assertEquals("Expect unchanged number of revisions", 3, revisions.size());
     }
@@ -289,7 +289,7 @@ public class DocumentManagerTests {
     }
 
     @Test
-     public void testUpdateDocument() throws Exception {
+    public void testUpdateDocument() throws Exception {
         m_WIP_Document.setTitle(c_TestDocumentTitle + " (DYNAMIC)");
         DocumentManager.getInstance().updateDocument(m_WIP_Document);
 

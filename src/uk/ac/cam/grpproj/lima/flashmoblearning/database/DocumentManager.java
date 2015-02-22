@@ -333,7 +333,7 @@ public class DocumentManager {
 	}
  	
     /**
-     * Delete revision(s) from a document, typically called when documents are deleted or published.
+     * Delete revision(s) from a document.
      * @param revisions list of revisions to delete
      * @throws SQLException an error has occurred in the database.
      * @throws NoSuchObjectException revision does not exist.

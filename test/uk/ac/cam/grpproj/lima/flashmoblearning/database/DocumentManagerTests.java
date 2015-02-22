@@ -289,7 +289,7 @@ public class DocumentManagerTests {
     }
 
     @Test
-     public void testUpdateDocument() throws Exception {
+    public void testUpdateDocument() throws Exception {
         m_WIP_Document.setTitle(c_TestDocumentTitle + " (DYNAMIC)");
         DocumentManager.getInstance().updateDocument(m_WIP_Document);
 

@@ -18,11 +18,11 @@
 		<th>ID</th>
 	</tr>
 	<%
-		if(session.getAttribute("uid")==null){
+		if(session.getAttribute(Attribute.USERID)==null){
 			//session invalid
 			response.sendRedirect("login.jsp");
-		}else if(session.getAttribute("privilege")==null||
-				!session.getAttribute("privilege").equals("admin")){
+		}else if(session.getAttribute(Attribute.PRIVILEGE)==null||
+				!session.getAttribute(Attribute.PRIVILEGE).equals("admin")){
 			response.sendRedirect("landing.jsp");
 		}
 		//TODO: set new limit
@@ -37,8 +37,9 @@
 		
 		for(int i=0;i<Math.min(users.size(),limit);i++){
 			User u = users.get(i);
+			Long uid = u.getID();
 			%>
-				<tr><td><%=u.getName() %></td><td><%=u.getID()%></td></tr>
+				<tr><td><a href="userPage.jsp?uid=<%=uid%>"><%=u.getName() %></a></td><td><%=u.getID()%></td></tr>
 			<%
 		}
 

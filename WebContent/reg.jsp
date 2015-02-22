@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>-Register - Flash Mob Learning</title>
+<title>Register - Flash Mob Learning</title>
 <link rel="stylesheet" href="LoginStyle.css" media="screen"
 	type="text/css" />
 </head>

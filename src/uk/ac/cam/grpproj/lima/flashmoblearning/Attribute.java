@@ -8,4 +8,5 @@ public interface Attribute {
 	public static final String PRIVILEGE = "privilege";
 	public static final String USERID = "uid";
 	public static final String USERNAME = "uname";
+	public static final String DOCTYPE = "doctype";
 }

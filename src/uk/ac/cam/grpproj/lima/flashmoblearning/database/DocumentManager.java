@@ -693,9 +693,9 @@ public class DocumentManager {
      * @param param query parameter to filter/sort the results.
      * @throws SQLException an error has occurred in the database.
      */
-	public void ageScores(QueryParam param) throws SQLException {
+	public int ageScores(QueryParam param) throws SQLException {
 		PreparedStatement ps = m_Database.getConnection().prepareStatement(
 				param.updateQuery("UPDATE documents SET score = vote_count * EXP(-1 * POWER(time_to_sec(timediff(NOW(),update_time)) / 3600,2)/" + PublishedDocument.AGING_CONSTANT + ") WHERE score > 0"));
-		ps.executeUpdate();
+		return ps.executeUpdate();
 	}
 }

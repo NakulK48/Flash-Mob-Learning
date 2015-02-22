@@ -333,18 +333,6 @@ public class DocumentManager {
 	}
  	
     /**
-     * Delete revision(s) from a document.
-     * @param revisions list of revisions to delete
-     * @throws SQLException an error has occurred in the database.
-     * @throws NoSuchObjectException revision does not exist.
-     */
-	public void deleteRevision(List<Revision> revisions) throws SQLException, NoSuchObjectException {
-		for(Revision r : revisions) {
-			deleteRevision(r);
-		}
-	}
-
-    /**
      * Delete a revision from a document, e.g. for housekeeping.
      * @param revisions list of revisions to delete
      * @throws SQLException an error has occurred in the database.

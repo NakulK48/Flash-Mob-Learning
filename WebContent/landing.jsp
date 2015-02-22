@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="java.util.Date"%>
+    pageEncoding="ISO-8859-1" import="java.util.Date,uk.ac.cam.grpproj.lima.flashmoblearning.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -27,14 +27,14 @@
 	<%
 		
 		//Session check
-		if(session.getAttribute("uid")==null){
+		if(session.getAttribute(Attribute.USERID)==null){
 			//session invalid
 			response.sendRedirect("login.jsp");
 		}
 	%>
 <div data-role="page">
    <div data-role="header">
-      <h1>Welcome, <%=session.getAttribute("username") %>! <a href="logout.jsp">Logout</a></h1>
+      <h1>Welcome, <%=session.getAttribute(Attribute.USERNAME) %>! <a href="logout.jsp">Logout</a></h1>
    </div> 
    <div class="button_skulpt" width="device-width">
       <a href="hub.jsp"> <!--  CHANGE ME -->

@@ -8,9 +8,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>User List</title>
+<title>All Users</title>
 </head>
 <body>
+	<center><table border="1" style="width:100%">
+	<thead>All Users</thead>
+	<tr>
+		<th>Name</th>
+		<th>ID</th>
+	</tr>
 	<%
 		if(session.getAttribute("uid")==null){
 			//session invalid
@@ -19,20 +25,45 @@
 				!session.getAttribute("privilege").equals("admin")){
 			response.sendRedirect("landing.jsp");
 		}
-		int offset = request.getAttribute("page")==null?0:Integer.parseInt((String) request.getAttribute("page"));
-		int limit = 10;
+		//TODO: set new limit
+		int limit = 5;
+		int pageno = request.getParameter("page")==null?0:Integer.parseInt((String) request.getParameter("page"));
+		int offset = pageno * limit;
 		
-		QueryParam qp = new QueryParam(limit, offset);
+		QueryParam qp = new QueryParam(limit+1, offset);
 		
 		List<User> users = LoginManager.getInstance().getAllUsers(qp);
 		
 		
-		for(User u:users){
+		for(int i=0;i<Math.min(users.size(),limit);i++){
+			User u = users.get(i);
 			%>
-			
+				<tr><td><%=u.getName() %></td><td><%=u.getID()%></td></tr>
 			<%
 		}
 
 	%>
+	</table></center>
+	<br>
+	<div id="footer">
+	<%
+		if (pageno != 0) {
+			%><div style="bottom:0;float:left;"><a href="userList.jsp?page=<%=pageno-1%>">Previous</a></div><%
+		}
+	
+		if (users.size()==limit+1){
+			%><div style="bottom:0;float:right;"><a href="userList.jsp?page=<%=pageno+1%>">Next</a></div><%
+		}
+	%>
+	<div style="bottom:0;"><center>Page <%=pageno+1 %></center></div>
+	</div>
+	      <nav id="menu">
+         <ul>
+         	<li><a href="mng.jsp">Back</a>
+            <li><a href="landing.jsp">Home</a></li>
+            <li><a href="logout.jsp">Logout</a></li>
+         </ul>
+      </nav>
+	
 </body>
 </html>

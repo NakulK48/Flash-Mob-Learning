@@ -19,10 +19,16 @@
 	}
 	%>
 	<h1>Manage:</h1>
-	<h2></h2><a href="logout.jsp">Users</a></h2>
+	<h2></h2><a href="userList.jsp">Users</a></h2>
 	<h2></h2><a href="banner.jsp">Login banner</a></h2>
 	<h2></h2><a href=>Documents</a></h2>
 	
-	<h2></h2><a href=>Logout</a></h2>
+	</div>
+	      <nav id="menu">
+         <ul>
+            <li><a href="landing.jsp">Home</a></li>
+            <li><a href="logout.jsp">Logout</a></li>
+         </ul>
+      </nav>
 </body>
 </html>

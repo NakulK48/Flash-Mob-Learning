@@ -267,7 +267,7 @@ public class DocumentManager {
      * @throws NoSuchObjectException unable to load the user for a document.
      */
 	public List<PublishedDocument> getPublished(DocumentType documentType, QueryParam param) throws SQLException, NoSuchObjectException {
-		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE published_flag = true") + getDocumentTypeSQL(documentType));
+		PreparedStatement ps = m_Database.getConnection().prepareStatement(param.updateQuery("SELECT * FROM documents WHERE published_flag = true" + getDocumentTypeSQL(documentType)));
 		ResultSet rs = ps.executeQuery();
 		return getPublishedDocumentsFromResultSet(rs, null);
 	}

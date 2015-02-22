@@ -146,7 +146,7 @@
 			<input type="text" id="tags" list="tagOptions" />
 			<datalist id="tagOptions">
 			   <select onchange="$('#tags').val(this.value);">
-			    <option label="United Stated" value="USA"></option>
+			    <option label="United States" value="USA"></option>
 			    <option label="United Kingdom" value="UK"></option>
 			    <option label="Uruguay" value="URU"></option>
 			    <option label="Brazil" value="BRA"></option>

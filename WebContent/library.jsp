@@ -67,14 +67,22 @@
 		response.sendRedirect("login.jsp");
 	}
 
+	if (request.getParameter("doctype") != null)
+	{
+		String doctypeString = request.getParameter("doctype");
+		DocumentType dt = null;
+		if (doctypeString.equals("skulpt")) dt = DocumentType.SKULPT;
+		else dt = DocumentType.PLAINTEXT;
+		session.setAttribute(Attribute.DOCTYPE, dt);
+	}
+
 	DocumentType dt = DocumentType.ALL;
 	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
 	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
 //TODO: Check whether viewing Skulpt or Text
-
-	DocumentType doctype = (DocumentType) session.getAttribute("doctype");
+	DocumentType doctype = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 	
-	long uid = (Long) session.getAttribute("uid");
+	long uid = (Long) session.getAttribute(Attribute.USERID);
 	//TODO: Remove above placeholder
 	LoginManager lm = LoginManager.getInstance();
 	DocumentManager dm = DocumentManager.getInstance();

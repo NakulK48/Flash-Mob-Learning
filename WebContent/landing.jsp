@@ -37,11 +37,11 @@
       <h1>Welcome, <%=session.getAttribute(Attribute.USERNAME) %>! <a href="logout.jsp">Logout</a></h1>
    </div> 
    <div class="button_skulpt" width="device-width">
-      <a href="library.jsp?doctype=skulpt"> <!--  CHANGE ME -->
+      <a href="library.jsp?doctype=skulpt">
       <img src="static/skulptbutton.png" id="Skulpt" width="100%"></a>
    </div>
    <div class="button_text" width="device-width">
-      <a href="library.jsp?doctype=plaintext"> <!-- CHANGE ME -->
+      <a href="library.jsp?doctype=plaintext">
       <img src="static/textbutton.png" id="Text" width="100%"></a>
    </div>
 </div>

@@ -80,6 +80,7 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
             type: "POST",
             url: "plaintextfunctions.jsp",
             data: {
+      			funct: save,
                 docID: <%=docID%>,
         		text: mytext,
         		newDoc: request.getParameter("newDoc")
@@ -87,7 +88,7 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
             },
             dataType: "script"
         }).done(function( response ) {
-            <!-- TODO error and success-->
+			alert(response);
         });
 
   </script>

@@ -20,8 +20,10 @@
 		PublishedDocument pubdoc = (PublishedDocument) DocumentManager.getInstance().getDocumentById(docID);
 		WIPDocument wipdoc = pubdoc.fork(u);
 		Long wipdocid = wipdoc.getID();
+		
+	    String redirectURL = "plaintexteditor.jsp?docid="+Long.toString(wipdocid)+"&newdoc=1&mydoc=1&wipdoc=1" ;
+	    response.sendRedirect(redirectURL);
 	%>
-	document.location.href = "plaintexteditor.jsp?docid="+<%= Long.toString(wipdocid) %> +"&newdoc=1&mydoc=1&wipdoc=1" 
 </script>
 </body>
 </html>

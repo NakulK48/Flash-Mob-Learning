@@ -6,7 +6,7 @@
 
 <%!
 String processRequest() {
-	if(request.getParameter("funct")=="save"){
+	if(request.getParameter("funct")=="save"){ // TODO : Error handling
 		String docTitle = request.getParameter("titleBox");
 		Date date = new Date();
 		User u = LoginManager.getInstance().getUser(Long.parseLong((String)session.getAttribute("uid")));
@@ -14,16 +14,19 @@ String processRequest() {
 		Document doc = DocumentManager.getInstance().getDocumentById(docID);
 		User docOwner = doc.owner; 
 		if(u.getID() == docOwner.getID()){ //Working on my own WIPDocument or a fork
-			// TODO: What if doc is not a WIPDoc?
-			WIPDocument wipdoc = (WIPDocument) doc;
-			String oldContent = wipdoc.getLastRevision().getContent();
-			if(!oldContent.equals(request.getParameter("text"))){
-				wipdoc.addRevision(date, request.getParameter("text"));
-				return "OK";
+			if(doc instanceof WIPDocument){
+				WIPDocument wipdoc = (WIPDocument) doc;
+				String oldContent = wipdoc.getLastRevision().getContent();
+				if(!oldContent.equals(request.getParameter("text"))){
+					wipdoc.addRevision(date, request.getParameter("text"));
+					return "OK";
+				}
+				else{
+					return "Already saved";
+				}
 			}
-			else
-			{
-				return "Already saved";
+			else{
+				return "Invalid document type";
 			}
 		} else {
 			return "Invalid permissions";

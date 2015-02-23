@@ -59,9 +59,30 @@
          </div>
          <div class="content" style="padding-top:10px;">
 <%
-
+	DocumentManager dm = DocumentManager.getInstance();
 
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
+	if (upvoted != null)
+	{
+		long thisDocumentID = Long.parseLong(upvoted);
+		long thisUserID = (Long) session.getAttribute(Attribute.USERID);
+		User thisUser = LoginManager.getInstance().getUser(thisUserID);
+		
+
+		PublishedDocument thisDocument = (PublishedDocument) dm.getDocumentById(thisDocumentID);
+		
+		try
+		{
+			dm.addVote(thisUser, thisDocument);
+		}
+		catch (DuplicateEntryException e)
+		{
+			thisDocument.setVotes(thisDocument.getVotes() - 1);
+		}
+
+		thisDocument.setVotes(thisDocument.getVotes() + 1);
+	}
+	
 	String showFeatured = request.getParameter("showFeatured");
 	if (showFeatured == null) showFeatured = "true";
 	
@@ -131,11 +152,11 @@
 		//TODO: increase its votes by 1
 	}
 	
-%>
-	<div id="orderHolder" >
-		<a href='<%="hub.jsp?sort=hot"%>'><div class="order" id="left">Hot</div></a>
-		<a href='<%="hub.jsp?sort=top"%>'><div class="order" id="centre">Top</div></a>
-		<a href='<%="hub.jsp?sort=new"%>'><div class="order" id="right">New</div></a>
+%> 
+	<div id="orderHolder" data-type="controlgroup" data-style="horizontal">
+		<div class="order" id="left"><a href='<%="hub.jsp?sort=hot"%>'>Hot</a></div>
+		<div class="order" id="centre"><a href='<%="hub.jsp?sort=top"%>'>Top</a></div>
+		<div class="order" id="right"><a href='<%="hub.jsp?sort=new"%>'>New</a></div>
 	</div>
 
 <table>
@@ -147,19 +168,23 @@
 	<%
 		if (pageNumber == 1) 
 		{
-			out.println("<tr><td>Featured</td></tr>");
+			out.println("<tr><th>Featured</th>");
 			if (showFeatured.equals("true"))
 			{
-				out.println("<td><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'>(Hide) </a>");
-				out.println("<a href = 'hub.jsp?sort=" + sortType + "&showFeatured=only'> (View More)</td></a>");
+				out.println("<th><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'>(Hide) </a> ");
+				out.println(" <a href = 'hub.jsp?sort=" + sortType + "&showFeatured=only'> (View More)</a></th></tr>");
+				out.println("<tr><td>&nbsp;</td></tr>");
 			}
 			else if (showFeatured.equals("false"))
 			{
-				out.println("<a href = 'hub.jsp?sort=" + sortType + "&showFeatured=true'><td>(Show)</td></a>");
+				out.println("<th><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=true'>(Show)</a></th></tr>");
+				out.println("<tr></tr>");
+				out.println("<tr><td>&nbsp;</td></tr>");
 			}
 			else //only
 			{
-				out.println("<td><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'>(Hide) </a>");
+				out.println("<th><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'>(Hide) </a></th></tr>");
+				out.println("<tr><td>&nbsp;</td></tr>");
 			}
 
 		}
@@ -179,9 +204,10 @@
 				else ageString = ageInDays + " days ago";
 			}
 			
+			String upvoteLink = "<a href='hub.jsp?page=" + pageNumber + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
 			String entry = 
 			"<tr class='upperRow'>" + 
-			"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >UP</button></td>" + //upvote
+			"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
 			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
@@ -197,7 +223,11 @@
 		} 
 		
 
-		if (pageNumber == 1 && !showFeatured.equals("only")) out.println("<tr>The Rest</tr>");
+		if (pageNumber == 1 && !showFeatured.equals("only"))
+		{
+			out.println("<tr><th>The Rest</th></tr>");
+			out.println("<tr><td>&nbsp;</td></tr>");
+		}
 		for (PublishedDocument pd : subs)
 		{
 
@@ -213,9 +243,10 @@
 				else ageString = ageInDays + " days ago";
 			}
 			
+			String upvoteLink = "<a href='hub.jsp?page=" + pageNumber + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
 			String entry = 
 			"<tr class='upperRow'>" + 
-			"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >UP</button></td>" + //upvote
+			"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
 			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
@@ -240,10 +271,14 @@
 
 
 </table>
-	<div id="footer">	
-		<div style="bottom:0;float:left;"><a href='<%=previousURL %>'>Previous</a></div>
-		<div style="bottom:0;float:right;"><a href='<%=nextURL %>'>Next</a></div>
-		<div style="bottom:0;float:center;">Page <%=pageNumber %></div>
+	<div data-role="footer" class="ui-bar" data-position="fixed">	
+	
+	<div data-style="controlgroup" data-type="horizontal">
+		<div><a href='<%=previousURL %>'>Previous</a></div>
+		<div>Page <%=pageNumber %></div>
+		<div><a href='<%=nextURL %>'>Next</a></div>
+	</div>
+
 	</div>	
          </div>
       </div>

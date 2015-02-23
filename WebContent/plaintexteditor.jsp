@@ -80,6 +80,8 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
             type: "POST",
             url: "plaintextfunctions.jsp",
             data: {
+            	
+            	title: document.getElementById('titleBox').value,
       			funct: save,
                 docID: <%=docID%>,
         		text: mytext,

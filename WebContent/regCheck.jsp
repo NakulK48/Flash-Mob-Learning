@@ -26,20 +26,19 @@
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/reg.jsp");
 			response.getWriter().println("<center><font color=red>Password does not match.</font></center>");
 			rd.include(request, response);
-		}
-		
-		//Data base connection 
-		try{
-			LoginManager l = LoginManager.getInstance();
-			User u = l.createUser(name, pwd, false);
-			session.setAttribute(Attribute.USERID,u.getID());
-			session.setAttribute(Attribute.USERNAME, u.getName());
-			session.setAttribute(Attribute.PRIVILEGE, "user");
-			response.sendRedirect("landing.jsp");			
-		}catch(DuplicateEntryException e){
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/reg.jsp");
-			response.getWriter().println("<center><font color=red>Username already exists.</font></center>");
-			rd.include(request, response);
+		}else{
+			try{
+				LoginManager l = LoginManager.getInstance();
+				User u = l.createUser(name, pwd, false);
+				session.setAttribute(Attribute.USERID,u.getID());
+				session.setAttribute(Attribute.USERNAME, u.getName());
+				session.setAttribute(Attribute.PRIVILEGE, "user");
+				response.sendRedirect("landing.jsp");			
+			}catch(DuplicateEntryException e){
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/reg.jsp");
+				response.getWriter().println("<center><font color=red>Username already exists.</font></center>");
+				rd.include(request, response);
+			}
 		}
 	%>
 </html>

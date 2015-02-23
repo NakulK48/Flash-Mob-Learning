@@ -41,7 +41,5 @@
 		</div>
 	</div>
 
-	<script
-		src='http://codepen.io/assets/libs/fullpage/jquery_and_jqueryui.js'></script>
 </body>
 </html>

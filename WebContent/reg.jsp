@@ -28,10 +28,6 @@
 		<div class="login-help">
 			<a href="login.jsp">Login</a>
 		</div>
-	</div>
-
-	<script
-		src='http://codepen.io/assets/libs/fullpage/jquery_and_jqueryui.js'></script>
-	
+	</div>	
 </body>
 </html>

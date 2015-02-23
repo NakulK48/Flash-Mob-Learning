@@ -163,13 +163,7 @@
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="#">My Docs</a>
-               <ul>
-                  <li><a href="/about/history">History</a></li>
-                  <li><a href="/about/team">The team</a></li>
-                  <li><a href="/about/address">Our address</a></li>
-               </ul>
-            </li>
+            <li><a href="#">My Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>

@@ -77,8 +77,11 @@
 	}
 
 	DocumentType dt = DocumentType.ALL;
-	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
-	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
+	if (session.getAttribute(Attribute.DOCTYPE) == null) {
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+	dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
 //TODO: Check whether viewing Skulpt or Text
 	DocumentType doctype = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 	
@@ -130,11 +133,11 @@
 				if (ageInDays == 1) ageString = "yesterday";
 				else ageString = ageInDays + " days ago";
 			}
-			
+			String editor = dt==DocumentType.PLAINTEXT?"'plaintexteditor.jsp":"'editor.jsp";
 			String entry = 
 			"<tr class='lowerRow'>" + 
 			"<td></td>" + 
-			"<td class='title'> <a href='editor.jsp?docID=" + Long.toString(doc.getID()) + "'>" + doc.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href="+editor+"?docID=" + Long.toString(doc.getID()) + "'>" + doc.getTitle() + "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>"; 
 			

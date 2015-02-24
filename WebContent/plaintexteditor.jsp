@@ -94,7 +94,10 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
 			alert(response);
         }).fail(function(response) { alert("Error")   ; });
 }
-
+function previewit() {
+	saveit();
+	window.location="preview.jsp?docID=<%=request.getParameter("docID")%>&WIPDoc=1&myDoc=1";
+}
         
 
   </script>

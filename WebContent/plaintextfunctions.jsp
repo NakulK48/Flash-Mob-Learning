@@ -6,21 +6,21 @@
 
 <%!
 String processRequest() {
-	if(request.getParameter("funct")=="save"){ 
-		String docTitle = request.getParameter("title");
-		Date date = new Date();
+	if("${funct}"=="save"){ 
 		try{
-		User u = LoginManager.getInstance().getUser(Long.parseLong((String)session.getAttribute("uid")));
-		Long docID = Long.parseLong((String)request.getParameter("docID"));
-		Document doc = DocumentManager.getInstance().getDocumentById(docID);
+		String docTitle = "${title}";
+		Date date = new Date();
+		User u = LoginManager.getInstance().getUser(Long.parseLong((String)"${uid}"));
+		Long documentID = Long.parseLong((String)"${docID}");
+		Document doc = DocumentManager.getInstance().getDocumentById(documentID);
 		User docOwner = doc.owner; 
 		if(u.getID() == docOwner.getID()){ //Working on my own WIPDocument or a fork
 			if(doc instanceof WIPDocument){
 				WIPDocument wipdoc = (WIPDocument) doc;
 				wipdoc.setTitle(docTitle);
 				String oldContent = wipdoc.getLastRevision().getContent();
-				if(!oldContent.equals(request.getParameter("text"))){
-					wipdoc.addRevision(date, request.getParameter("text"));
+				if(!oldContent.equals("${text}")){
+					wipdoc.addRevision(date, "${text}");
 					return "Save successful";
 				}
 				else{
@@ -37,9 +37,6 @@ String processRequest() {
 			return "Something went wrong ! Please try again later";
 		}
 	}
-
-
-
 }
 %>
 <% processRequest(); %>

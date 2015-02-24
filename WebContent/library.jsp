@@ -164,13 +164,9 @@
          <ul>
             <li><a href="landing.jsp">Home</a></li>
             <li><a href="#">My Docs</a></li>
-            <%if(request.getParameter("doctype")=="skulpt"){ %>
-            	<li><a href="CreateNew.jsp?doctype=skulpt">New Document</a></li>
-           		<li><a href="hub.jsp?doctype=skulpt">Community Hub</a></li>
-           	<%} else if(request.getParameter("doctype")=="plaintext"){%>
-           	    <li><a href="CreateNew.jsp?doctype=plaintext">New Document</a></li>
-           		<li><a href="hub.jsp?doctype=plaintext">Community Hub</a></li>
-           	<%}%>
+            <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="CreateNew.jsp?doctype=skulpt">New Skulpt Document</a></li>
+           	<li><a href="CreateNew.jsp?doctype=plaintext">New Text Document</a></li>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>
 

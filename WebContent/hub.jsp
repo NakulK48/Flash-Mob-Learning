@@ -168,6 +168,7 @@
 		.order{float:left; padding-right:6%; width:50px}		
 	</style>
 
+
 	<table>
 		<tr>
 			<td class='heading' id='upvoteScoreHeading'></td>
@@ -196,23 +197,6 @@
 					out.println("<tr><td>&nbsp;</td></tr>");
 				}
 	
-<table>
-	<tr>
-		<td class='heading' id='upvoteScoreHeading'></td>
-		<td class='heading' id='titleSubmitterHeading'></td>
-		<td class='heading' id='ageHeading'></td>
-	</tr>
-	<%
-		if (pageNumber == 1) 
-		{
-			out.println("<tr><th>Featured</th></tr>");
-			if (showFeatured.equals("true"))
-			{
-				%>
-				<tr><td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=false'>(Hide) </a></td></tr>
-				<tr><td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=only'> (View More)</a></td></tr>
-				<tr><td>&nbsp;</td></tr>
-				<%
 			}
 			//TODO list featured documents
 			for (PublishedDocument pd : featuredSubs)
@@ -253,18 +237,6 @@
 			{
 				out.println("<tr><th>The Rest</th></tr>");
 				out.println("<tr><td>&nbsp;</td></tr>");
-				%>
-				<tr><td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=true'>(Show) </a></td></tr>
-				<tr><td>&nbsp;</td></tr>
-				<%
-			}
-			else //only.
-			{
-				%>
-				<tr><td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=false'>(Hide) </a></td></tr>
-				<tr><td>&nbsp;</td></tr>
-				<%
-
 			}
 			for (PublishedDocument pd : subs)
 			{
@@ -304,46 +276,6 @@
 			
 			String previousURL = "hub.jsp?sort=" + sortType + "&page=" + previousPage;
 			String nextURL = "hub.jsp?sort=" + sortType + "&page=" + nextPage;
-			out.println(entry);
-		} 
-		
-
-		if (pageNumber == 1 && !showFeatured.equals("only"))
-		{
-			%>
-			<tr><th>The Rest</th></tr>
-			<tr><td>&nbsp;</td></tr>
-			<%
-		}
-		for (PublishedDocument pd : subs)
-		{
-
-			String ageString;
-			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
-			if (ageInHours < 1) ageString = "Less than an hour ago";
-			else if (ageInHours < 2) ageString = "An hour ago";
-			else if (ageInHours < 24) ageString = ageInHours + " hours ago";
-			else
-			{
-				int ageInDays = ageInHours / 24;
-				if (ageInDays == 1) ageString = "yesterday";
-				else ageString = ageInDays + " days ago";
-			}
-			
-			String upvoteLink = "<a href='hub.jsp?page=" + pageNumber + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
-			String entry = 
-			"<tr class='upperRow'>" + 
-			"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
-			//TODO: Replace with upvote sprite
-			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
-			"<td class='age'>" + ageString + "</td>" + //age
-			"</tr>" + 
-			"<tr class='lowerRow'>" +
-			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
-			"<td></td>" +
-			"</tr>"; 
 			
 		%>
 	

@@ -36,13 +36,13 @@
 
 <%		
 		//Session check
-	if(session.getAttribute("uid")==null){
+	if(session.getAttribute(Attribute.USERID)==null){
 		//session invalid
 		response.sendRedirect("login.jsp");
 	}
 
 LoginManager l = LoginManager.getInstance();
-User u = l.getUser((String) session.getAttribute("username"));
+User u = l.getUser((long) session.getAttribute(Attribute.USERID));
 //String body = DocumentManager.getInstance().getRevisionContent(doc.getLastRevision());
 %>
 	

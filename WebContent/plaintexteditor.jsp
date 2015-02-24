@@ -84,7 +84,7 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
             	
             	title: encodeURIComponent(document.getElementById('titleBox').value),
       			funct: "save",
-                docID: <%=request.getParameter("docid")%>,
+                docID: <%=request.getParameter("docID")%>,
         		text: mytext,
         		newDoc: <%=request.getParameter("newDoc")%>
         		
@@ -92,8 +92,10 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
             dataType: "script"
         }).done(function( response ) {
 			alert(response);
-        });
-        }
+        }).fail(function(response) { alert("Error")   ; });
+}
+
+        
 
   </script>
   <div class="header">
@@ -103,7 +105,7 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
 
         <form action="demo_form.asp" id="tagtitlebox">
         <input type="text" value=<%
-    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(request.getParameter("docid")));%>"<%=document.getTitle()%>"
+    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(request.getParameter("docID")));%>"<%=document.getTitle()%>"
     id="titleBox" maxlength="30" placeholder="Title" required><br>
         <input type="text" placeholder="Tags" required><br>
         </form>
@@ -116,6 +118,8 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
 				<button class="fml_buttons" type="button" onclick="saveit()"
 					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Save</button>
+				<button class="fml_buttons" type="button" onclick="previewit()"
+					style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Preview</button>
 			</div>
 
 

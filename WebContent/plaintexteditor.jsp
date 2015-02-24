@@ -29,6 +29,54 @@
              "searchfield": true
           });
        });
+       
+    // output functions are configurable.  This one just appends some text
+    // to a pre element.
+    var mycodemirror;
+    function loadCodeMirror(){
+      mycodemirror = CodeMirror.fromTextArea(document.getElementById("text"), {lineNumbers: false});
+    }
+    setTimeout(function () {
+        $('.textbox').css({
+            'height': 'auto'
+        });
+    }, 100);
+
+    function builtinRead(x) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+                throw "File not found: '" + x + "'";
+        return Sk.builtinFiles["files"][x];
+    }
+
+    // Here's everything you need to run a python program in skulpt
+    // grab the code from your textarea
+    // get a reference to your pre element for output
+    // configure the output function
+    // call Sk.importMainWithBody()
+
+    	<% String docID = request.getParameter("docid");%>
+
+    function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
+    	   mycodemirror.save();
+    	   var mytext = encodeURIComponent(document.getElementById("text").value); 
+            jQuery.ajax({
+                type: "POST",
+                url: "plaintextfunctions.jsp",
+                data: {
+                	
+                	title: encodeURIComponent(document.getElementById('titleBox').value),
+          			funct: save,
+                    docID: <%=docID%>,
+            		text: mytext,
+            		newDoc: request.getParameter("newDoc")
+            		
+                },
+                dataType: "script"
+            }).done(function( response ) {
+    			alert(response);
+            });
+
+       
     </script>
 </head >
 
@@ -45,55 +93,6 @@
 
 //String body = DocumentManager.getInstance().getRevisionContent(doc.getLastRevision());
 %>
-	
-<script type="text/javascript"> 
-// output functions are configurable.  This one just appends some text
-// to a pre element.
-var mycodemirror;
-function loadCodeMirror(){
-  mycodemirror = CodeMirror.fromTextArea(document.getElementById("text"), {lineNumbers: false});
-}
-setTimeout(function () {
-    $('.textbox').css({
-        'height': 'auto'
-    });
-}, 100);
-
-function builtinRead(x) {
-    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
-            throw "File not found: '" + x + "'";
-    return Sk.builtinFiles["files"][x];
-}
-
-// Here's everything you need to run a python program in skulpt
-// grab the code from your textarea
-// get a reference to your pre element for output
-// configure the output function
-// call Sk.importMainWithBody()
-
-	<% String docID = request.getParameter("docid");%>
-
-function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
-	   mycodemirror.save();
-	   var mytext = document.getElementById("text").value; 
-        jQuery.ajax({
-            type: "POST",
-            url: "plaintextfunctions.jsp",
-            data: {
-            	
-            	title: document.getElementById('titleBox').value,
-      			funct: save,
-                docID: <%=docID%>,
-        		text: mytext,
-        		newDoc: request.getParameter("newDoc")
-        		
-            },
-            dataType: "script"
-        }).done(function( response ) {
-			alert(response);
-        });
-
-  </script>
   <div class="header">
    <a href="#menu"></a>
           Text Editor
@@ -101,17 +100,14 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
 
         <form action="demo_form.asp" id="tagtitlebox">
         <input type="text" value=<%
-    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(docID));%>
-    	<%=document.getTitle()%>
+    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(docID));%>"<%=document.getTitle()%>"
     id="titleBox" maxlength="30" placeholder="Title" required><br>
         <input type="text" placeholder="Tags" required><br>
         </form>
 
 
 
-    <textarea class="textbox" id="text" >
-    <%if(Integer.parseInt(request.getParameter("newdoc"))!=1){%>
-    	<%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
+    <textarea class="textbox" id="text" ><%if(Integer.parseInt(request.getParameter("newdoc"))!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
 
     <!-- complete these buttons-->
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">

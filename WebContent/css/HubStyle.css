@@ -49,26 +49,19 @@ tr.lowerRow td
 #orderHolder
 {
 	top:0;
-	width:100%;
 	height:40px;
-	font-size:20pt;
+	font-size:16pt;
 	font-family:Verdana;
 }
 
 .order
 {
-	width:33%;
+	font-size:16pt
+	
 }
-#footer {
+/* #footer {
    position:absolute;
    bottom:0;
    width:100%;
    height:60px;
-}
-#left{ left:0%; width:33%; text-align:center}
-
-#right{left:66%; width:33%; text-align:center}
-
-#centre{left:33%; width:33%; text-align:center}
-
-
+} */

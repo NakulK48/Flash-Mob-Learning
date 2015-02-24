@@ -172,7 +172,6 @@
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="#">My Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
             <li><a href="CreateNew.jsp?doctype=skulpt">New Skulpt Document</a></li>
            	<li><a href="CreateNew.jsp?doctype=plaintext">New Text Document</a></li>

@@ -29,6 +29,8 @@
              "searchfield": true
           });
        });
+       
+       
     </script>
 </head >
 
@@ -75,13 +77,13 @@ function builtinRead(x) {
 
 function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
 	   mycodemirror.save();
-	   var mytext = document.getElementById("text").value; 
+	   var mytext = encodeURIComponent(document.getElementById("text").value); 
         jQuery.ajax({
             type: "POST",
             url: "plaintextfunctions.jsp",
             data: {
             	
-            	title: document.getElementById('titleBox').value,
+            	title: encodeURIComponent(document.getElementById('titleBox').value),
       			funct: save,
                 docID: <%=docID%>,
         		text: mytext,
@@ -101,17 +103,14 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
 
         <form action="demo_form.asp" id="tagtitlebox">
         <input type="text" value=<%
-    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(docID));%>
-    	<%=document.getTitle()%>
+    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(docID));%>"<%=document.getTitle()%>"
     id="titleBox" maxlength="30" placeholder="Title" required><br>
         <input type="text" placeholder="Tags" required><br>
         </form>
 
 
 
-    <textarea class="textbox" id="text" >
-    <%if(Integer.parseInt(request.getParameter("newdoc"))!=1){%>
-    	<%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
+    <textarea class="textbox" id="text" ><%if(Integer.parseInt(request.getParameter("newdoc"))!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
 
     <!-- complete these buttons-->
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">

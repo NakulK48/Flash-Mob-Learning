@@ -23,11 +23,11 @@
 			User u = LoginManager.getInstance().getUser(userID);
 			%>
 			<title><%=u.getName() %></title>
+			</head>
+			<body>
+				
+			</body>
 			<%
 		}
 	%>
-</head>
-<body>
-
-</body>
 </html>

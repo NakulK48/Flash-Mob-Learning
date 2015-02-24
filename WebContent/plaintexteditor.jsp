@@ -40,9 +40,9 @@
 		//session invalid
 		response.sendRedirect("login.jsp");
 	}
+	LoginManager l = LoginManager.getInstance();
+	User u = l.getUser((long) session.getAttribute(Attribute.USERID));
 
-LoginManager l = LoginManager.getInstance();
-User u = l.getUser((long) session.getAttribute(Attribute.USERID));
 //String body = DocumentManager.getInstance().getRevisionContent(doc.getLastRevision());
 %>
 	
@@ -71,7 +71,7 @@ function builtinRead(x) {
 // configure the output function
 // call Sk.importMainWithBody()
 
-	<% String docID = request.getParameter("docID");%>
+	<% String docID = request.getParameter("docid");%>
 
 function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
 	   mycodemirror.save();
@@ -100,21 +100,18 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
   </div>
 
         <form action="demo_form.asp" id="tagtitlebox">
-        <input type="text" value=<%if(session.getAttribute("newDoc")=="1"){%><%=""%><%}
-    else{
-    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong((String)session.getAttribute("docID")));%>
+        <input type="text" value=<%
+    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(docID));%>
     	<%=document.getTitle()%>
-    <%}%> id="titleBox" maxlength="30" placeholder="Title" required><br>
+    id="titleBox" maxlength="30" placeholder="Title" required><br>
         <input type="text" placeholder="Tags" required><br>
         </form>
 
 
 
-    <textarea class="textbox" id="text" ><%if(session.getAttribute("newDoc")=="1"){}
-    else{
-    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong((String)session.getAttribute("docID")));%>
-    	<%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%>
-    <%}%></textarea><br /> 
+    <textarea class="textbox" id="text" >
+    <%if(Integer.parseInt(request.getParameter("newdoc"))!=1){%>
+    	<%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
 
     <!-- complete these buttons-->
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">

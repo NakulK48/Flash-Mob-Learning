@@ -15,8 +15,9 @@
     <%
     try{
 		LoginManager l = LoginManager.getInstance();
-		User u = LoginManager.getInstance().getUser((String) session.getAttribute(Attribute.USERNAME));
-		String type = request.getParameter("type");
+		User u = LoginManager.getInstance().getUser((long) session.getAttribute(Attribute.USERID));
+		System.out.println(u);
+		String type = request.getParameter("doctype");
 		Date date = new Date();
 		if(type.equals("skulpt")){
 			WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(1), u, "", date.getTime());

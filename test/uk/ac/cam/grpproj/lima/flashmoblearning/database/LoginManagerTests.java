@@ -8,6 +8,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.Student;
 import uk.ac.cam.grpproj.lima.flashmoblearning.Teacher;
 import uk.ac.cam.grpproj.lima.flashmoblearning.TestHelper;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 
 import javax.management.Query;
@@ -80,6 +81,11 @@ public class LoginManagerTests {
         LoginManager.getInstance().modifyUser(t);
 
         Teacher u2 = (Teacher) LoginManager.getInstance().getUser(c_TestUsername);
+    }
+
+    @Test(expected=DuplicateEntryException.class)
+    public void testAddExistingUser() throws Exception {
+        LoginManager.getInstance().createUser(c_TestUsername, c_TestPassword, true);
     }
 
     @Test(expected=NoSuchObjectException.class)

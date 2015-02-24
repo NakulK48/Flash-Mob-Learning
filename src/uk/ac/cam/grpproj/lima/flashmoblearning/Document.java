@@ -1,12 +1,13 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
-import java.sql.SQLException;
-import java.util.*;
-
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
+
+import java.sql.SQLException;
+import java.util.*;
 
 /** Base class for Document's. */
 public class Document {
@@ -18,23 +19,25 @@ public class Document {
 	/** Time and date of creation of the document */
 	public final long creationTime;
 
-	/** Every work-in-progress document has a unique ID which never changes.
-	 * This must be set by the database when the document is first stored. It cannot be changed
-	 * after that point. */
+	/** Every document has a unique ID which never changes.
+	 * This is initially -1, and set to its permanent value by the database 
+	 * when the document is first stored. */
 	private long id;
-	/** Title of the document. Mutable. */
+	/** Title of the document (can be changed). */
 	private String title;
-	
+
 	/** Create a Document.
 	 * @param id If loaded from the database, this is a (non-negative) ID for 
 	 * the document. If it hasn't been stored yet this should be -1.
-	 * @param docType Document type e.g. Skulpt.
+	 * @param docType Document type e.g. Skulpt. Cannot be ALL.
 	 * @param owner All documents are owned by a single user.
 	 * @param title Title of the document. Can change.
 	 * @param time Creation time.
 	 */
-	public Document(long id, DocumentType docType, User owner,
+	Document(long id, DocumentType docType, User owner,
 			String title, long time) {
+		if(docType == null || docType == DocumentType.ALL)
+			throw new IllegalArgumentException();
 		this.id = id;
 		this.docType = docType;
 		this.owner = owner;
@@ -70,8 +73,13 @@ public class Document {
 	 * @throws NoSuchObjectException If the Document has not been stored.
 	 * @throws SQLException 
 	 * @throws NotInitializedException If the database has not been initialised. */
-	public void addTag(Tag t) throws NotInitializedException, SQLException, NoSuchObjectException {
-		DocumentManager.getInstance().addTag(this, t);
+	public boolean addTag(Tag t) throws NotInitializedException, SQLException, NoSuchObjectException {
+		try {
+			DocumentManager.getInstance().addTag(this, t);
+			return true;
+		} catch (DuplicateEntryException e) {
+			return false;
+		}
 	}
 	
 	/** Remove a tag.
@@ -98,22 +106,25 @@ public class Document {
 		DocumentManager.getInstance().updateDocument(this);
 	}
 	
+	/** Get the list of revisions.
+	 * @param param How many revisions, in what order etc.
+	 * @throws NoSuchObjectException 
+	 * @throws SQLException 
+	 * @throws NotInitializedException */
 	public List<Revision> getRevisions(QueryParam param) throws NotInitializedException, SQLException, NoSuchObjectException {
 		List<Revision> r = Collections.unmodifiableList(new ArrayList<Revision>(innerGetRevisions(param)));
 		return r;
 	}
 	
-	/** Find all revisions 
-	 * @throws NoSuchObjectException 
-	 * @throws SQLException 
-	 * @throws NotInitializedException */
+	/** Get the list of revisions without copying them */
 	private List<Revision> innerGetRevisions(QueryParam param) throws NotInitializedException, SQLException, NoSuchObjectException {
 		List<Revision> revisions =
 				DocumentManager.getInstance().getRevisions(this, param);
 		assert(revisionsBelongToMe(revisions));
 		return revisions;
 	}
-	
+
+	/** Sanity check that the revisions belong to this document */
 	private boolean revisionsBelongToMe(Collection<Revision> revisions) {
 		for(Revision r : revisions) {
 			if(r.document != this) return false;
@@ -134,18 +145,17 @@ public class Document {
 	private static final QueryParam LAST_REVISION_QUERY = 
 			new QueryParam(1, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	
+	/** Get the most recent revision only */
 	public Revision getLastRevision() throws NotInitializedException, SQLException, NoSuchObjectException {
 		return getRevisions(LAST_REVISION_QUERY).get(0);
 	}
-	
+
+	/** Get the parent document, if any, that this document was forked from. 
+	 * Preserved when publishing, updated when forking. */
 	public Document getParentDocument() throws SQLException, NoSuchObjectException {
 		return DocumentManager.getInstance().getParentDocument(this);
 	}
 
-	public void setParentDocument(Document parent) throws SQLException, NoSuchObjectException {
-		DocumentManager.getInstance().setParentDocument(this, parent);
-	}
-	
 	/** Copy the last revision, tags and any other mutable metadata to a new 
 	 * document. Used by fork() and publish().
 	 * @param d A new document which hasn't been stored yet.
@@ -160,6 +170,8 @@ public class Document {
 			if(newParent != null)
 				DocumentManager.getInstance().setParentDocument(d, newParent);
 		} catch (IDAlreadySetException e) {
+			throw new IllegalStateException("ID already set but just created?!");
+		} catch (DuplicateEntryException e) {
 			throw new IllegalStateException("ID already set but just created?!");
 		}
 		Revision.createRevision(d, new Date(), content);

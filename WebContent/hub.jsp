@@ -59,10 +59,37 @@
          </div>
          <div class="content" style="padding-top:10px;">
 <%
-
+	DocumentManager dm = DocumentManager.getInstance();
 
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
-	String doctype = request.getParameter("doctype"); //browsing text or skulpt?
+	if (upvoted != null)
+	{
+		long thisDocumentID = Long.parseLong(upvoted);
+		long thisUserID = (Long) session.getAttribute(Attribute.USERID);
+		User thisUser = LoginManager.getInstance().getUser(thisUserID);
+		
+
+		PublishedDocument thisDocument = (PublishedDocument) dm.getDocumentById(thisDocumentID);
+		
+		try
+		{
+			dm.addVote(thisUser, thisDocument);
+		}
+		catch (DuplicateEntryException e)
+		{
+			thisDocument.setVotes(thisDocument.getVotes() - 1);
+		}
+
+		thisDocument.setVotes(thisDocument.getVotes() + 1);
+	}
+	
+	String showFeatured = request.getParameter("showFeatured");
+	if (showFeatured == null) showFeatured = "true";
+	
+	DocumentType dt = DocumentType.ALL;
+	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
+	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
+			
 	String sortType = request.getParameter("sort");
 	String pageNumberString = request.getParameter("page");
 	if (pageNumberString == null) pageNumberString = "1";
@@ -81,23 +108,42 @@
 	if (!sortType.equals("new") && !sortType.equals("top") && !sortType.equals("hot")) sortType = "hot";
 	
 	QueryParam p;
+	QueryParam pf;
+	
+	int featuredCount = 5;
+	if (showFeatured.equals("only")) featuredCount = 25;
 	
 	if (sortType.equals("new"))
 	{
 		p = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+		pf = new QueryParam(featuredCount, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	}
 	
 	else if (sortType.equals("top"))
 	{
 		p = new QueryParam(25, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
+		pf = new QueryParam(featuredCount, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 	}
 	
 	else // "hot"
 	{
 		p = new QueryParam(25, offset, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
+		pf = new QueryParam(featuredCount, 0, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
+	}
+	
+	ArrayList<PublishedDocument> featuredSubs = new ArrayList<PublishedDocument>();
+	ArrayList<PublishedDocument> subs = new ArrayList<PublishedDocument>();
+
+	if (pageNumber == 1 && (showFeatured.equals("true") || showFeatured.equals("only"))) 
+	{
+		featuredSubs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getFeatured(dt, p);
+	}
+	
+	if (!showFeatured.equals("only"))
+	{
+		subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(dt, p);
 	}
 
-	ArrayList<PublishedDocument> subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(p);
 
 	if (upvoted != null)
 	{
@@ -106,11 +152,11 @@
 		//TODO: increase its votes by 1
 	}
 	
-%>
-	<div id="orderHolder" >
-		<a href='<%="hub.jsp?sort=hot"%>'><div class="order" id="left">Hot</div></a>
-		<a href='<%="hub.jsp?sort=top"%>'><div class="order" id="centre">Top</div></a>
-		<a href='<%="hub.jsp?sort=new"%>'><div class="order" id="right">New</div></a>
+%> 
+	<div id="orderHolder" data-type="controlgroup" data-style="horizontal">
+		<div class="order" id="left"><a href='<%="hub.jsp?sort=hot"%>'>Hot</a></div>
+		<div class="order" id="centre"><a href='<%="hub.jsp?sort=top"%>'>Top</a></div>
+		<div class="order" id="right"><a href='<%="hub.jsp?sort=new"%>'>New</a></div>
 	</div>
 
 <table>
@@ -120,7 +166,68 @@
 		<td class='heading' id='ageHeading'></td>
 	</tr>
 	<%
-	
+		if (pageNumber == 1) 
+		{
+			out.println("<tr><th>Featured</th>");
+			if (showFeatured.equals("true"))
+			{
+				out.println("<th><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'>(Hide) </a> ");
+				out.println(" <a href = 'hub.jsp?sort=" + sortType + "&showFeatured=only'> (View More)</a></th></tr>");
+				out.println("<tr><td>&nbsp;</td></tr>");
+			}
+			else if (showFeatured.equals("false"))
+			{
+				out.println("<th><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=true'>(Show)</a></th></tr>");
+				out.println("<tr></tr>");
+				out.println("<tr><td>&nbsp;</td></tr>");
+			}
+			else //only
+			{
+				out.println("<th><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'>(Hide) </a></th></tr>");
+				out.println("<tr><td>&nbsp;</td></tr>");
+			}
+
+		}
+		//TODO list featured documents
+		for (PublishedDocument pd : featuredSubs)
+		{
+
+			String ageString;
+			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
+			if (ageInHours < 1) ageString = "Less than an hour ago";
+			else if (ageInHours < 2) ageString = "An hour ago";
+			else if (ageInHours < 24) ageString = ageInHours + " hours ago";
+			else
+			{
+				int ageInDays = ageInHours / 24;
+				if (ageInDays == 1) ageString = "yesterday";
+				else ageString = ageInDays + " days ago";
+			}
+			
+			String upvoteLink = "<a href='hub.jsp?page=" + pageNumber + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
+			String entry = 
+			"<tr class='upperRow'>" + 
+			"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
+			//TODO: Replace with upvote sprite
+			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
+			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='age'>" + ageString + "</td>" + //age
+			"</tr>" + 
+			"<tr class='lowerRow'>" +
+			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
+			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
+			"<td></td>" +
+			"</tr>"; 
+			
+			out.println(entry);
+		} 
+		
+
+		if (pageNumber == 1 && !showFeatured.equals("only"))
+		{
+			out.println("<tr><th>The Rest</th></tr>");
+			out.println("<tr><td>&nbsp;</td></tr>");
+		}
 		for (PublishedDocument pd : subs)
 		{
 
@@ -136,9 +243,10 @@
 				else ageString = ageInDays + " days ago";
 			}
 			
+			String upvoteLink = "<a href='hub.jsp?page=" + pageNumber + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
 			String entry = 
 			"<tr class='upperRow'>" + 
-			"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >UP</button></td>" + //upvote
+			"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
 			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
@@ -163,10 +271,14 @@
 
 
 </table>
-	<div id="footer">	
-		<div style="bottom:0;float:left;"><a href='<%=previousURL %>'>Previous</a></div>
-		<div style="bottom:0;float:right;"><a href='<%=nextURL %>'>Next</a></div>
-		<div style="bottom:0;float:center;">Page <%=pageNumber %></div>
+	<div data-role="footer" class="ui-bar" data-position="fixed">	
+	
+	<div data-style="controlgroup" data-type="horizontal">
+		<div><a href='<%=previousURL %>'>Previous</a></div>
+		<div>Page <%=pageNumber %></div>
+		<div><a href='<%=nextURL %>'>Next</a></div>
+	</div>
+
 	</div>	
          </div>
       </div>

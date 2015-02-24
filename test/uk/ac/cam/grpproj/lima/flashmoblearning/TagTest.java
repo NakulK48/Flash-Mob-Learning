@@ -13,7 +13,7 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.Database;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.QueryParam;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
@@ -39,7 +39,7 @@ public class TagTest {
 	final String payloadSimple = "Test payload";
 
 	@Test
-	public void testCreateAndFetch() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException, IDAlreadySetException {
+	public void testCreateAndFetch() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 
@@ -55,13 +55,13 @@ public class TagTest {
 		Assert.assertEquals(1, tags.size());
 		Assert.assertTrue(tags.contains(t));
 		List<PublishedDocument> docs = 
-				DocumentManager.getInstance().getPublishedByTag(t, QueryParam.UNSORTED);
+				DocumentManager.getInstance().getPublishedByTag(t, DocumentType.ALL, QueryParam.UNSORTED);
 		Assert.assertEquals(1, docs.size());
 		Assert.assertEquals(published, docs.get(0));
 	}
 
 	@Test
-	public void testBanTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException, IDAlreadySetException {
+	public void testBanTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 
@@ -77,7 +77,7 @@ public class TagTest {
 		Assert.assertEquals(1, tags.size());
 		Assert.assertTrue(tags.contains(t));
 		List<PublishedDocument> docs = 
-				DocumentManager.getInstance().getPublishedByTag(t, QueryParam.UNSORTED);
+				DocumentManager.getInstance().getPublishedByTag(t, DocumentType.ALL, QueryParam.UNSORTED);
 		Assert.assertEquals(1, docs.size());
 		Assert.assertEquals(published, docs.get(0));
 		t.setBanned(true);
@@ -86,7 +86,7 @@ public class TagTest {
 		Assert.assertTrue(DocumentManager.getInstance().getTag(tagName1).getBanned());
 		// Deletes references.
 		docs = 
-				DocumentManager.getInstance().getPublishedByTag(t, QueryParam.UNSORTED);
+				DocumentManager.getInstance().getPublishedByTag(t, DocumentType.ALL, QueryParam.UNSORTED);
 		Assert.assertEquals(0, docs.size());
 		published = (PublishedDocument) DocumentManager.getInstance().getDocumentById(published.getID());
 		Assert.assertEquals(0, published.getTags().size());
@@ -95,7 +95,7 @@ public class TagTest {
 	}
 
 	@Test
-	public void testDeleteTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException, IDAlreadySetException {
+	public void testDeleteTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 
@@ -111,7 +111,7 @@ public class TagTest {
 		Assert.assertEquals(1, tags.size());
 		Assert.assertTrue(tags.contains(t));
 		List<PublishedDocument> docs = 
-				DocumentManager.getInstance().getPublishedByTag(t, QueryParam.UNSORTED);
+				DocumentManager.getInstance().getPublishedByTag(t, DocumentType.ALL, QueryParam.UNSORTED);
 		Assert.assertEquals(1, docs.size());
 		Assert.assertEquals(published, docs.get(0));
 		DocumentManager.getInstance().deleteTag(t);
@@ -123,7 +123,7 @@ public class TagTest {
 		}
 		// Deletes references.
 		docs = 
-				DocumentManager.getInstance().getPublishedByTag(t, QueryParam.UNSORTED);
+				DocumentManager.getInstance().getPublishedByTag(t, DocumentType.ALL, QueryParam.UNSORTED);
 		Assert.assertEquals(0, docs.size());
 		published = (PublishedDocument) DocumentManager.getInstance().getDocumentById(published.getID());
 		Assert.assertEquals(0, published.getTags().size());
@@ -132,7 +132,7 @@ public class TagTest {
 	}
 	
 	@Test
-	public void testDeleteTagFromDocument() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException, IDAlreadySetException {
+	public void testDeleteTagFromDocument() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 

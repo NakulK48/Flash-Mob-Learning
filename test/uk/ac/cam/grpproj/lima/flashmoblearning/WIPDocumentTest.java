@@ -18,7 +18,7 @@ public class WIPDocumentTest extends DocumentTestBase {
 
 	@Override
 	List<? extends Document> getByTitle(String title) throws NotInitializedException, SQLException, NoSuchObjectException {
-		return DocumentManager.getInstance().getWIPByExactTitle(title, QueryParam.UNSORTED);
+		return DocumentManager.getInstance().getWIPByExactTitle(title, DocumentType.ALL, QueryParam.UNSORTED);
 	}
 
 }

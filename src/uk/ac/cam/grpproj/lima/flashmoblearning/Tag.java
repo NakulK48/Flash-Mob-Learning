@@ -3,7 +3,7 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
 import java.sql.SQLException;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
@@ -12,19 +12,19 @@ public class Tag {
 	/** Tag name */
 	public final String name;
 	/** Every tag has a unique ID which never changes.
-	 * This must be set by the database when the document is first stored. It cannot be changed
+	 * This must be set by the database when the tag is first stored. It cannot be changed
 	 * after that point. */
 	private long id;
 	
+	/** Has the tag been banned? If so it may not be added to documents. */
 	private boolean banned;
 	
 	/** Create a tag and store it to the database */
-	public static Tag create(String name) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
-		Tag t = new Tag(-1, name, false);
-		return DocumentManager.getInstance().createTag(t);
+	public static Tag create(String name) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException {
+		return DocumentManager.getInstance().createTag(name, false);
 	}
 
-	/** Called by database */
+	/** Get the tag ID. Called by database */
 	public long getID() {
 		return id;
 	}
@@ -52,15 +52,14 @@ public class Tag {
 		return banned;
 	}
 	
-	/** Ban or unban the tag 
-	 * @throws DuplicateNameException 
+	/** Ban or unban the tag. Updates the database.
 	 * @throws NoSuchObjectException 
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
-	public void setBanned(boolean b) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateNameException {
+	public void setBanned(boolean b) throws NotInitializedException, SQLException, NoSuchObjectException {
 		if(banned == b) return;
 		banned = b;
-		DocumentManager.getInstance().updateTag(this);
+		DocumentManager.getInstance().updateTagBanned(this);
 		if(b)
 			DocumentManager.getInstance().deleteTagReferences(this);
 	}

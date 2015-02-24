@@ -1,7 +1,6 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
 import java.sql.SQLException;
-import java.util.Date;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
@@ -17,17 +16,24 @@ public class PublishedDocument extends Document{
 	private int votes;
 	/** Will be set by database */
 	private double score;
+	/** Parameter for ageing algorithm for document scores */
+	public static final int AGING_CONSTANT = 50000;
 	
+	/** Get the total number of votes ever cast for this document, including
+	 * those cast by users who have now been deleted. */
 	public int getVotes() {
 		return votes;
 	}
 
+	/** Set the number of votes cast. */
 	public void setVotes(int votes) {
 		this.votes = votes;
 	}
 	
+	/** Get the document's age-adjusted popularity score. */
 	public double getScore() { return score; }
 
+	/** Set the document's age-adjusted popularity score. */
 	public void setScore(double score) {
 		this.score = score;
 	}
@@ -85,16 +91,11 @@ public class PublishedDocument extends Document{
 		DocumentManager.getInstance().updateDocument(this);
 	}
 	
-	public static double calculateScore(long age, int votes)
-	{
-		age /= 3600000; //in hours
-		return (votes * Math.exp(age * age / 50000));
-	}
-	
-	/** Calculate the document's score */
+	/** Calculate the document's age-adjusted popularity score. This uses an 
+	 * algorithm similar to that used by Reddit's "Hot" ranking. */
 	public double calculateScore()
 	{
 		double age = (System.currentTimeMillis() - creationTime)/3600000;
-		return (votes * Math.exp(-1 * age * age / 50000));
+		return (votes * Math.exp(-1 * age * age / PublishedDocument.AGING_CONSTANT));
 	}
 }

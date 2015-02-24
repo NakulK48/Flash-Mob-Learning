@@ -21,11 +21,15 @@
 			LoginManager l = LoginManager.getInstance();
 			User u = l.getUser(username);
 			if(u.checkPassword(pwd)){
-				session.setAttribute("uid",String.valueOf(u.getID()));
-				session.setAttribute("username",String.valueOf(u.getName()));
+				session.setAttribute(Attribute.USERID,(u.getID()));
+				session.setAttribute(Attribute.USERNAME,String.valueOf(u.getName()));
 				if(u instanceof Teacher){
 					//TODO redirect to admin landing page
-					System.out.println("Admin mode logged in!");
+					System.out.println("Admin logged in!");
+					session.setAttribute(Attribute.PRIVILEGE,"admin");
+				}
+				else{
+					session.setAttribute(Attribute.PRIVILEGE,"user");
 				}
 				response.sendRedirect("landing.jsp");
 			}else{

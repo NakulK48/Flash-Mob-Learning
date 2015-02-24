@@ -15,6 +15,7 @@ public class Revision {
 	public final Document document;
 	/** Creation time. Not included in equals/hashCode because SQL truncates it. */
 	public final Date creationTime;
+	/** The revision ID (primary key) */
 	private final long id;
 	
 	/** Create a Revision with a given content and store it to the database. */
@@ -23,13 +24,22 @@ public class Revision {
 		return DocumentManager.getInstance().addRevision(doc, d, payload);
 	}
 	
-	/** To be used carefully! */
+	/** To be used by the database code only! */
 	public Revision(long id, Date d, Document doc) {
 		this.id = id;
 		this.document = doc;
 		this.creationTime = d;
 	}
 	
+	/** Fetch the content of the revision. This may be large, so is fetched 
+	 * on-demand from the database table rather than being loaded with the 
+	 * Revision metadata.
+	 * @return The content of a revision as a String. TODO OPT We could maybe
+	 * use some other representation to speed things up?
+	 * @throws SQLException If an error occurred.
+	 * @throws NoSuchObjectException If the revision has been deleted from the
+	 * database.
+	 */
 	public String getContent() throws SQLException, NoSuchObjectException {
 		return DocumentManager.getInstance().getRevisionContent(this);
 	}
@@ -44,10 +54,13 @@ public class Revision {
 		return createRevision(doc, creationTime, fetched);
 	}
 
+	/** Get the User who owns the document that this revision belongs to */
 	public User getOwner() {
 		return document.owner;
 	}
 
+	/** Get the Revision ID (an automatically generated unique number for this 
+	 * revision used as a primary key). */
 	public long getID() { return id; }
 	
 	@Override

@@ -69,6 +69,10 @@ table {top:200px;}
 	long userID = 0;
 	String userIDString = request.getParameter("id");
 	
+	DocumentType dt = DocumentType.ALL;
+	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
+	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
+	
 	String sortType = request.getParameter("sort");
 	if (sortType == null ) sortType = "new";
 	if (!sortType.equals("new") && !sortType.equals("top")) sortType = "new";
@@ -113,7 +117,7 @@ table {top:200px;}
 			p = new QueryParam(25, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 		}
 
-		thisUserDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByUser(profileUser, p);
+		thisUserDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByUser(profileUser, dt, p);
 	}
 	
 	catch (Exception e)

@@ -1,5 +1,9 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
+/**
+ * The QueryParam class provides the framework for adding parameters to any database
+ * query, including result limits, offsets, sort field and order.
+ */
 public class QueryParam {
 
 	// A limit of 0 or less implies no limit.
@@ -10,7 +14,8 @@ public class QueryParam {
 	public static QueryParam UNSORTED = new QueryParam(0);
 
 	/**
-	 * @param limit Limits the number of rows to return. 0 or less means no limit.
+	 * Constructs a new query parameter with limit.
+	 * @param limit limits the number of rows to return. 0 or less means no limit.
 	 */
 	public QueryParam(int limit) {
 		this.limit = limit;
@@ -20,8 +25,9 @@ public class QueryParam {
 	}
 
 	/**
-	 * @param limit Limits the number of rows to return. 0 or less means no limit.
-	 * @param offset Retrieves records from offset to offset + limit.
+	 * Constructs a new query parameter with limit and offset.
+	 * @param limit limits the number of rows to return. 0 or less means no limit.
+	 * @param offset the offset/start of the results to return.
 	 */
 	public QueryParam(int limit, int offset) {
 		this.limit = limit;
@@ -32,9 +38,11 @@ public class QueryParam {
 
 
 	/**
-	 * @param limit Limits the number of rows to return. 0 or less means no limit.
-	 * @param sortField The field to sort by, TIME for all documents and POPULARITY for published documents.
-	 * @param sortOrder Ascending or Descending, ignored if sort is irrelevant.
+	 * Constructs a new query parameter with limit, offset and sort.
+	 * @param limit limits the number of rows to return. 0 or less means no limit.
+	 * @param offset the offset/start of the results to return.
+	 * @param sortField the field to sort by, TIME for all documents and POPULARITY for published documents.
+	 * @param sortOrder ascending or descending, ignored if sort is irrelevant.
 	 */
 	public QueryParam(int limit, int offset, SortField sortField, SortOrder sortOrder) {
 		this.limit = limit;
@@ -43,6 +51,11 @@ public class QueryParam {
 		this.sortOrder = sortOrder;
 	}
 
+	/**
+	 * Updates a given SQL query with the limits/offset/sort specified by this query parameter.
+	 * @param sql the SQL query to modify
+	 * @return The updated SQL query with limits/offset/sort specified.
+	 */
 	public String updateQuery(String sql) {
 		if(sortField == SortField.TIME) {
 			sql += " ORDER BY update_time " + (sortOrder == SortOrder.ASCENDING ? "ASC" : "DESC");
@@ -57,21 +70,35 @@ public class QueryParam {
 	}
 
 	public static enum SortField {
-		
-		// No sorting, defaults to sort by insertion time.
-		NONE,	
-		// Sort by creation time - limited to Documents.
-		TIME,	
-		// Sorts by popularity - limited to PublishedDocuments.
+
+        /**
+         * No sorting, defaults to sort by insertion time.
+         */
+		NONE,
+        /**
+         * Sort by creation time - limited to Documents.
+         */
+		TIME,
+        /**
+         * Sorts by popularity - limited to PublishedDocuments.
+         */
 		POPULARITY,
-		// Sorts by votes - limited to PublishedDocuments.
+        /**
+         * Sorts by votes - limited to PublishedDocuments.
+         */
 		VOTES
 		
 	}
 
 	public static enum SortOrder {
 
+        /**
+         * Sort in ascending order.
+         */
 		ASCENDING,
+        /**
+         * Sort in descending order.
+         */
 		DESCENDING
 		
 	}

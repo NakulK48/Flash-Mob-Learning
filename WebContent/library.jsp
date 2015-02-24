@@ -67,15 +67,22 @@
 		response.sendRedirect("login.jsp");
 	}
 
-	if (session.getAttribute("doctype") == null)
+	if (request.getParameter("doctype") != null)
 	{
-		response.sendRedirect("landing.jsp");
+		String doctypeString = request.getParameter("doctype");
+		DocumentType dt = null;
+		if (doctypeString.equals("skulpt")) dt = DocumentType.SKULPT;
+		else dt = DocumentType.PLAINTEXT;
+		session.setAttribute(Attribute.DOCTYPE, dt);
 	}
-//TODO: Check whether viewing Skulpt or Text
 
-	DocumentType doctype = (DocumentType) session.getAttribute("doctype");
+	DocumentType dt = DocumentType.ALL;
+	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
+	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
+//TODO: Check whether viewing Skulpt or Text
+	DocumentType doctype = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 	
-	long uid = (Long) session.getAttribute("uid");
+	long uid = (Long) session.getAttribute(Attribute.USERID);
 	//TODO: Remove above placeholder
 	LoginManager lm = LoginManager.getInstance();
 	DocumentManager dm = DocumentManager.getInstance();
@@ -98,7 +105,7 @@
 	QueryParam q = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	
 	//TODO: Change the below to take doctype into account
-	ArrayList<WIPDocument> docs = (ArrayList<WIPDocument>) dm.getWorkInProgressByUser(u, q);
+	ArrayList<WIPDocument> docs = (ArrayList<WIPDocument>) dm.getWorkInProgressByUser(u, dt, q);
 	
 %>
 
@@ -156,14 +163,14 @@
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="#">My Docs</a>
-               <ul>
-                  <li><a href="/about/history">History</a></li>
-                  <li><a href="/about/team">The team</a></li>
-                  <li><a href="/about/address">Our address</a></li>
-               </ul>
-            </li>
-            <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="#">My Docs</a></li>
+            <%if(request.getParameter("doctype")=="skulpt"){ %>
+            	<li><a href="CreateNew.jsp?doctype=skulpt">New Document</a></li>
+           		<li><a href="hub.jsp?doctype=skulpt">Community Hub</a></li>
+           	<%} else if(request.getParameter("doctype")=="plaintext"){%>
+           	    <li><a href="CreateNew.jsp?doctype=plaintext">New Document</a></li>
+           		<li><a href="hub.jsp?doctype=plaintext">Community Hub</a></li>
+           	<%}%>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>
 

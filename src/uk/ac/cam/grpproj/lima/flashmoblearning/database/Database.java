@@ -1,20 +1,23 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.*;
-import java.util.Arrays;
-import java.util.List;
-
+import uk.ac.cam.grpproj.lima.flashmoblearning.PublishedDocument;
 import uk.ac.cam.grpproj.lima.flashmoblearning.User;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.AlreadyInitializedException;
-import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateNameException;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.IllegalDatabaseStateException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NoSuchObjectException;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitializedException;
 
-/** Singleton class which opens the database connection, and deals with global config and Tags.
- * Most of the work is done by DocumentManager and LoginManager.
+import java.sql.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+/**
+ * The database class is responsible for initialising the database, setting up the tables (if database is empty),
+ * and maintaining the static instances of Login Manager and Document Manager.
+ *
+ * A copy of the database schema is stored in the setup(connection) method.
  */
 public class Database {
 	
@@ -28,6 +31,11 @@ public class Database {
 	private static final String c_Password = "flashmoblearning";
 	private static final String c_JDBCURL = "jdbc:mysql://localhost/flashmoblearning";
 	
+	/**
+	 * Obtain the static Database instance.
+	 * @return The static Database instance.
+	 * @throws NotInitializedException the static Database instance isn't initialised.
+	 */
 	public static Database getInstance() throws NotInitializedException {
         if(m_Instance != null)
             return m_Instance;
@@ -44,29 +52,46 @@ public class Database {
 			"something like \"Welcome to coding at XYZ school! Please create " +
 			"an account with your real name.\".";
 
-	/** Initializes and tests a MySQL database connection, setting up the 
-	 * database if necessary, and exiting if it is incorrectly setup.
-	 * REQUIREMENTS: An external mysql server with username and password as above,
-	 * a database called flashmoblearning and appropriate permissions. **/
+	/**
+	 * Initialises the database with the default MySQL connection parameters.
+	 * Defaults: localhost, username/password flashmoblearning.
+	 * @throws ClassNotFoundException unable to load the MySQL driver.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	public static void init() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
         init(c_JDBCURL, c_Username, c_Password);
 	}
 
 	/** Portable setup from an arbitrary JDBC URL */
-	public static void init(String databaseURL, String username, String password) throws ClassNotFoundException, SQLException {
-		// Check if we already have an active connection, and throw an exception if we do.
+	/**
+	 * Initialises the database given a JDBC URL, username and password.
+	 * This method is thread-safe.
+	 * This method will return silently if the database is already initialised.
+	 * @param databaseURL database JDBC URL.
+	 * @param username database username.
+	 * @param password database password.
+	 * @throws SQLException an error has occurred in the database.
+	 */
+	public static synchronized void init(String databaseURL, String username, String password) throws SQLException {
+		// Check if we already have an active connection, and return if we do.
 		if(m_Instance != null && m_Instance.getConnection() != null && !m_Instance.getConnection().isClosed()) {
-			throw new AlreadyInitializedException();
+			return;
 		}
 		
-		// No active connection, either uninitialized/closed - start one.
+		// No active connection, either uninitialised/closed - start one.
 		Connection connection = DriverManager.getConnection(databaseURL, username, password);
 		setup(connection);
         m_Instance = new Database(connection);
 		createDefaultUser();
+		startAgeing();
 	}
 
+	/**
+	 * Creates the default user and updates the login banner to set a password-change nag.
+	 * Should only be called internally on setup, if no users exist.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	private static void createDefaultUser() throws SQLException {
 		// Check if there are any users, if not, create one.
 		if(LoginManager.getInstance().getAllUsers(new QueryParam(1)).size() == 0) {
@@ -77,7 +102,7 @@ public class Database {
                 lm.modifyUser(teacher);
                 lm.setLoginBanner(LOGIN_PASSWORD_NAG);
                 System.out.println("Created default user and set login banner");
-            } catch (DuplicateNameException e) {
+            } catch (DuplicateEntryException e) {
                 throw new IllegalStateException("Duplicate name in spite of empty database?!", e);
             } catch (NoSuchObjectException e) {
                 throw new IllegalStateException("Impossible setting up database: "+e, e);
@@ -85,23 +110,38 @@ public class Database {
         }
 	}
 
+	/**
+	 * Creates a new Database instance with given connection.
+	 * @param connection an initialised connection.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	private Database(Connection connection) throws SQLException {
 		m_Connection = connection;
 		m_LoginManagerInstance = new LoginManager(this);
 		m_DocumentManagerInstance = new DocumentManager(this);
 	}
 
-	/** Obtain database connection **/
+	/**
+	 * Obtains the existing database connection.
+	 * @return The backing database connection.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	public Connection getConnection() throws SQLException {
 		return m_Connection;
 	}
 
-	/** Obtain a new statement, ready for execution **/
+	/**
+	 * Obtains a new statement, ready for execution
+	 * @return new database statement.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	public Statement getStatement() throws SQLException {
 		return m_Connection.createStatement();
 	}
 
-	/** Shutdown the database */
+	/**
+	 * Shuts down the database and closes the connection.
+	 */
 	public void close() {
 		try {
 			m_Connection.close();
@@ -110,7 +150,11 @@ public class Database {
 		}
 	}
 
-	/** Get the DocumentManager */
+	/**
+	 * Obtain the static DocumentManager instance.
+	 * @return The static DocumentManager instance.
+	 * @throws NotInitializedException the static DocumentManager instance isn't initialised.
+	 */
 	public DocumentManager getDocumentManager() throws NotInitializedException {
 		if(m_DocumentManagerInstance != null)
 			return m_DocumentManagerInstance;
@@ -118,7 +162,11 @@ public class Database {
 			throw new NotInitializedException();
 	}
 
-	/** Get the LoginManager */
+	/**
+	 * Obtain the static LoginManager instance.
+	 * @return The static LoginManager instance.
+	 * @throws NotInitializedException the static LoginManager instance isn't initialised.
+	 */
 	public LoginManager getLoginManager() throws NotInitializedException {
 		if(m_LoginManagerInstance != null)
 			return m_LoginManagerInstance;
@@ -126,8 +174,12 @@ public class Database {
 			throw new NotInitializedException();
 	}
 
-	/** Creates all necessary tables if they do not exist.
-	 * @return True if we created tables. **/
+	/**
+	 * Creates all necessary tables if they do not exist.
+	 * If the database is not empty but incomplete, it is deemed corrupt and setup fails with an exception.
+	 * @param connection connection to run table setup.
+	 * @throws SQLException an error has occurred in the database.
+	 */
 	private static void setup(Connection connection) throws SQLException {
         String create_documents = "CREATE TABLE documents (\n" +
 				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
@@ -164,7 +216,7 @@ public class Database {
 
 		String create_tags = "CREATE TABLE tags (\n" +
 				"  id bigint NOT NULL AUTO_INCREMENT,\n" +
-				"  name text NOT NULL,\n" +
+				"  name varchar(255) NOT NULL,\n" +
 				"  banned_flag tinyint NOT NULL DEFAULT '0',\n" +
 				"  PRIMARY KEY (id)\n" +
 				")";
@@ -195,7 +247,8 @@ public class Database {
 				  "CREATE INDEX revisions_document_id on revisions(document_id)",
 				  "CREATE UNIQUE INDEX users_username on users(username)",
 				  "CREATE INDEX votes_document_id on votes(document_id)",
-				  "CREATE UNIQUE INDEX setting_name on settings(setting_name)"
+				  "CREATE UNIQUE INDEX setting_name on settings(setting_name)",
+                  "CREATE UNIQUE INDEX tag_name on tags(name)",
 				};
 		
 		String[] create_fks = new String[]
@@ -209,7 +262,7 @@ public class Database {
 				 "ALTER TABLE votes ADD CONSTRAINT votes_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE"};
 		
 		String[] create_triggers = new String[]
-				{"CREATE TRIGGER add_vote AFTER INSERT ON votes FOR EACH ROW UPDATE documents SET vote_count = vote_count+1, score = vote_count * EXP(-1 * POWER(time_to_sec(timediff(NOW(),update_time)) / 3600,2)/50000) WHERE id = NEW.document_id;"};
+				{"CREATE TRIGGER add_vote AFTER INSERT ON votes FOR EACH ROW UPDATE documents SET vote_count = vote_count+1, score = vote_count * EXP(-1 * POWER(time_to_sec(timediff(NOW(),update_time)) / 3600,2)/" + PublishedDocument.AGING_CONSTANT + ") WHERE id = NEW.document_id;"};
 
 		String check_login_banner = "SELECT * FROM settings WHERE setting_name = 'login_banner'";
 		String create_login_banner = "INSERT INTO settings (setting_name, setting_value) VALUES ('login_banner', 'Welcome to Flash Mob Learning!')";
@@ -275,8 +328,32 @@ public class Database {
 		}
 	}
 	
-	public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
-		init();
-		System.out.println("Success!");
+	private static final Timer ageingTimer = new Timer();
+	
+	static final int TIMER_DELAY = 10*1000;
+	static final int TIMER_PERIOD = 60*60*1000;
+	
+	private static void startAgeing() {
+		ageingTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				// FIXME OPT / FIXME SCALABILITY consider progressive update.
+				// For now this is a single transaction.
+				try {
+					System.out.println("Ageing old documents...");
+					int updated = DocumentManager.getInstance().ageScores(new QueryParam(0));
+					System.out.println("Ageing completed, updated "+updated+" documents.");
+				} catch (NotInitializedException e) {
+					System.err.println("Impossible: Not initialised!");
+				} catch (SQLException e) {
+					System.err.println("Ageing failed: "+e);
+					e.printStackTrace();
+				}
+			}
+			
+		}, TIMER_DELAY, TIMER_PERIOD);
 	}
+
+
 }

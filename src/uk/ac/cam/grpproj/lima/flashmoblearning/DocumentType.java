@@ -2,7 +2,9 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
 
 /** A document type */
 public enum DocumentType {
-	
+
+    /** All documents, useful for retrieving for filtering from database */
+    ALL(false, -1),
 	/** A plain text document */
 	PLAINTEXT(false, 0),
 	/** A Skulpt program */
@@ -15,7 +17,7 @@ public enum DocumentType {
 	 * add more document types and remove old ones and everything will work, as
 	 * long as we never change an ID for a document type we are using.
 	 */
-	DocumentType(final boolean r, int i) {
+	private DocumentType(final boolean r, int i) {
 		runnable = r;
 		id = i;
 	}

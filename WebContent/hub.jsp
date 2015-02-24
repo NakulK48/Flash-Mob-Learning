@@ -168,23 +168,28 @@
 	<%
 		if (pageNumber == 1) 
 		{
-			out.println("<tr><th>Featured</th>");
+			out.println("<tr><th>Featured</th></tr>");
 			if (showFeatured.equals("true"))
 			{
-				out.println("<th><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'>(Hide) </a> ");
-				out.println(" <a href = 'hub.jsp?sort=" + sortType + "&showFeatured=only'> (View More)</a></th></tr>");
-				out.println("<tr><td>&nbsp;</td></tr>");
+				%>
+				<tr><td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=false'>(Hide) </a></td></tr>
+				<tr><td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=only'> (View More)</a></td></tr>
+				<tr><td>&nbsp;</td></tr>
+				<%
 			}
 			else if (showFeatured.equals("false"))
 			{
-				out.println("<th><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=true'>(Show)</a></th></tr>");
-				out.println("<tr></tr>");
-				out.println("<tr><td>&nbsp;</td></tr>");
+				%>
+				<tr><td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=true'>(Show) </a></td></tr>
+				<tr><td>&nbsp;</td></tr>
+				<%
 			}
-			else //only
+			else //only.
 			{
-				out.println("<th><a href = 'hub.jsp?sort=" + sortType + "&showFeatured=false'>(Hide) </a></th></tr>");
-				out.println("<tr><td>&nbsp;</td></tr>");
+				%>
+				<tr><td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=false'>(Hide) </a></td></tr>
+				<tr><td>&nbsp;</td></tr>
+				<%
 			}
 
 		}
@@ -225,8 +230,10 @@
 
 		if (pageNumber == 1 && !showFeatured.equals("only"))
 		{
-			out.println("<tr><th>The Rest</th></tr>");
-			out.println("<tr><td>&nbsp;</td></tr>");
+			%>
+			<tr><th>The Rest</th></tr>
+			<tr><td>&nbsp;</td></tr>
+			<%
 		}
 		for (PublishedDocument pd : subs)
 		{

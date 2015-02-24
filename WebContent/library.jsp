@@ -137,7 +137,7 @@
 			String entry = 
 			"<tr class='lowerRow'>" + 
 			"<td></td>" + 
-			"<td class='title'> <a href="+editor+"?docID=" + Long.toString(doc.getID()) + "'>" + doc.getTitle() + "</a></td>" + //title
+			"<td class='title'> <a href="+editor+"?docID=" + Long.toString(doc.getID())+"&newdoc="+0+ "'>" + doc.getTitle() + "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>"; 
 			

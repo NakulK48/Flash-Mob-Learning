@@ -9,9 +9,6 @@
    <link rel="stylesheet" href="static/homeattempt.css">
        <link type="text/css" href="jquery.mmenu.all.css" rel="stylesheet" />
     <!--  change the jquery.js to a jquery.min.js before distribution -->
-    <script type="text/javascript" src="jquery.mobile-1.4.5/jquery-2.1.3.min.js"></script> 
-    <script type="text/javascript" src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
-
           <link type="text/css" href="css/demo.css" rel="stylesheet" />
 
       <!-- Include jQuery.mmenu .css files -->

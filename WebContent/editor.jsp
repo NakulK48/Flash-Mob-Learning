@@ -4,6 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html> 
 <head> 
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="skulpt.min.js" type="text/javascript"></script>
     <script src="skulpt-stdlib.js" type="text/javascript"></script> 
@@ -18,9 +19,27 @@
     <!-- Include jQuery and the jQuery.mmenu .js files -->
     <script type="text/javascript" src="jquery-2.1.3.min.js"></script>
     <script type="text/javascript" src="jquery.mmenu.min.all.js"></script>
-
+    
+    <script src="jquery.tagsinput.js"></script>
+    <script src="jquery-ui.js"></script>
+    
+	<script src="jquery.taghandler.js"></script>
+	<link rel="stylesheet" type="text/css" href="jquery.taghandler.css"/>
     <!-- Fire the plugin onDocumentReady -->
     <script type="text/javascript">
+	$(function(){
+		$('.tagInputField').autocomplete();
+	})
+	$(document).ready(function(){
+
+	$("#array_tag_handler").tagHandler({
+    assignedTags: [ 'C', 'Perl', 'PHP' ],
+    availableTags: [ 'C', 'C++', 'C#', 'Java', 'Perl', 'PHP', 'Python' ],
+    autocomplete: true
+	});
+
+
+	})
        $(document).ready(function() {
           $("#menu").mmenu({
              "slidingSubmenus": false,
@@ -56,7 +75,16 @@
 	<script type="text/javascript">
 		// output functions are configurable.  This one just appends some text
 		// to a pre element.
-
+		
+		$(function(){
+			$('#tagbox').tagsInput({
+				'width':'auto',
+				'height':'auto',
+				'autocomplete':true
+			});
+			
+		});
+		
 		var mycodemirror;
 		function loadCodeMirror() {
 			mycodemirror = CodeMirror.fromTextArea(document
@@ -142,7 +170,7 @@
 			<label>Title</label>
 			<input>
 			</br>
-			<label>Select Tag</label>
+<!-- 			<label>Select Tag</label>
 			<input type="text" id="tags" list="tagOptions" />
 			<datalist id="tagOptions">
 			   <select onchange="$('#tags').val(this.value);">
@@ -155,15 +183,9 @@
 			</datalist>
 			<button type="button" onclick="addTag()">Add</button>
 			
-			</br>
+			</br> -->
 			
-			<label>Remove Tag</label>
-			<select id="removeTagList">
-			</select>
-			<button type="button" onclick="removeTag()">Remove</button>
 
-			</div>
-			</br>
 		<div class="codeEditor">
 
 
@@ -179,7 +201,8 @@
 				<button class="fml_buttons" type="button" onclick="saveit()"
 					style="border-style: none; background: #7AA3CC;width:10%; min-width:50px;">Save</button>
 			</div>
-			<label id="selectedTags">Tags: </label>
+			
+			<ul id="array_tag_handler" style="list-style-type:none;"></ul>
 			<pre id="output"></pre>
 			<!-- If you want turtle graphics include a canvas -->
 			<canvas id="mycanvas">

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.sql.*"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.sql.*,uk.ac.cam.grpproj.lima.flashmoblearning.*, java.util.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html> 
 <head> 
@@ -31,10 +31,19 @@
 		$('.tagInputField').autocomplete();
 	})
 	$(document).ready(function(){
+		var availableTags = [];
+	<%
+	DocumentManager dm = DocumentManager.getInstance();
+	Set<Tag> tagList = dm.getTagsNotBanned();
+	for(Tag t:tagList){
+		out.println("availableTags.push('"+t.name+"');");
+	}
+	
+	%>
+	
 
 	$("#array_tag_handler").tagHandler({
-    assignedTags: [ 'C', 'Perl', 'PHP' ],
-    availableTags: [ 'C', 'C++', 'C#', 'Java', 'Perl', 'PHP', 'Python' ],
+    availableTags: availableTags,
     autocomplete: true
 	});
 
@@ -166,10 +175,13 @@
 		<div class="header">
 			<a href="#menu"></a> Code Editor
 		</div>
-			<div style="padding-left: 10%;">
-			<label>Title</label>
-			<input>
-			</br>
+			<div id ="title">
+				<label>Title</label>
+				<input type="text" id="titleText">
+			</div>
+			<style> 
+				#title{width:10px;margin:auto auto}}
+			</style>
 <!-- 			<label>Select Tag</label>
 			<input type="text" id="tags" list="tagOptions" />
 			<datalist id="tagOptions">

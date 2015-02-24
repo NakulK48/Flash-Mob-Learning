@@ -5,7 +5,8 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  font-family: 'Verdana', sans-serif;
+  font-family: 'Avenir Next', sans-serif;
+  font:'Avenir';
 }
 
 .login-card {
@@ -60,6 +61,7 @@ body {
   font-family: 'Arial', sans-serif;
   font-weight: 700;
   height: 36px;
+  
   padding: 0 8px;
 /* border-radius: 3px; */
 /* -webkit-user-select: none;

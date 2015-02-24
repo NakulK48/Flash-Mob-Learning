@@ -5,7 +5,7 @@
 <html>
    <head>
 
-      <title>Flash Mob Learning</title>
+      <title>Library</title>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link type="text/css" href="css/demo.css" rel="stylesheet" />
@@ -59,12 +59,12 @@
             Library
          </div>
          <div class="content">
-            <h1>My Library</h1>
 <%
 	
-	if(session.getAttribute("uid")==null){
+	if(session.getAttribute(Attribute.USERID)==null){
 		//session invalid
 		response.sendRedirect("login.jsp");
+		return;
 	}
 
 	if (request.getParameter("doctype") != null)
@@ -97,12 +97,13 @@
 		pageNumber = 1;
 		previousPage = 1;
 	}
-
-	int offset = (pageNumber - 1) * 25;
+	//number of entries displayed per page
+	int limit = 25;
+	int offset = (pageNumber - 1) * limit;
 	
 	User u = lm.getUser(uid);
 
-	QueryParam q = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+	QueryParam q = new QueryParam(limit+1, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	
 	//TODO: Change the below to take doctype into account
 	ArrayList<WIPDocument> docs = (ArrayList<WIPDocument>) dm.getWorkInProgressByUser(u, dt, q);
@@ -116,11 +117,9 @@
 		<td class='heading' id='ageHeading'>Last edited</td>
 	</tr>
 	<%
-	
-		for (WIPDocument doc : docs)
-		{
-
+		for (int i=0; i<Math.min(docs.size(),limit);i++){
 			String ageString;
+			WIPDocument doc = docs.get(i);
 			int ageInHours = (int) ((System.currentTimeMillis() - doc.creationTime)/3600000);
 			if (ageInHours < 1) ageString = "Less than an hour ago";
 			else if (ageInHours < 2) ageString = "An hour ago";
@@ -140,7 +139,7 @@
 			"</tr>"; 
 			
 			out.println(entry);
-		} 
+		}
 		
 		//dm.deleteAllDocumentsByUser(jimmy);
 		//lm.deleteUser(jimmy);
@@ -151,9 +150,19 @@
 	%>
 	
 	<tr id="pageHolder">	
-	<td id="previous"><a href='<%=previousURL %>'>Previous</a></td>
-	<td id="current">Page <%=pageNumber %></td>
-	<td id="next"><a href='<%=nextURL %>'>Next</a></td>
+	<% 
+		if (pageNumber != 1){
+			%><td id="previous"><a href='<%=previousURL %>'>Previous</a></td><%
+		}else{
+			%> <td id="previous">Previous</td><%;
+		}
+		%><td id="current">Page <%=pageNumber %></td><%
+		if (docs.size()==limit+1){
+			%><td id="next"><a href='<%=nextURL %>'>Next</a></td><%
+		}else{
+			%> <td id="next">Next</td><%;
+		}
+	%>
 	</tr>	
 </table>
          </div>
@@ -164,13 +173,9 @@
          <ul>
             <li><a href="landing.jsp">Home</a></li>
             <li><a href="#">My Docs</a></li>
-            <%if(request.getParameter("doctype")=="skulpt"){ %>
-            	<li><a href="CreateNew.jsp?doctype=skulpt">New Document</a></li>
-           		<li><a href="hub.jsp?doctype=skulpt">Community Hub</a></li>
-           	<%} else if(request.getParameter("doctype")=="plaintext"){%>
-           	    <li><a href="CreateNew.jsp?doctype=plaintext">New Document</a></li>
-           		<li><a href="hub.jsp?doctype=plaintext">Community Hub</a></li>
-           	<%}%>
+            <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="CreateNew.jsp?doctype=skulpt">New Skulpt Document</a></li>
+           	<li><a href="CreateNew.jsp?doctype=plaintext">New Text Document</a></li>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>
 

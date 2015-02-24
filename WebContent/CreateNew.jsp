@@ -20,15 +20,15 @@
 		String type = request.getParameter("doctype");
 		Date date = new Date();
 		if(type.equals("skulpt")){
-			WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(1), u, "", date.getTime());
+			WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(1), u, "New Document", date.getTime());
 			Long docid = doc.getID();
-		    String redirectURL = "editor.jsp?docid="+Long.toString(docid)+"&newdoc=1&mydoc=1&wipdoc=1" ;
+		    String redirectURL = "editor.jsp?docid="+Long.toString(docid)+"&mydoc=1&wipdoc=1" ;
 		    response.sendRedirect(redirectURL);
 		}
 		else if(type.equals("plaintext")){
-			WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(0), u, "", date.getTime());
+			WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(0), u, "New Document", date.getTime());
 			Long docid = doc.getID();
-		    String redirectURL = "plaintexteditor.jsp?docid="+Long.toString(docid)+"&newdoc=1&mydoc=1&wipdoc=1" ;
+		    String redirectURL = "plaintexteditor.jsp?docid="+Long.toString(docid)+"&mydoc=1&wipdoc=1" ;
 		    response.sendRedirect(redirectURL);
 		}
 		else{ 

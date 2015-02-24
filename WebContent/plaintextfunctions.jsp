@@ -6,7 +6,7 @@
 
 <%!
 String processRequest() {
-	if("${funct}"=="save"){ 
+	if("${funct}".equals("save")){ 
 		try{
 		String docTitle = "${title}";
 		Date date = new Date();
@@ -21,22 +21,23 @@ String processRequest() {
 				String oldContent = wipdoc.getLastRevision().getContent();
 				if(!oldContent.equals("${text}")){
 					wipdoc.addRevision(date, "${text}");
-					return "Save successful";
+					return("Save successful");
 				}
 				else{
-					return "Already saved";
+					return("Already saved");
 				}
 			}
 			else{
-				return "Invalid document type";
+				return("Invalid document type");
 			}
 		} else {
-			return "Invalid permissions";
+			return("Invalid permissions");
 		}
 		}catch(Exception e){
-			return "Something went wrong ! Please try again later";
+			return("Something went wrong ! Please try again later");
 		}
 	}
+	else return("Unknown function call");
 }
 %>
 <% processRequest(); %>

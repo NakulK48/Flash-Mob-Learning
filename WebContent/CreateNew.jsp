@@ -15,7 +15,7 @@
     <%
     try{
 		LoginManager l = LoginManager.getInstance();
-		User u = LoginManager.getInstance().getUser((String) session.getAttribute("username"));
+		User u = LoginManager.getInstance().getUser((String) session.getAttribute(Attribute.USERNAME));
 		String type = request.getParameter("type");
 		Date date = new Date();
 		if(type.equals("skulpt")){

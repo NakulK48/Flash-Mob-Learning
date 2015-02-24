@@ -97,7 +97,8 @@
 		pageNumber = 1;
 		previousPage = 1;
 	}
-	int limit = 5;
+	//number of entries displayed per page
+	int limit = 25;
 	int offset = (pageNumber - 1) * limit;
 	
 	User u = lm.getUser(uid);

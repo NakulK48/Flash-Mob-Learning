@@ -81,7 +81,7 @@
 		response.sendRedirect("landing.jsp");
 		return;
 	}
-	dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
+	dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE); //browsing text or skulpt?
 //TODO: Check whether viewing Skulpt or Text
 	DocumentType doctype = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 	
@@ -137,7 +137,7 @@
 			String entry = 
 			"<tr class='lowerRow'>" + 
 			"<td></td>" + 
-			"<td class='title'> <a href="+editor+"?docID=" + Long.toString(doc.getID())+"&newdoc="+0+ "'>" + doc.getTitle() + "</a></td>" + //title
+			"<td class='title'> <a href="+editor+"?docID=" + Long.toString(doc.getID())+"&newDoc="+0+ "'>" + doc.getTitle() + "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>"; 
 			

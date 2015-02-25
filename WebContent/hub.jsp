@@ -60,6 +60,12 @@
          </div>
          <div class="content" style="padding-top:10px;">
 <%
+	if(session.getAttribute(Attribute.USERID)==null){
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+%>
+<%
 	DocumentManager dm = DocumentManager.getInstance();
 
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote

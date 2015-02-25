@@ -57,6 +57,7 @@
 	if(session.getAttribute("uid")==null){
 		//session invalid
 		response.sendRedirect("login.jsp");
+		return;
 	}
 %>
 

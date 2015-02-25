@@ -11,6 +11,13 @@
 </head>
 <body>
 	    <h1>Creating a new document, please wait</h1>
+	<%
+		System.out.println("Creating plain text");
+		if(session.getAttribute(Attribute.USERID)==null){
+			response.sendRedirect("login.jsp");
+			return;
+		}
+	%>
 
     <%
     try{
@@ -30,7 +37,7 @@
 			WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(0), u, "New Document", date.getTime());
 			Long docid = doc.getID();
 			doc.addRevision(date, "");
-		    String redirectURL = "plaintexteditor.jsp?docID="+Long.toString(docid)+"&newdoc=1&mydoc=1&wipdoc=1" ;
+		    String redirectURL = "plaintexteditor.jsp?docID="+Long.toString(docid)+"&newDoc=1&mydoc=1&wipdoc=1" ;
 		    response.sendRedirect(redirectURL);
 		}
 		else{ 

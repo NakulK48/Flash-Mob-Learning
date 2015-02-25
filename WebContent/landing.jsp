@@ -27,6 +27,7 @@
 		if(session.getAttribute(Attribute.USERID)==null){
 			//session invalid
 			response.sendRedirect("login.jsp");
+			return;
 		}
 	%>
 <div data-role="page">

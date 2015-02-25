@@ -24,9 +24,10 @@
 <body>
 <%		
 		//Session check
-	if(session.getAttribute("uid")==null){
+	if(session.getAttribute(Attribute.USERID)==null){
 		//session invalid
 		response.sendRedirect("login.jsp");
+		return;
 	}
 %>
 

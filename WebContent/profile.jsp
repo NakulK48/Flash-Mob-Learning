@@ -64,14 +64,20 @@ table {top:200px;}
 </style>
 </head>
 <body>
+<%
+	if(session.getAttribute(Attribute.USERID)==null){
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+%>
 
 <%
 	long userID = 0;
 	String userIDString = request.getParameter("id");
 	
 	DocumentType dt = DocumentType.ALL;
-	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
-	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
+	if (session.getAttribute(Attribute.DOCTYPE) == null) response.sendRedirect("landing.jsp");
+	else dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE); //browsing text or skulpt?
 	
 	String sortType = request.getParameter("sort");
 	if (sortType == null ) sortType = "new";

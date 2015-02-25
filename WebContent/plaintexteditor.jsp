@@ -41,6 +41,7 @@
 	if(session.getAttribute(Attribute.USERID)==null){
 		//session invalid
 		response.sendRedirect("login.jsp");
+		return;
 	}
 	LoginManager l = LoginManager.getInstance();
 	User u = l.getUser((long) session.getAttribute(Attribute.USERID));
@@ -115,7 +116,7 @@ function previewit() {
 
 
 
-    <textarea class="textbox" id="text" ><%if(Integer.parseInt(request.getParameter("newdoc"))!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
+    <textarea class="textbox" id="text" ><%if(Integer.parseInt(request.getParameter("newDoc"))!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
 
     <!-- complete these buttons-->
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">

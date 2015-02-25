@@ -12,6 +12,13 @@
 <body>
 	    <h1>Cloning the document, please wait</h1>
 <script>
+	<%
+		if(session.getAttribute(Attribute.USERID)==null){
+			response.sendRedirect("landing.jsp");
+			return;
+		}
+	%>
+
     <%
 		LoginManager l = LoginManager.getInstance();
 		User u = LoginManager.getInstance().getUser((String) session.getAttribute("username"));

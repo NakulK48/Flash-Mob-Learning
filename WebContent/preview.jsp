@@ -95,14 +95,15 @@ try{
 
 <div id="buttons" style="padding-left: 40%; padding-right: 30%;">
 
-	<%if(((String)request.getParameter("myDoc")).equals("1")){%>
+	<%if(request.getParameter("myDoc")!=null&&((String)request.getParameter("myDoc")).equals("1")){%>
 		<button class="fml_buttons" type="button" onclick="editit()"
 				style="border-style: none; width:10%; min-width:50px;">Edit</button>
-		<%if(((String)request.getParameter("WIPDoc")).equals("1")){%>
+		<%if(request.getParameter("WIPDoc")!=null&&((String)request.getParameter("WIPDoc")).equals("1")){%>
 			<button class="fml_buttons" type="button" onclick="publishit()"
 				style="border-style: none; width:10%; min-width:50px;">Publish</button>
 	
-	<%}}else{%>
+		<%}
+	}else{%>
 		<button class="fml_buttons" type="button" onclick="cloneit()"
 				style="border-style: none; width:10%; min-width:50px;">Clone</button>
 		<button class="fml_buttons" type="button" onclick="upvoteit()"

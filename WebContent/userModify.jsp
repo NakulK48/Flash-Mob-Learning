@@ -58,6 +58,7 @@
 						RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
 						response.getWriter().println("<center><font color=green>User detail successfully updated, please login again</font></center>");
 						rd.include(request, response);			
+						return;
 					}
 				}catch(DuplicateEntryException e){
 					RequestDispatcher rd = getServletContext().getRequestDispatcher("/userPage.jsp");

@@ -5,7 +5,7 @@
 <html>
    <head>
 
-      <title>Flash Mob Learning</title>
+      <title>Hub - Flash Mob Learning</title>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link type="text/css" href="css/demo.css" rel="stylesheet" />
@@ -29,6 +29,9 @@
          });
       </script>
       <link rel="stylesheet" type="text/css" href="css/HubStyle.css">
+
+   </head>
+   <body>
 <%!
  	public void jspInit()
 	{
@@ -49,22 +52,35 @@
 
 	} 
 %>
-   </head>
-   <body>
-
-      <!-- The page -->
-      <div class="page">
-         <div class="header">
-            <a href="#menu"></a>
-            Community Hub
-         </div>
-         <div class="content" style="padding-top:10px;">
 <%
 	if(session.getAttribute(Attribute.USERID)==null){
 		response.sendRedirect("landing.jsp");
 		return;
 	}
+
+	DocumentType dt = DocumentType.ALL;
+	if (request.getParameter("doctype") != null)
+	{
+		String doctypeString = request.getParameter("doctype");
+		if (doctypeString.equals("skulpt")) dt = DocumentType.SKULPT;
+		else dt = DocumentType.PLAINTEXT;
+		session.setAttribute(Attribute.DOCTYPE, dt);
+	}
+	if (session.getAttribute(Attribute.DOCTYPE) == null) {
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+	dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE); //browsing text or skulpt?
 %>
+
+      <!-- The page -->
+      <div class="page">
+         <div class="header">
+            <a href="#menu"></a>
+            <%=dt==DocumentType.SKULPT?"Skulpt - ":"Text - " %>Community Hub
+         </div>
+         <div class="content" style="padding-top:10px;">
+
 <%
 	DocumentManager dm = DocumentManager.getInstance();
 
@@ -93,20 +109,6 @@
 	
 	String showFeatured = request.getParameter("showFeatured");
 	if (showFeatured == null) showFeatured = "true";
-	
-	DocumentType dt = DocumentType.ALL;
-	if (request.getParameter("doctype") != null)
-	{
-		String doctypeString = request.getParameter("doctype");
-		if (doctypeString.equals("skulpt")) dt = DocumentType.SKULPT;
-		else dt = DocumentType.PLAINTEXT;
-		session.setAttribute(Attribute.DOCTYPE, dt);
-	}
-	if (session.getAttribute(Attribute.DOCTYPE) == null) {
-		response.sendRedirect("landing.jsp");
-		return;
-	}
-	dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE); //browsing text or skulpt?
 			
 	String sortType = request.getParameter("sort");
 	String pageNumberString = request.getParameter("page");

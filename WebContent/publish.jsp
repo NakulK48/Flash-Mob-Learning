@@ -13,7 +13,7 @@
 	    <h1>Publishing your document, please wait</h1>
 <script>
 	<%
-		if(session.getAttribute(Attribute.USERID)!=null){
+		if(session.getAttribute(Attribute.USERID)==null){
 			response.sendRedirect("landing.jsp");
 			return;
 		}
@@ -21,8 +21,8 @@
 
 	<%
 		LoginManager l = LoginManager.getInstance();
-		User u = l.getUser((String) session.getAttribute("username"));
-		Long docID = Long.parseLong(request.getParameter("docid"));
+		User u = l.getUser((String) session.getAttribute(Attribute.USERNAME));
+		Long docID = Long.parseLong(request.getParameter("docID"));
 		WIPDocument wipdoc1 = (WIPDocument) DocumentManager.getInstance().getDocumentById(docID);
 		PublishedDocument pubdoc1 = wipdoc1.publish();
 		Long pubdocID = pubdoc1.getID();

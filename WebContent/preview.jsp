@@ -46,11 +46,11 @@
 <script type="text/javascript"> 
 
 function cloneit(){
-	window.location = "fork.jsp?docid=<%=documentID%>";
+	window.location = "fork.jsp?docID=<%=documentID%>";
 }
 
 function editit(){
-	window.location = "plaintexteditor.jsp?docID=<%=documentID%>&newdoc=0&wipdoc=1&mydoc=1";
+	window.location = "plaintexteditor.jsp?docID=<%=documentID%>&newdoc=0&wipdoc=1&myDoc=1";
 }
 
 function publishit(){
@@ -117,7 +117,7 @@ try{
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="library.jsp">My Documents</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>

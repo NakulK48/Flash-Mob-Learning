@@ -45,10 +45,21 @@
 	}
 	LoginManager l = LoginManager.getInstance();
 	User u = l.getUser((Long) session.getAttribute(Attribute.USERID));
-
+	
 //String body = DocumentManager.getInstance().getRevisionContent(doc.getLastRevision());
 %>
-	
+<%
+	String newDoc = request.getParameter("newDoc");
+	String docID = request.getParameter("docID");
+	if(docID==null) {
+		response.sendRedirect("error.jsp");
+		return;
+	}
+	if(newDoc==null) { 
+		response.sendRedirect("error.jsp");
+		return;
+	}
+%>
 <script type="text/javascript"> 
 // output functions are configurable.  This one just appends some text
 // to a pre element.
@@ -85,9 +96,9 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
             	
             	title: encodeURIComponent(document.getElementById('titleBox').value),
       			funct: "save",
-                docID: <%=request.getParameter("docID")%>,
+                docID: <%=docID%>,
         		text: mytext,
-        		newDoc: <%=request.getParameter("newDoc")%>
+        		newDoc: <%=newDoc%>
         		
             },
             dataType: "script"
@@ -97,7 +108,7 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
 }
 function previewit() {
 	saveit();
-	window.location="preview.jsp?docID=<%=request.getParameter("docID")%>&WIPDoc=1&myDoc=1";
+	window.location="preview.jsp?docID=<%=docID%>&WIPDoc=1&myDoc=1";
 }
         
 
@@ -109,14 +120,14 @@ function previewit() {
 
         <form action="demo_form.asp" id="tagtitlebox">
         <input type="text" value=<%
-    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(request.getParameter("docID")));%>"<%=document.getTitle()%>"
+    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(docID));%>"<%=document.getTitle()%>"
     id="titleBox" maxlength="30" placeholder="Title" required><br>
         <input type="text" placeholder="Tags" required><br>
         </form>
 
 
 
-    <textarea class="textbox" id="text" ><%if(Integer.parseInt(request.getParameter("newDoc"))!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
+    <textarea class="textbox" id="text" ><%if(Integer.parseInt(newDoc)!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
 
     <!-- complete these buttons-->
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">

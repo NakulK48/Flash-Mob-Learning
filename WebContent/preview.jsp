@@ -33,37 +33,33 @@
 <body>
 <%		
 		//Session check
-	if(session.getAttribute("uid")==null){
+	if(session.getAttribute(Attribute.USERID)==null){
 		//session invalid
 		response.sendRedirect("login.jsp");
 		return;
 	}
 %>
+<%
+	String documentID = (String) request.getParameter("docID");
+%>
 
 <script type="text/javascript"> 
 
-	<%
-	LoginManager l = LoginManager.getInstance();
-	User u = l.getUser((String) session.getAttribute(Attribute.USERNAME));
-	Long docID = Long.parseLong(request.getParameter("docID"));
-	Document doc = DocumentManager.getInstance().getDocumentById(docID);
-	%>
-
 function cloneit(){
-	window.location = <%="fork.jsp?docid="+request.getParameter("docID")%>
-} 
+	window.location = "fork.jsp?docid=<%=documentID%>";
+}
 
 function editit(){
-	window.location = <%="plaintexteditor.jsp?docID="+request.getParameter("docID")+"&newdoc=0&wipdoc=1&mydoc=1"%>
+	window.location = "plaintexteditor.jsp?docID=<%=documentID%>&newdoc=0&wipdoc=1&mydoc=1";
 }
 
 function publishit(){
-	window.location = <%="publish.jsp?docID="+request.getParameter("docID")%>
+	window.location ="publish.jsp?docID=<%=documentID%>";
 }
 
-function upvoteit(){
+//function upvoteit(){
  //<!-- TODO -->
-}
+//}
 
 </script>
           <div class="header">
@@ -72,6 +68,13 @@ function upvoteit(){
         </div>
 
 <div>
+	<%
+	LoginManager l = LoginManager.getInstance();
+	User u = l.getUser((String) session.getAttribute(Attribute.USERNAME));
+	Long docID = Long.parseLong(request.getParameter("docID"));
+	Document doc = DocumentManager.getInstance().getDocumentById(docID);
+	%>
+
 <h1 id="titlearea">
      <%=doc.getTitle() %>
 </h1>
@@ -91,10 +94,11 @@ try{
 </div>
 
 <div id="buttons" style="padding-left: 40%; padding-right: 30%;">
-	<%if(session.getAttribute("myDoc")=="1"){%>
+
+	<%if(((String)request.getParameter("myDoc")).equals("1")){%>
 		<button class="fml_buttons" type="button" onclick="editit()"
 				style="border-style: none; width:10%; min-width:50px;">Edit</button>
-		<%if(session.getAttribute("WIPDoc")=="1"){%>
+		<%if(((String)request.getParameter("WIPDoc")).equals("1")){%>
 			<button class="fml_buttons" type="button" onclick="publishit()"
 				style="border-style: none; width:10%; min-width:50px;">Publish</button>
 	
@@ -104,6 +108,7 @@ try{
 		<button class="fml_buttons" type="button" onclick="upvoteit()"
 				style="border-style: none; width:10%; min-width:50px;">Upvote</button>
 	<%}%>
+	
 </div>
 
 

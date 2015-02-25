@@ -79,13 +79,6 @@ function builtinRead(x) {
     return Sk.builtinFiles["files"][x];
 }
 
-// Here's everything you need to run a python program in skulpt
-// grab the code from your textarea
-// get a reference to your pre element for output
-// configure the output function
-// call Sk.importMainWithBody()
-
-
 function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
 	   mycodemirror.save();
 	   var mytext = encodeURIComponent(document.getElementById("text").value); 
@@ -106,6 +99,7 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
 			//alert(response);
         }).fail(function(response) { alert("Error")   ; });
 }
+
 function previewit() {
 	saveit();
 	window.location="preview.jsp?WIPDoc=1&myDoc=1&docID=<%=docID%>";

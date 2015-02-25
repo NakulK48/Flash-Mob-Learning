@@ -21,7 +21,7 @@
 
     <%
 		LoginManager l = LoginManager.getInstance();
-		User u = LoginManager.getInstance().getUser((String) session.getAttribute("username"));
+		User u = LoginManager.getInstance().getUser((Long) session.getAttribute(Attribute.USERID));
 		Long docID = Long.parseLong(request.getParameter("docid"));
 		Document doc = DocumentManager.getInstance().getDocumentById(docID);
 		PublishedDocument pubdoc = (PublishedDocument) DocumentManager.getInstance().getDocumentById(docID);

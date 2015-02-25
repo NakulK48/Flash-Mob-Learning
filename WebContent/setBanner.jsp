@@ -16,9 +16,12 @@
 	if(session.getAttribute(Attribute.USERID)==null){
 		//session invalid
 		response.sendRedirect("login.jsp");
-	}else if(session.getAttribute(Attribute.PRIVILEGE)==null||
+		return;
+	}
+	if(session.getAttribute(Attribute.PRIVILEGE)==null||
 			!session.getAttribute(Attribute.PRIVILEGE).equals("admin")){
 		response.sendRedirect("landing.jsp");
+		return;
 	}
 	%>
 	

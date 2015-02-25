@@ -91,7 +91,14 @@
 		}
 
 	} 
-%>
+	%>
+	<%
+		if(session.getAttribute(Attribute.USERID)==null){
+			response.sendRedirect("landing.jsp");
+			return;
+		}
+	%>
+
 </head >
 
 <body onload="loadCodeMirror()">

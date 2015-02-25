@@ -21,9 +21,11 @@
 		if(session.getAttribute(Attribute.USERID)==null){
 			//session invalid
 			response.sendRedirect("login.jsp");
+			return;
 		}else if(session.getAttribute(Attribute.PRIVILEGE)==null||
 				!session.getAttribute(Attribute.PRIVILEGE).equals("admin")){
 			response.sendRedirect("landing.jsp");
+			return;
 		}
 		int limit = 5;
 		int pageno = request.getParameter("page")==null?0:Integer.parseInt((String) request.getParameter("page"));

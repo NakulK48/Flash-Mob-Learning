@@ -25,8 +25,9 @@
 	%>
 	<%
 		//Check if user already logged in.
-		if(session.getAttribute(Attribute.USERID)!=null){
+		if(session.getAttribute(Attribute.USERID)==null){
 			response.sendRedirect("landing.jsp");
+			return;
 		}
 	%>
 	<img alt="logo" src="fml_logo.png" style="width:100%">

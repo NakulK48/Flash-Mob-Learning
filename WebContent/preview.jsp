@@ -57,6 +57,7 @@
 	if(session.getAttribute("uid")==null){
 		//session invalid
 		response.sendRedirect("login.jsp");
+		return;
 	}
 %>
 
@@ -64,7 +65,7 @@
 
 	<%
 	LoginManager l = LoginManager.getInstance();
-	User u = l.getUser((String) session.getAttribute("username"));
+	User u = l.getUser((String) session.getAttribute(Attribute.USERNAME));
 	Long docID = Long.parseLong(request.getParameter("docID"));
 	Document doc = DocumentManager.getInstance().getDocumentById(docID);
 	%>
@@ -74,7 +75,7 @@ function cloneit(){
 }
 
 function editit(){
-	document.location.href = "plaintexteditor.jsp?docID="+request.getParameter("docID")+"&WIPDoc=1&myDoc=1"
+	document.location.href = "plaintexteditor.jsp?docID="+request.getParameter("docID")+"&newdoc=0&wipdoc=1&mydoc=1"
 }
 
 function publishit(){
@@ -95,8 +96,12 @@ function upvoteit(){
 <h1 id="titlearea">
      <%=doc.getTitle() %>
 </h1>
-<h2 id="parentdoctitle">
-	Based on "<%= doc.getParentDocument().getTitle() %>"</h2>
+<%	boolean hasParent = false;
+try{
+	String parentTitle=doc.getParentDocument().getTitle();
+	hasParent=true;
+	}catch(Exception e){}%>
+<h2 id="parentdoctitle"> <%if(hasParent){%><%="Based on"+ doc.getParentDocument().getTitle() + "."%><%}else%><%=""%></h2>
 <p id="bodyarea">
 	<%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
 </p>

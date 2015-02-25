@@ -42,6 +42,13 @@
 		}
 	}
 %>
+<%
+	if(session.getAttribute(Attribute.USERID)==null){
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+%>
+
 </head>
 <body>
 
@@ -52,9 +59,10 @@
             Search Results
          </div>
          <div class="content" style="padding-top:10px;">
+
 <%
 	DocumentType dt = DocumentType.ALL;
-	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
+	if (session.getAttribute(Attribute.DOCTYPE) == null) response.sendRedirect("landing.jsp");
 	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
 
 	String searchQuery = request.getParameter("query");

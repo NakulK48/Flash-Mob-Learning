@@ -8,9 +8,11 @@
 		if(session.getAttribute(Attribute.USERID)==null){
 			//session invalid
 			response.sendRedirect("login.jsp");
+			return;
 		}else if(session.getAttribute(Attribute.PRIVILEGE)==null||
 				!session.getAttribute(Attribute.PRIVILEGE).equals("admin")){
 			response.sendRedirect("landing.jsp");
+			return;
 		}
 		String uid = request.getParameter("uid");
 		Long userID = 0L;

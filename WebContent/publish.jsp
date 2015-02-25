@@ -23,10 +23,10 @@
 		LoginManager l = LoginManager.getInstance();
 		User u = l.getUser((String) session.getAttribute(Attribute.USERNAME));
 		Long docID = Long.parseLong(request.getParameter("docID"));
-		WIPDocument wipdoc1 = (WIPDocument) DocumentManager.getInstance().getDocumentById(docID);
+		Document d = DocumentManager.getInstance().getDocumentById(docID);
+		WIPDocument wipdoc1 = (WIPDocument) d;
 		PublishedDocument pubdoc1 = wipdoc1.publish();
 		Long pubdocID = pubdoc1.getID();
-		
 	    String redirectURL = "successfulpublish.jsp";
 	    response.sendRedirect(redirectURL);
 	%>

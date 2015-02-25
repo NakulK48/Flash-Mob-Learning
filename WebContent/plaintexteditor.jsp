@@ -137,7 +137,7 @@ function previewit() {
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="library.jsp">My Documents</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>

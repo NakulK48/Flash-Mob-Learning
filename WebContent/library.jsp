@@ -171,7 +171,7 @@
       <nav id="menu">
          <ul>
             <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
-            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">Published</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">Published</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
             <li><a href="landing.jsp">Home</a></li>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  

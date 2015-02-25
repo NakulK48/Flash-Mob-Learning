@@ -27,10 +27,6 @@
           });
        });
     </script>
-<title>Preview</title>
-</head >
-
-<body>
 <%		
 		//Session check
 	if(session.getAttribute(Attribute.USERID)==null){
@@ -38,10 +34,22 @@
 		response.sendRedirect("login.jsp");
 		return;
 	}
-%>
-<%
+
 	String documentID = (String) request.getParameter("docID");
+	LoginManager l = LoginManager.getInstance();
+	User u = l.getUser((String) session.getAttribute(Attribute.USERNAME));
+	Long docID = Long.parseLong(documentID);
+	Document doc = DocumentManager.getInstance().getDocumentById(docID);
+	String title = doc.getTitle();
+	String pageType = "Preview";
+	if (doc instanceof PublishedDocument){
+		pageType = "Published";
+	} 	
 %>
+<title><%=title%> - <%=pageType %></title>
+</head >
+
+<body>
 
 <script type="text/javascript"> 
 
@@ -50,7 +58,7 @@ function cloneit(){
 }
 
 function editit(){
-	window.location = "plaintexteditor.jsp?docID=<%=documentID%>&newdoc=0&wipdoc=1&myDoc=1";
+	window.location = "plaintexteditor.jsp?docID=<%=documentID%>&newDoc=0&wipdoc=1";
 }
 
 function publishit(){
@@ -68,15 +76,9 @@ function publishit(){
         </div>
 
 <div>
-	<%
-	LoginManager l = LoginManager.getInstance();
-	User u = l.getUser((String) session.getAttribute(Attribute.USERNAME));
-	Long docID = Long.parseLong(request.getParameter("docID"));
-	Document doc = DocumentManager.getInstance().getDocumentById(docID);
-	%>
 
 <h1 id="titlearea">
-     <%=doc.getTitle() %>
+     <%=doc.getTitle()+" - "+pageType %>
 </h1>
 <%	boolean hasParent = false;
 try{
@@ -94,22 +96,25 @@ try{
 </div>
 
 <div id="buttons" style="padding-left: 40%; padding-right: 30%;">
-
-	<%if(request.getParameter("myDoc")!=null&&((String)request.getParameter("myDoc")).equals("1")){%>
+	<%if(pageType.equals("Preview")){%>
 		<button class="fml_buttons" type="button" onclick="editit()"
-				style="border-style: none; width:10%; min-width:50px;">Edit</button>
-		<%if(request.getParameter("WIPDoc")!=null&&((String)request.getParameter("WIPDoc")).equals("1")){%>
-			<button class="fml_buttons" type="button" onclick="publishit()"
-				style="border-style: none; width:10%; min-width:50px;">Publish</button>
+			style="border-style: none; width:10%; min-width:50px;">Edit</button>
 	
-		<%}
-	}else{%>
-		<button class="fml_buttons" type="button" onclick="cloneit()"
-				style="border-style: none; width:10%; min-width:50px;">Clone</button>
-		<button class="fml_buttons" type="button" onclick="upvoteit()"
-				style="border-style: none; width:10%; min-width:50px;">Upvote</button>
-	<%}%>
-	
+		<button class="fml_buttons" type="button" onclick="publishit()"
+			style="border-style: none; width:10%; min-width:50px;">Publish</button>
+	<%
+	}else{
+		%><button class="fml_buttons" type="button" onclick="cloneit()"
+				style="border-style: none; width:10%; min-width:50px;">Clone</button><%
+		String myDoc = request.getParameter("myDoc");
+		if(!(myDoc!= null && ((String) myDoc).equals("1"))){
+			//Not my document
+			%>
+			<button class="fml_buttons" type="button" onclick="upvoteit()"
+					style="border-style: none; width:10%; min-width:50px;">Upvote</button><%
+		}
+	}
+	%>
 </div>
 
 

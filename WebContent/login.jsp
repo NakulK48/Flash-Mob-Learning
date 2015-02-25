@@ -29,6 +29,7 @@
 			response.sendRedirect("landing.jsp");
 		}
 	%>
+	<img alt="logo" src="fml_logo.png" style="width:100%">
 	<div class="login-card" >
 	<center><%=LoginManager.getInstance().getLoginBanner()%></center><br>
 		<form method="post" action="loginCheck.jsp">

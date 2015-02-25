@@ -43,19 +43,33 @@
 	
 
 	$("#array_tag_handler").tagHandler({
+	assignedTags:['+ New Tag'],
     availableTags: availableTags,
-    autocomplete: true
+    autocomplete: true,
 	});
 
 
 	})
+
        $(document).ready(function() {
           $("#menu").mmenu({
              "slidingSubmenus": false,
              "classes": "mm-white",
-             "searchfield": true
+             "searchfield":{
+            	 add:true,
+            	 search:false
+             }
           });
        });
+	
+	$("#menu .mm-search input")
+    .bind( "change", function() {
+        // do your search
+
+        // maybe close the menu?
+        $("#foo").trigger( "close" );
+    }
+);
     </script>
     
     <%!
@@ -84,15 +98,6 @@
 	<script type="text/javascript">
 		// output functions are configurable.  This one just appends some text
 		// to a pre element.
-		
-		$(function(){
-			$('#tagbox').tagsInput({
-				'width':'auto',
-				'height':'auto',
-				'autocomplete':true
-			});
-			
-		});
 		
 		var mycodemirror;
 		function loadCodeMirror() {
@@ -182,21 +187,6 @@
 			<style> 
 				#title{width:10px;margin:auto auto}}
 			</style>
-<!-- 			<label>Select Tag</label>
-			<input type="text" id="tags" list="tagOptions" />
-			<datalist id="tagOptions">
-			   <select onchange="$('#tags').val(this.value);">
-			    <option label="United States" value="USA"></option>
-			    <option label="United Kingdom" value="UK"></option>
-			    <option label="Uruguay" value="URU"></option>
-			    <option label="Brazil" value="BRA"></option>
-			    <option label="Russia" value="RUS"></option>
-			   </select>
-			</datalist>
-			<button type="button" onclick="addTag()">Add</button>
-			
-			</br> -->
-			
 
 		<div class="codeEditor">
 
@@ -225,7 +215,7 @@
 	<!-- The menu -->
 	<nav id="menu">
 	<ul>
-		<li><a href="landing.jsp">Home</a></li>
+		<li><a href="landing.jsp"><img src="fml_logo_head.png" style="width:20px;height:20px"></img>Home</a></li>
 		<li><a href="library.jsp">My Docs</a></li>
 		<li><a href="hub.jsp">Community Hub</a></li>
 		<li style="padding-top: 140%;"></li>

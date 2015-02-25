@@ -182,8 +182,10 @@
 			if (showFeatured.equals("true"))
 			{
 				%>
-				<tr><td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=false'>(Hide) </a></td></tr>
-				<tr><td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=only'> (View More)</a></td></tr>
+				<tr>
+				<td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=false'>(Hide) </a></td>
+				<td><a href = 'hub.jsp?sort=<%=sortType%>&showFeatured=only'> (View More)</a></td>
+				</tr>
 				<tr><td>&nbsp;</td></tr>
 				<%
 			}

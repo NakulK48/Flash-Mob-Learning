@@ -25,7 +25,6 @@
 				session.setAttribute(Attribute.USERNAME,String.valueOf(u.getName()));
 				if(u instanceof Teacher){
 					//TODO redirect to admin landing page
-					System.out.println("Admin logged in!");
 					session.setAttribute(Attribute.PRIVILEGE,"admin");
 				}
 				else{

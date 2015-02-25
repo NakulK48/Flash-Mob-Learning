@@ -9,7 +9,8 @@
 			//session invalid
 			response.sendRedirect("login.jsp");
 			return;
-		}else if(session.getAttribute(Attribute.PRIVILEGE)==null||
+		}
+		if(session.getAttribute(Attribute.PRIVILEGE)==null||
 				!session.getAttribute(Attribute.PRIVILEGE).equals("admin")){
 			response.sendRedirect("landing.jsp");
 			return;
@@ -19,17 +20,30 @@
 		
 		if(uid==null){
 			response.sendRedirect("userList.jsp");
+			return;
 		}
-		else{
-			userID = Long.parseLong(uid);
-			User u = LoginManager.getInstance().getUser(userID);
-			%>
-			<title><%=u.getName() %></title>
-			</head>
-			<body>
-				
-			</body>
-			<%
-		}
+		userID = Long.parseLong(uid);
+		User u = LoginManager.getInstance().getUser(userID);
 	%>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%=u.getName() %></title>
+</head>
+
+<link rel="stylesheet" href="LoginStyle.css" media="screen"
+	type="text/css" />
+<body>
+	<div><a href="userList.jsp">Back</a></div>
+	<div class="login-card" >
+		<form method="post" action="userModify.jsp?uid=<%=userID%>">
+			<input type="text" name="username" value=<%=u.getName()%> required> <input
+				type="password" name="pwd" placeholder="New Password" required> 
+			<input type="password" name="rpwd" placeholder="Repeat Password" required>
+			<input type="submit" name="modify"class="login login-submit"  value="Sumbit Changes">
+			
+		</form>
+		<form method="post" action="userModify.jsp?uid=<%=userID%>">
+			<input type="submit" name="delete"class="login delete-submit"  value="Delete User">
+		</form>
+	</div>		
+</body>
 </html>

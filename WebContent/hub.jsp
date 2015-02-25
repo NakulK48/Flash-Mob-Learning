@@ -69,6 +69,7 @@
 	DocumentManager dm = DocumentManager.getInstance();
 
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
+
 	if (upvoted != null)
 	{
 		long thisDocumentID = Long.parseLong(upvoted);
@@ -94,8 +95,18 @@
 	if (showFeatured == null) showFeatured = "true";
 	
 	DocumentType dt = DocumentType.ALL;
-	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
-	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
+	if (request.getParameter("doctype") != null)
+	{
+		String doctypeString = request.getParameter("doctype");
+		if (doctypeString.equals("skulpt")) dt = DocumentType.SKULPT;
+		else dt = DocumentType.PLAINTEXT;
+		session.setAttribute(Attribute.DOCTYPE, dt);
+	}
+	if (session.getAttribute(Attribute.DOCTYPE) == null) {
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+	dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE); //browsing text or skulpt?
 			
 	String sortType = request.getParameter("sort");
 	String pageNumberString = request.getParameter("page");
@@ -108,8 +119,9 @@
 		pageNumber = 1;
 		previousPage = 1;
 	}
-
-	int offset = (pageNumber - 1) * 25;
+	
+	int limit = 25;
+	int offset = (pageNumber - 1) * limit;
 	
 	if (sortType == null) sortType = "hot";
 	if (!sortType.equals("new") && !sortType.equals("top") && !sortType.equals("hot")) sortType = "hot";
@@ -274,7 +286,7 @@
 			"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() + "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
@@ -351,9 +363,8 @@
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
-            <li><a href="hub.jsp">Community Hub</a></li>
-            <li><a href="logout.jsp">Logout</a></li>
+            <li><a href="library.jsp">My Documents</a></li>
+          <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>
       </nav>
 

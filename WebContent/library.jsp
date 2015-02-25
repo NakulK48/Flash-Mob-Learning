@@ -27,8 +27,7 @@
             });
          });
       </script>
-      
-      <%!
+<%!
  	public void jspInit()
 	{
 		try
@@ -67,9 +66,8 @@
 		return;
 	}
 
-	if (request.getParameter("doctype") != null)
-	{
-		String doctypeString = request.getParameter("doctype");
+	String doctypeString = request.getParameter("doctype");
+	if (doctypeString != null) {
 		DocumentType dt = null;
 		if (doctypeString.equals("skulpt")) dt = DocumentType.SKULPT;
 		else dt = DocumentType.PLAINTEXT;
@@ -82,8 +80,6 @@
 		return;
 	}
 	dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE); //browsing text or skulpt?
-//TODO: Check whether viewing Skulpt or Text
-	DocumentType doctype = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 	
 	long uid = (Long) session.getAttribute(Attribute.USERID);
 	//TODO: Remove above placeholder
@@ -174,10 +170,9 @@
       <!-- The menu -->
       <nav id="menu">
          <ul>
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
             <li><a href="landing.jsp">Home</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
-            <li><a href="CreateNew.jsp?doctype=skulpt">New Skulpt Document</a></li>
-           	<li><a href="CreateNew.jsp?doctype=plaintext">New Text Document</a></li>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>
 

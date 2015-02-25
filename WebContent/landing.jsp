@@ -36,11 +36,11 @@
    </div> 
    <img alt="logo" src="fml_logo.png" style="width:100%">
    <div class="button_skulpt" width="device-width">
-      <a href="library.jsp?doctype=skulpt">
+      <a href="hub.jsp?doctype=skulpt">
       <img src="static/skulptbutton.png" id="Skulpt" width="100%"></a>
    </div>
    <div class="button_text" width="device-width">
-      <a href="library.jsp?doctype=plaintext">
+      <a href="hub.jsp?doctype=plaintext">
       <img src="static/textbutton.png" id="Text" width="100%"></a>
    </div>
 </div>

@@ -28,27 +28,6 @@
        });
     </script>
 <title>Preview</title>
-<%!
- 	public void jspInit()
-	{
-		try
-		{
-			Database.init();
-		}
-		
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-
-	} 
-%>
-
 </head >
 
 <body>
@@ -71,19 +50,19 @@
 	%>
 
 function cloneit(){
-	document.location.href = "fork.jsp?docid="+request.getParameter("docid")
-}
+	window.location = <%="fork.jsp?docid="+request.getParameter("docID")%>
+} 
 
 function editit(){
-	document.location.href = "plaintexteditor.jsp?docID="+request.getParameter("docID")+"&newdoc=0&wipdoc=1&mydoc=1"
+	window.location = <%="plaintexteditor.jsp?docID="+request.getParameter("docID")+"&newdoc=0&wipdoc=1&mydoc=1"%>
 }
 
 function publishit(){
-	document.location.href = "publish.jsp?docID="+request.getParameter("docID");
+	window.location = <%="publish.jsp?docID="+request.getParameter("docID")%>
 }
 
 function upvoteit(){
- <!-- TODO -->
+ //<!-- TODO -->
 }
 
 </script>
@@ -100,7 +79,7 @@ function upvoteit(){
 try{
 	String parentTitle=doc.getParentDocument().getTitle();
 	hasParent=true;
-	}catch(Exception e){}%>
+}catch(Exception e){}%>
 <h2 id="parentdoctitle"> <%if(hasParent){%><%="Based on"+ doc.getParentDocument().getTitle() + "."%><%}else%><%=""%></h2>
 <p id="bodyarea">
 	<%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
@@ -132,7 +111,7 @@ try{
       <!-- The menu -->
       <nav id="menu">
          <ul>
-            <li><a href="home.jsp">Home</a></li>
+            <li><a href="landing.jsp">Home</a></li>
             <li><a href="library.jsp">My Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  

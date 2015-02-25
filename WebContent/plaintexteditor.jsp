@@ -103,12 +103,12 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
             },
             dataType: "script"
         }).done(function( response ) {
-			alert(response);
+			//alert(response);
         }).fail(function(response) { alert("Error")   ; });
 }
 function previewit() {
 	saveit();
-	window.location="preview.jsp?docID=<%=docID%>&WIPDoc=1&myDoc=1";
+	window.location="preview.jsp?WIPDoc=1&myDoc=1&docID=<%=docID%>";
 }
         
 

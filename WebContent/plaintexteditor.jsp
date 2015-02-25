@@ -44,7 +44,7 @@
 		return;
 	}
 	LoginManager l = LoginManager.getInstance();
-	User u = l.getUser((long) session.getAttribute(Attribute.USERID));
+	User u = l.getUser((Long) session.getAttribute(Attribute.USERID));
 
 //String body = DocumentManager.getInstance().getRevisionContent(doc.getLastRevision());
 %>

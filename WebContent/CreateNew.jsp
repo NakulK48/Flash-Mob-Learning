@@ -22,7 +22,7 @@
     <%
     try{
 		LoginManager l = LoginManager.getInstance();
-		User u = LoginManager.getInstance().getUser((long) session.getAttribute(Attribute.USERID));
+		User u = LoginManager.getInstance().getUser((Long) session.getAttribute(Attribute.USERID));
 		System.out.println(u);
 		String type = request.getParameter("doctype");
 		Date date = new Date();
@@ -30,7 +30,7 @@
 			WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(1), u, "New Document", date.getTime());
 			Long docid = doc.getID();
 			doc.addRevision(date, "");
-		    String redirectURL = "editor.jsp?docID="+Long.toString(docid)+"&newdoc=1&mydoc=1&wipdoc=1" ;
+		    String redirectURL = "editor.jsp?docID="+Long.toString(docid)+"&newDoc=1&mydoc=1&wipdoc=1" ;
 		    response.sendRedirect(redirectURL);
 		}
 		else if(type.equals("plaintext")){

@@ -166,14 +166,6 @@
 		subs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublished(dt, p);
 	}
 
-
-	if (upvoted != null)
-	{
-		long documentToUpvote = Long.parseLong(upvoted);
-		//TODO: query DB to find the document with this ID
-		//TODO: increase its votes by 1
-	}
-	
 %> 
 	<div id="orderHolder"  >
 		<div id="inner">

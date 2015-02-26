@@ -139,9 +139,16 @@
          <div class="content" style="padding-top:10px;">
 
 	<div id="orderHolder">
-		<a href='<%="tag.jsp?name=" + tagName + "&sort=top"%>'><div class="order" id="left">Top</div></a>
-		<a href='<%="tag.jsp?name=" + tagName + "&sort=new"%>'><div class="order" id="right">New</div></a>
+	<div id="inner">
+		<div class="order" id="left"><a href='<%="tag.jsp?name=" + tagName + "&sort=top"%>'>Top</a></div>
+		<div class="order" id="right"><a href='<%="tag.jsp?name=" + tagName + "&sort=new"%>'>New</a></div>
 	</div>
+	</div>
+	
+	<style>
+		#inner{width:200px; display:block; margin:0 auto;}
+		.order{float:left; padding-right:6%; width:50px}		
+	</style>
 
 <h2><%= capitalisedSortType %> Documents</h2>
 <table>

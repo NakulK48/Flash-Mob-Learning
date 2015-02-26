@@ -34,6 +34,13 @@
 <body>
 	<div><a href="userList.jsp">Back</a></div>
 	<div class="login-card" >
+		<form method="post" action="profile.jsp?doctype=skulpt&id=<%=userID%>">
+			<input type="submit" name="skulpt" class="login skulpt-submit"  value="View Skulpt Documents">
+		</form>
+		<form method="post" action="profile.jsp?doctype=plaintext&id=<%=userID%>">
+			<input type="submit" name="text" class="login text-submit"  value="View Text Documents">
+		</form>
+		
 		<form method="post" action="userModify.jsp?uid=<%=userID%>">
 			<input type="text" name="username" value=<%=u.getName()%> required>
 			<input type="submit" name="modifyU"class="login login-submit" value="Change Username">

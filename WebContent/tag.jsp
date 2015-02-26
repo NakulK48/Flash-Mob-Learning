@@ -49,6 +49,8 @@
 		response.sendRedirect("landing.jsp");
 		return;
 	}
+	
+	long uid = (Long) session.getAttribute(Attribute.USERID);
 %>
 
 <%
@@ -212,8 +214,12 @@
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+            <li><a href="library.jsp">Library</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">My Published Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="results.jsp">Search</a></li>
+            <li style="padding-top: 140%;"></li>
             <li><a href="logout.jsp">Logout</a></li>
          </ul>
       </nav>

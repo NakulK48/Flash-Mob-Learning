@@ -97,6 +97,8 @@
 			response.sendRedirect("landing.jsp");
 			return;
 		}
+	
+		long uid = (Long) session.getAttribute(Attribute.USERID);
 	%>
 
 </head >
@@ -242,28 +244,15 @@
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
-            <%if(session.getAttribute("doctype") == DocumentType.SKULPT){ %>
-            	<li><a href="CreateNew.jsp?doctype=skulpt">New Document</a></li>
-           	<%} else if(session.getAttribute("doctype") == DocumentType.PLAINTEXT){%>
-           	    <li><a href="CreateNew.jsp?doctype=plaintext">New Document</a></li>
-           	<%}%>
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+            <li><a href="library.jsp">Library</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">My Published Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="results.jsp">Search</a></li>
             <li style="padding-top: 140%;"></li>
             <li><a href="logout.jsp">Logout</a></li>
          </ul>
       </nav>
-	<nav id="menu">
-	<ul>
-	    <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
-		<li><a href="landing.jsp"><img src="fml_logo_head.png" style="width:20px;height:20px"></img>Home</a></li>
-		<li><a href="library.jsp?doctype=skulpt">My Docs</a></li>
-		<li><a href="hub.jsp">Community Hub</a></li>
-		<li style="padding-top: 140%;"></li>
-		<li><a href="logout.jsp">Logout</a></li>
-	</ul>
-
-	</nav>
 
 </body> 
  

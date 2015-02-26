@@ -82,7 +82,6 @@
          <div class="content">
 <%
 	long uid = (Long) session.getAttribute(Attribute.USERID);
-	//TODO: Remove above placeholder
 	LoginManager lm = LoginManager.getInstance();
 	DocumentManager dm = DocumentManager.getInstance();
 	
@@ -147,22 +146,6 @@
 		String nextURL = "library.jsp?page=" + nextPage;
 		
 	%>
-
-	<tr id="pageHolder">	
-	<% 
-		if (pageNumber != 1){
-			%><td id="previous"><a href='<%=previousURL %>'>Previous</a></td><%
-		}else{
-			%> <td id="previous">Previous</td><%;
-		}
-		%><td id="current">Page <%=pageNumber %></td><%
-		if (docs.size()==limit+1){
-			%><td id="next"><a href='<%=nextURL %>'>Next</a></td><%
-		}else{
-			%> <td id="next">Next</td><%;
-		}
-	%>
-	</tr>	
 </table>
 
 	<script>
@@ -219,12 +202,14 @@
       <!-- The menu -->
       <nav id="menu">
          <ul>
-            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
-            <li><a href="profile.jsp?id=<%=uid%>">Published</a></li>
-            <li><a href="hub.jsp">Community Hub</a></li>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
-          <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+            <li><a href="library.jsp">Library</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">My Published Docs</a></li>
+            <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="results.jsp">Search</a></li>
+            <li style="padding-top: 140%;"></li>
+            <li><a href="logout.jsp">Logout</a></li>
          </ul>
       </nav>
 

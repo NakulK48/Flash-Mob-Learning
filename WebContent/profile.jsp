@@ -60,6 +60,10 @@
 
 	long userID = 0;
 	String userIDString = request.getParameter("id");
+	if(userIDString==null){
+		response.sendRedirect("error.jsp");
+		return;
+	}
 	
 	DocumentType dt = DocumentType.ALL;
 	if (session.getAttribute(Attribute.DOCTYPE) == null) response.sendRedirect("landing.jsp");
@@ -79,8 +83,8 @@
 		pageNumber = 1;
 		previousPage = 1;
 	}
-
-	int offset = (pageNumber - 1) * 25;
+	int limit = 25;
+	int offset = (pageNumber - 1) * limit;
 	
 	try
 	{
@@ -101,12 +105,12 @@
 		QueryParam p;
 		if (sortType.equals("new"))
 		{
-			p = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+			p = new QueryParam(limit + 1, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 		}
 		
 		else
 		{
-			p = new QueryParam(25, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
+			p = new QueryParam(limit + 1, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 		}
 
 		thisUserDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByUser(profileUser, dt, p);
@@ -157,8 +161,9 @@
 <h2><%= capitalisedSortType %> Documents</h2>
 <table>
 <%
-	for (PublishedDocument pd : thisUserDocuments)
+	for (int i = 0; i < Math.min(thisUserDocuments.size(),limit); i++)
 	{
+		PublishedDocument pd = thisUserDocuments.get(i);
 		String ageString;
 		int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
 		if (ageInHours < 1) ageString = "Less than an hour ago";
@@ -230,12 +235,20 @@
 	</script>
 	<div class="footer fixed"  >	
 		<div id="inner">
-			<div id = "previousLink" class="footerElem"><a href='<%=previousURL %>'>Previous</a></div>
-			<div id = "pageNumber" class="footerElem">Page <%=pageNumber %></div>
-			<div id = "nextLink" class="footerElem"><a href='<%=nextURL %>'>Next</a></div>	
+		<%
+			if (pageNumber != 1){
+				%><div id="previousLink" class="footerElem"><a href='<%=previousURL %>'>Previous</a></div><%
+			}else{
+				%><div id="previousLink" class="footerElem">Previous</div><%;
+			}
+			%><div id="pageNumber" class="footerElem">Page <%=pageNumber %></div><%
+			if (thisUserDocuments.size()==limit+1){
+				%><div id="nextLink" class="footerElem"><a href='<%=nextURL %>'>Next</a></div><%
+			}else{
+				%><div id="nextLink" class="footerElem">Next</div><%;
+			}%>
 		</div>
-	</div>	
-	
+	</div>		
 	<style>
 		
 		#footer { height: 100px}	

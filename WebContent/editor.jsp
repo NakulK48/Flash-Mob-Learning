@@ -42,57 +42,6 @@
 	
 	%>
 	
-
-	$("#array_tag_handler").tagHandler({
-	assignedTags:['+ New Tag'],
-    availableTags: availableTags,
-    autocomplete: true,
-	});
-
-
-	})
-
-       $(document).ready(function() {
-          $("#menu").mmenu({
-             "slidingSubmenus": false,
-             "classes": "mm-white",
-             "searchfield":{
-            	 add:true,
-            	 search:false
-             }
-          });
-       });
-	
-	$("#menu .mm-search input")
-    .bind( "change", function() {
-        // do your search
-
-        // maybe close the menu?
-        $("#foo").trigger( "close" );
-    }
-);
-    </script>
-    
-    <%!
- 	public void jspInit()
-	{
-		try
-		{
-			Database.init();
-		}
-		
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-
-	} 
-	%>
 	<%
 		if(session.getAttribute(Attribute.USERID)==null){
 			response.sendRedirect("login.jsp");
@@ -129,7 +78,44 @@
 		if(document instanceof PublishedDocument) published = true;
 		
 		myDoc = document.owner.getID() == uid;
+		Set<Tag> thisTags = document.getTags();
 		%>
+
+	$("#array_tag_handler").tagHandler({
+	assignedTags:['+ New Tag'
+	<%
+	for(Tag t : thisTags) {
+		out.println(",'"+ t.name+"'");
+	}
+	%>],
+    availableTags: availableTags,
+    autocomplete: true,
+	});
+
+
+	})
+
+       $(document).ready(function() {
+          $("#menu").mmenu({
+             "slidingSubmenus": false,
+             "classes": "mm-white",
+             "searchfield":{
+            	 add:true,
+            	 search:false
+             }
+          });
+       });
+	
+	$("#menu .mm-search input")
+    .bind( "change", function() {
+        // do your search
+
+        // maybe close the menu?
+        $("#foo").trigger( "close" );
+    }
+);
+    </script>
+    
 </head >
 
 <body onload="loadCodeMirror()">

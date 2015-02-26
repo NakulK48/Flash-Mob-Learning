@@ -94,11 +94,17 @@
 	%>
 	<%
 		if(session.getAttribute(Attribute.USERID)==null){
-			response.sendRedirect("landing.jsp");
+			response.sendRedirect("login.jsp");
 			return;
 		}
 	
 		long uid = (Long) session.getAttribute(Attribute.USERID);
+		
+		if (session.getAttribute(Attribute.DOCTYPE) == null) {
+			response.sendRedirect("landing.jsp");
+			return;
+		}
+		DocumentType dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 	%>
 
 </head >

@@ -159,6 +159,15 @@
 		function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
 			   mycodemirror.save();
 			   var mytext = encodeURIComponent(document.getElementById("code").value); 
+			   var tags = [];
+			   var tagDiv = document.getElementById('array_tag_handler');
+			   var tagDivContent = tagDiv.childNodes;
+			   for(var i=0;i<tagDivContent.length-1;i++){
+				   tags.push(tagDivContent[i].textContent);
+				   
+			   }
+
+			   
 		        jQuery.ajax({
 		            type: "POST",
 		            url: "plaintextfunctions.jsp",
@@ -169,6 +178,7 @@
 		                docID: <%=request.getParameter("docID")%>,
 		        		text: mytext,
 		        		newDoc: <%=request.getParameter("newDoc")%>
+		                //tags:
 		        		
 		            },
 		            dataType: "script"
@@ -177,26 +187,7 @@
 		        }).fail(function(response) { alert("Error")   ; });
 		}
 		
-		function addTag(){
-			var newTag = document.getElementById('tags').value;
-			console.log(newTag);
-			var selectedTags = document.getElementById('selectedTags');
-			var removeTagList = document.getElementById('removeTagList');
-			if(selectedTags.innerText.indexOf(newTag) == -1){ // to prevent duplicate Tags
-				selectedTags.innerText += " "+newTag;
-				removeTagList.options[removeTagList.options.length] = new Option(newTag, newTag);
-			}
-			
-		}
-		
-		function removeTag(){
-			var option = document.getElementById('removeTagList').value;
-			$("#removeTagList option[value="+option+"]").remove();
-			var selectedTagString = document.getElementById('selectedTags').innerText;
-			selectedTagString = selectedTagString.replace(option,'');
-			document.getElementById('selectedTags').innerText = selectedTagString;
-			
-		}
+
 		
 	</script>
 	<!-- The page -->

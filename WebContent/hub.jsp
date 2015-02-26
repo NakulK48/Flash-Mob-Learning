@@ -247,7 +247,7 @@
 			"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID())+(uid==pd.owner.getID()?"&myDoc=1":"")+ "'>" + pd.getTitle() + "</a></td>" + //title
+			"<td class='title'> <a href="+(dt==DocumentType.SKULPT?"'editor.jsp":"'preview.jsp")+"?docID=" + Long.toString(pd.getID())+(uid==pd.owner.getID()?"&myDoc=1":"")+ "'>" + pd.getTitle() + "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
@@ -291,7 +291,7 @@
 			String entry = 
 			"<tr class='upperRow'>" + 
 			"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
-			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) +(uid==pd.owner.getID()?"&myDoc=1":"")+"'>" + pd.getTitle() + "</a></td>" + //title
+			"<td class='title'> <a href="+(dt==DocumentType.SKULPT?"'editor.jsp":"'preview.jsp")+"?docID=" + Long.toString(pd.getID()) +(uid==pd.owner.getID()?"&myDoc=1":"")+"'>" + pd.getTitle() + "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
@@ -351,6 +351,7 @@
 			<div id = "nextLink" class="footerElem"><a href='<%=nextURL %>'>Next</a></div>	
 		</div>
 	</div>	
+
 	
 	<style>
 		

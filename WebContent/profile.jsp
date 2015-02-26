@@ -222,7 +222,7 @@
 		String entry = 
 		"<tr class='upperRow'>" + 
 		"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
-		"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+		"<td class='title'> <a href="+(dt==DocumentType.SKULPT?"'editor.jsp":"'preview.jsp")+"?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
 		"<td class='age'>" + ageString + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +

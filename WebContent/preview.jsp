@@ -159,7 +159,6 @@ try{
 </div>
 
 
-
       <!-- The menu -->
       <nav id="menu">
          <ul>

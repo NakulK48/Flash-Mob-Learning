@@ -121,8 +121,7 @@
 			return;
 		}
 		if(newDoc==null) { 
-			response.sendRedirect("error.jsp");
-			return;
+			newDoc = "0";
 		}
 		
 		Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(docID));
@@ -196,8 +195,7 @@
 			   for(var i=0;i<tagDivContent.length-1;i++){
 				   tags.push(tagDivContent[i].textContent);   
 			   }
-			   
-		        jQuery.ajax({
+		       jQuery.ajax({
 		            type: "POST",
 		            url: "plaintextfunctions.jsp",
 		            data: {
@@ -207,7 +205,7 @@
 		                docID: <%=docID%>,
 		        		text: mytext,
 		        		newDoc: <%=newDoc%>,
-		        		tags:encodeUIComponent(tags)
+		        		tags:encodeURIComponent(tags)
 		            },
 		            dataType: "script"
 		        }).done(function( response ) {
@@ -271,7 +269,7 @@
 		</div>
 			<div id ="title">
         <input type="text" value="<%=document.getTitle()%>"
-		    id="titleBox" maxlength="30" placeholder="Title" required><br>
+		    id="titleBox" maxlength="30" placeholder="Title"><br>
 
 
 			</div>
@@ -282,16 +280,14 @@
 		<div class="codeEditor">
 
 
-	<textarea class="textbox" id="code"><%if(Integer.parseInt(request.getParameter("newDoc"))!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}else{%><%="print 'Hello World'"%><%}%></textarea>
+	<textarea class="textbox" id="code"><%if(!newDoc.equals("1")){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}else{%><%="print 'Hello World'"%><%}%></textarea>
 			<br />
 
 
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
 				<button class="fml_buttons" type="button" onclick="runit()"
 					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Run</button>
-				<button class="fml_buttons" type="button" onclick="saveit()"
-					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Save</button>
-				<%
+				<%//This is horrid, I know... --Jamie--
 					if(published){
 					%>
 						<button class="fml_buttons" type="button" onclick="cloneit()"
@@ -309,11 +305,29 @@
 									style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Upvote</button>			
 						<%
 						}
+						if (isAdmin) {
+						
+							if(((PublishedDocument) document).getFeatured()){
+								%>
+								<button class="fml_buttons" type="button" onclick="unfeatureit()"
+										style="border-style: none; width:15%; min-width:60px;">unfeature</button><%	
+							} else {
+								%>
+								<button class="fml_buttons" type="button" onclick="featureit()"
+										style="border-style: none; width:15%; min-width:60px;">feature</button><%
+							}
+						}
 					} else {
 						%><button class="fml_buttons" type="button" onclick="publishit()"
-								style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Publish</button><%			
+								style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Publish</button>
+						<button class="fml_buttons" type="button" onclick="deleteit()"
+								style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Delete</button>			
+						<button class="fml_buttons" type="button" onclick="saveit()"
+								style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Save</button>
+						
+						<%			
 
-						if (!myDoc) {
+						if (!(myDoc||isAdmin)) {
 							response.sendRedirect("error.jsp");
 							return;
 						}

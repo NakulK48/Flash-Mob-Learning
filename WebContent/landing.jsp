@@ -22,7 +22,6 @@
 </head>
 <body>
 	<%
-		
 		//Session check
 		if(session.getAttribute(Attribute.USERID)==null){
 			//session invalid
@@ -35,6 +34,20 @@
       <h1>Welcome, <%=session.getAttribute(Attribute.USERNAME) %>! <a href="logout.jsp">Logout</a></h1>
    </div> 
    <img alt="logo" src="fml_logo.png" style="width:100%">
+	<%
+		String priv =(String) session.getAttribute(Attribute.PRIVILEGE);
+		if(priv!=null && priv.equals("admin")){
+	%>
+	<div class="button_skulpt" width="device-width">
+      <a href="mng.jsp">
+      <img src="static/gearbutton.png" id="mng" width="100%"></a>
+   </div>
+			
+			
+			
+	<%
+		}
+	%>
    <div class="button_skulpt" width="device-width">
       <a href="hub.jsp?doctype=skulpt">
       <img src="static/skulptbutton.png" id="Skulpt" width="100%"></a>

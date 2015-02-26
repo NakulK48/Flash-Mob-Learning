@@ -116,7 +116,7 @@ function previewit() {
           Text Editor
   </div>
 
-        <form action="demo_form.asp" id="tagtitlebox">
+        <form id="tagtitlebox">
         <input type="text" value=<%
     Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(docID));%>"<%=document.getTitle()%>"
     id="titleBox" maxlength="30" placeholder="Title" required><br>

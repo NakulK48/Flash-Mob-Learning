@@ -160,9 +160,10 @@
 			else ageString = ageInDays + " days ago";
 		}
 		String upvoteLink = "<a href='profile.jsp?page=" + pageNumber + "&name=" + tagName + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
+		String upvoteImage = "UpvoteNormal.png";
 		String entry = 
 		"<tr class='upperRow'>" + 
-		"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
+		"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
 		//TODO: Replace with upvote sprite
 		//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
 		"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title

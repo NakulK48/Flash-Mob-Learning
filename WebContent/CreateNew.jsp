@@ -29,7 +29,7 @@
 		if(type.equals("skulpt")){
 			WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(1), u, "New Document", date.getTime());
 			Long docid = doc.getID();
-			doc.addRevision(date, "");
+			doc.addRevision(date, "print 'Hello World'");
 		    String redirectURL = "editor.jsp?docID="+Long.toString(docid)+"&newDoc=1&myDoc=1&wipdoc=1" ;
 		    response.sendRedirect(redirectURL);
 		}

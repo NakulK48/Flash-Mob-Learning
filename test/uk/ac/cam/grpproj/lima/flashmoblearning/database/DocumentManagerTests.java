@@ -1,10 +1,13 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning.database;
 
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import uk.ac.cam.grpproj.lima.flashmoblearning.*;
+import uk.ac.cam.grpproj.lima.flashmoblearning.database.DocumentManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
 
 import java.sql.*;
@@ -431,6 +434,15 @@ public class DocumentManagerTests {
 
         featured = DocumentManager.getInstance().getFeatured(DocumentType.ALL, QueryParam.UNSORTED).get(0);
         Assert.assertEquals("Featured document has (oldVoteCount+1) votes", oldVoteCount+1, featured.getVotes());
+    }
+    
+    @Test
+    public void testCheckUpvote() throws Exception {
+    	List<Document> docs = new ArrayList<Document>();
+    	docs.add(m_Published_Document);
+        List<Long> upvotes = DocumentManager.getInstance().hasUpvoted(m_TestUser, docs);
+        Assert.assertEquals("Test user has upvoted a document", 1, upvotes.size());
+        Assert.assertEquALS("Test user upvoted the right document", m_Published_Document.getID(), upvotes.get(0));
     }
 
     @Test(expected=DuplicateEntryException.class)

@@ -128,10 +128,10 @@ function previewit() {
     <textarea class="textbox" id="text" ><%if(Integer.parseInt(newDoc)!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
 
     <!-- complete these buttons-->
-			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
+			<div id="buttons" style="padding-left: 40%; padding-right: 30%; min-width:60px;">
 				<button class="fml_buttons" type="button" onclick="saveit()"
 					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Save</button>
-				<button class="fml_buttons" type="button" onclick="previewit()"
+				<button class="fml_buttons" type="button" onclick="previewit();	min-width:60px;"
 					style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Preview</button>
 			</div>
 

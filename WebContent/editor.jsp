@@ -113,7 +113,18 @@
 	<script type="text/javascript">
 		// output functions are configurable.  This one just appends some text
 		// to a pre element.
-		
+<%
+	String newDoc = request.getParameter("newDoc");
+	String docID = request.getParameter("docID");
+	if(docID==null) {
+		response.sendRedirect("error.jsp");
+		return;
+	}
+	if(newDoc==null) { 
+		response.sendRedirect("error.jsp");
+		return;
+	}
+%>
 		var mycodemirror;
 		function loadCodeMirror() {
 			mycodemirror = CodeMirror.fromTextArea(document
@@ -166,7 +177,7 @@
 
 		function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
 			   mycodemirror.save();
-			   var mytext = encodeURIComponent(document.getElementById("code").value); 
+			   var mytext = encodeURIComponent(document.getElementById("text").value); 
 		        jQuery.ajax({
 		            type: "POST",
 		            url: "plaintextfunctions.jsp",
@@ -174,17 +185,22 @@
 		            	
 		            	title: encodeURIComponent(document.getElementById('titleBox').value),
 		      			funct: "save",
-		                docID: <%=request.getParameter("docID")%>,
+		                docID: <%=docID%>,
 		        		text: mytext,
-		        		newDoc: <%=request.getParameter("newDoc")%>
+		        		newDoc: <%=newDoc%>
 		        		
 		            },
 		            dataType: "script"
 		        }).done(function( response ) {
-					alert(response);
+					//alert(response);
 		        }).fail(function(response) { alert("Error")   ; });
 		}
-		
+		//DOES NOT WORK
+		function previewit() {
+			saveit();
+			window.location="preview.jsp?WIPDoc=1&myDoc=1&docID=<%=docID%>";
+		}
+
 		function addTag(){
 			var newTag = document.getElementById('tags').value;
 			console.log(newTag);
@@ -235,7 +251,9 @@
 				<button class="fml_buttons" type="button" onclick="runit()"
 					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Run</button>
 				<button class="fml_buttons" type="button" onclick="saveit()"
-					style="border-style: none; background: #7AA3CC;width:10%; min-width:50px;">Save</button>
+					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Save</button>
+				<button class="fml_buttons" type="button" onclick="previewit()"
+					style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Preview</button>
 			</div>
 			
 			<ul id="array_tag_handler" style="list-style-type:none;"></ul>

@@ -25,6 +25,7 @@
 		Long docID = Long.parseLong(request.getParameter("docID"));
 		Document doc = DocumentManager.getInstance().getDocumentById(docID);
 		if(doc.owner.getID()==((Long) session.getAttribute(Attribute.USERID))){
+			//TODO: allow admin to delete as well
 			DocumentManager.getInstance().deleteDocument(DocumentManager.getInstance().getDocumentById(docID));
 		}
 

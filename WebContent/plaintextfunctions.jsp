@@ -41,4 +41,4 @@ String processRequest(String text, String docID, Long uid, String title, String[
 	//else return("Unknown function call");
 }
 %>
-<% processRequest(URLDecoder.decode(request.getParameter("text"), "UTF-8"), (String) request.getParameter("docID"), (Long) session.getAttribute("uid"), (String) request.getParameter("title"), (String[]) request.getParameter("tags")); %>
+<% processRequest(URLDecoder.decode(request.getParameter("text"), "UTF-8"), (String) request.getParameter("docID"), (Long) session.getAttribute("uid"), (String) request.getParameter("title"), (String[]) request.getParameterValues("tags")); %>

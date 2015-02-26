@@ -98,33 +98,45 @@
 			return;
 		}
 	
+		boolean published = false;
+		boolean isAdmin = false;
+		boolean myDoc = false; 
+		
 		long uid = (Long) session.getAttribute(Attribute.USERID);
 		
 		if (session.getAttribute(Attribute.DOCTYPE) == null) {
 			response.sendRedirect("landing.jsp");
 			return;
 		}
+		
+		String priv = (String) session.getAttribute(Attribute.PRIVILEGE);
+		isAdmin = priv != null && priv.equals("admin");
 		DocumentType dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
-	%>
-
+		
+		
+		String newDoc = request.getParameter("newDoc");
+		String docID = request.getParameter("docID");
+		if(docID==null) {
+			response.sendRedirect("error.jsp");
+			return;
+		}
+		if(newDoc==null) { 
+			response.sendRedirect("error.jsp");
+			return;
+		}
+		
+		Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(docID));
+		if(document instanceof PublishedDocument) published = true;
+		
+		myDoc = document.owner.getID() == uid;
+		%>
 </head >
 
 <body onload="loadCodeMirror()">
 	<script type="text/javascript">
 		// output functions are configurable.  This one just appends some text
 		// to a pre element.
-<%
-	String newDoc = request.getParameter("newDoc");
-	String docID = request.getParameter("docID");
-	if(docID==null) {
-		response.sendRedirect("error.jsp");
-		return;
-	}
-	if(newDoc==null) { 
-		response.sendRedirect("error.jsp");
-		return;
-	}
-%>
+
 		var mycodemirror;
 		function loadCodeMirror() {
 			mycodemirror = CodeMirror.fromTextArea(document
@@ -196,20 +208,18 @@
 		        		text: mytext,
 		        		newDoc: <%=newDoc%>,
 		        		tags:encodeUIComponent(tags)
-
-		        		
 		            },
 		            dataType: "script"
 		        }).done(function( response ) {
-					//alert(response);
+					alert("Save successful");
 		        }).fail(function(response) { alert("Error")   ; });
 		}
 
-		//DOES NOT WORK
-		function previewit() {
-			saveit();
-			window.location="preview.jsp?WIPDoc=1&myDoc=1&docID=<%=docID%>";
+
+		function publishit(){
+			window.location ="publish.jsp?docID=<%=docID%>";
 		}
+
 
 		function addTag(){
 			var newTag = document.getElementById('tags').value;
@@ -231,6 +241,26 @@
 			document.getElementById('selectedTags').innerText = selectedTagString;
 			
 		}
+		
+		function deleteit() {
+		    if (confirm("Are you sure you want to delete this document ? This cannot be undone.") == true) {
+		        window.location = "delete.jsp?docID=<%=docID%>";
+		    } else {
+		    }
+		}
+		function featureit(){
+			window.location ="feature.jsp?docID=<%=docID%>&feature=true";
+			alert("Document featured!");
+		}
+
+		function unfeaturit(){
+			window.location ="feature.jsp?docID=<%=docID%>&feature=false";
+			alert("Document unfeatured!");
+		}
+		
+		function cloneit(){
+			window.location = "fork.jsp?docID=<%=docID%>";
+		}
 
 		
 	</script>
@@ -240,8 +270,7 @@
 			<a href="#menu"></a> Code Editor
 		</div>
 			<div id ="title">
-        <input type="text" value=<%
-		    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(request.getParameter("docID")));%>"<%=document.getTitle()%>"
+        <input type="text" value="<%=document.getTitle()%>"
 		    id="titleBox" maxlength="30" placeholder="Title" required><br>
 
 
@@ -262,8 +291,35 @@
 					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Run</button>
 				<button class="fml_buttons" type="button" onclick="saveit()"
 					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Save</button>
-				<button class="fml_buttons" type="button" onclick="previewit()"
-					style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Preview</button>
+				<%
+					if(published){
+					%>
+						<button class="fml_buttons" type="button" onclick="cloneit()"
+								style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Clone</button>			
+					<%
+						if(isAdmin || myDoc){
+						%>
+							<button class="fml_buttons" type="button" onclick="deleteit()"
+									style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Delete</button>			
+						<%
+						}
+						if (!myDoc){
+						%>
+							<button class="fml_buttons" type="button" onclick="upvoteit()"
+									style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Upvote</button>			
+						<%
+						}
+					} else {
+						%><button class="fml_buttons" type="button" onclick="publishit()"
+								style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Publish</button><%			
+
+						if (!myDoc) {
+							response.sendRedirect("error.jsp");
+							return;
+						}
+					}
+				%>
+				
 			</div>
 			
 			<ul id="array_tag_handler" style="list-style-type:none;"></ul>

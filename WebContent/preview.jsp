@@ -43,6 +43,8 @@
 	DocumentType dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 
 	String documentID = (String) request.getParameter("docID");
+	String priv = (String) session.getAttribute(Attribute.PRIVILEGE);
+	boolean isAdmin = priv != null && priv.equals("admin");
 	LoginManager l = LoginManager.getInstance();
 	User u = l.getUser((String) session.getAttribute(Attribute.USERNAME));
 	Long docID = Long.parseLong(documentID);
@@ -123,11 +125,14 @@ try{
 		%><button class="fml_buttons" type="button" onclick="cloneit()"
 				style="border-style: none; width:15%; min-width:60px;">Clone</button><%
 		String myDoc = request.getParameter("myDoc");
-		if(!(myDoc!= null && ((String) myDoc).equals("1"))){
-			//Not my document
+		if(myDoc!= null && ((String) myDoc).equals("1")||isAdmin){
+			//my document
+			%><button class="fml_buttons" type="button" onclick="deleteit()"
+					style="border-style: none; width:15%; min-width:60px;">Delete</button><%
+		}else{
 			%>
 			<button class="fml_buttons" type="button" onclick="upvoteit()"
-					style="border-style: none; width:15%; min-width:60px;">Upvote</button><%
+					style="border-style: none; width:15%; min-width:60px;">Upvote</button><%			
 		}
 	}
 	%>

@@ -65,7 +65,10 @@
 // to a pre element.
 var mycodemirror;
 function loadCodeMirror(){
-  mycodemirror = CodeMirror.fromTextArea(document.getElementById("text"), {lineNumbers: false});
+  mycodemirror = CodeMirror.fromTextArea(document.getElementById("text"), {
+	  lineNumbers: false,
+	  lineWrapping: true
+	});
 }
 setTimeout(function () {
     $('.textbox').css({

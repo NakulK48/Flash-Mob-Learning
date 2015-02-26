@@ -227,6 +227,10 @@
 
 		}
 		//TODO list featured documents
+		
+		User thisUser = LoginManager.getInstance().getUser(uid);
+		ArrayList<Long> upvotedDocuments = (ArrayList<Long>) dm.hasUpvoted(thisUser, featuredSubs);
+		
 		for (PublishedDocument pd : featuredSubs)
 		{
 
@@ -244,9 +248,11 @@
 			
 			
 			String upvoteLink = "<a href='hub.jsp?page=" + pageNumber + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
+			String upvoteImage = "UpvoteNormal.png";
+			if (upvotedDocuments.contains(pd.getID())) upvoteImage = "UpvoteEngaged.png";
 			String entry = 
 			"<tr class='upperRow'>" + 
-			"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
+			"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
 			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID())+(uid==pd.owner.getID()?"&myDoc=1":"")+ "'>" + pd.getTitle() + "</a></td>" + //title
@@ -268,6 +274,10 @@
 			<tr><td>&nbsp;</td></tr>
 			<%
 		}
+		
+		upvotedDocuments = (ArrayList<Long>) dm.hasUpvoted(thisUser, subs);
+
+		
 		for (PublishedDocument pd : subs)
 		{
 
@@ -284,11 +294,11 @@
 			}
 			
 			String upvoteLink = "<a href='hub.jsp?page=" + pageNumber + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
+			String upvoteImage = "UpvoteNormal.png";
+			if (upvotedDocuments.contains(pd.getID())) upvoteImage = "UpvoteEngaged.png";
 			String entry = 
 			"<tr class='upperRow'>" + 
-			"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
-			//TODO: Replace with upvote sprite
-			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
+			"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
 			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) +(uid==pd.owner.getID()?"&myDoc=1":"")+"'>" + pd.getTitle() + "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 

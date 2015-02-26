@@ -664,8 +664,8 @@ public class DocumentManager {
  	 * @param documents list of documents to check if user has upvoted.
  	 * @return List of document IDs the user has upvoted.
  	 */
- 	public List<Long> hasUpvoted(User user, List<Document> documents) throws SQLException {
- 		List<Long> ret = new ArrayList<Long>();
+ 	public ArrayList<Long> hasUpvoted(User user, ArrayList<PublishedDocument> documents) throws SQLException {
+ 		ArrayList<Long> ret = new ArrayList<Long>();
  		if(documents.size() > 0) {
  			// Form query
  			String query = "SELECT document_id FROM votes WHERE user_id = ? AND (document_id = ?";

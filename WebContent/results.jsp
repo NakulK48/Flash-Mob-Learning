@@ -84,7 +84,11 @@
 	<br>
 	
 <%
-	if (searchQuery == null || searchQuery.length() == 0) out.println("<p class='error'>Whoops! We need something to search for.</p>");
+	if (searchQuery == null || searchQuery.length() == 0) 
+	{
+		out.println("<p class='error'>Enter a search string.</p>");
+		return;
+	}
 	
 	else
 	{

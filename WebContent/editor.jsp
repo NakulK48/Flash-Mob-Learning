@@ -239,12 +239,11 @@
 			<a href="#menu"></a> Code Editor
 		</div>
 			<div id ="title">
-        <form action="demo_form.asp" id="tagtitlebox">
         <input type="text" value=<%
 		    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(request.getParameter("docID")));%>"<%=document.getTitle()%>"
 		    id="titleBox" maxlength="30" placeholder="Title" required><br>
 
-        </form>
+
 			</div>
 			<style> 
 				#title{width:10px;margin:auto auto}}

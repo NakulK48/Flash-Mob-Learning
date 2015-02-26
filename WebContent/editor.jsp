@@ -104,7 +104,7 @@
 			response.sendRedirect("landing.jsp");
 			return;
 		}
-		dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
+		DocumentType dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 	%>
 
 </head >

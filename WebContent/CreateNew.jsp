@@ -30,14 +30,14 @@
 			WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(1), u, "New Document", date.getTime());
 			Long docid = doc.getID();
 			doc.addRevision(date, "");
-		    String redirectURL = "editor.jsp?docID="+Long.toString(docid)+"&newDoc=1&mydoc=1&wipdoc=1" ;
+		    String redirectURL = "editor.jsp?docID="+Long.toString(docid)+"&newDoc=1&myDoc=1&wipdoc=1" ;
 		    response.sendRedirect(redirectURL);
 		}
 		else if(type.equals("plaintext")){
 			WIPDocument doc = WIPDocument.createDocument(DocumentType.getValue(0), u, "New Document", date.getTime());
 			Long docid = doc.getID();
 			doc.addRevision(date, "");
-		    String redirectURL = "plaintexteditor.jsp?docID="+Long.toString(docid)+"&newDoc=1&mydoc=1&wipdoc=1" ;
+		    String redirectURL = "plaintexteditor.jsp?docID="+Long.toString(docid)+"&newDoc=1&myDoc=1&wipdoc=1" ;
 		    response.sendRedirect(redirectURL);
 		}
 		else{ 

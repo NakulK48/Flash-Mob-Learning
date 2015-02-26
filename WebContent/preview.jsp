@@ -30,10 +30,17 @@
 <%		
 		//Session check
 	if(session.getAttribute(Attribute.USERID)==null){
-		//session invalid
 		response.sendRedirect("login.jsp");
 		return;
 	}
+
+	long uid = (Long) session.getAttribute(Attribute.USERID);
+	
+	if (session.getAttribute(Attribute.DOCTYPE) == null) {
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+	DocumentType dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 
 	String documentID = (String) request.getParameter("docID");
 	LoginManager l = LoginManager.getInstance();
@@ -123,11 +130,14 @@ try{
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Documents</a></li>
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+            <li><a href="library.jsp">Library</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">My Published Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
-          <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
+            <li><a href="results.jsp">Search</a></li>
+            <li style="padding-top: 140%;"></li>
+            <li><a href="logout.jsp">Logout</a></li>
          </ul>
-
       </nav>
 
 </body> 

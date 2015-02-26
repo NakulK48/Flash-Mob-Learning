@@ -52,7 +52,7 @@
 
 <%
 	if(session.getAttribute(Attribute.USERID)==null){
-		response.sendRedirect("landing.jsp");
+		response.sendRedirect("login.jsp");
 		return;
 	}
 	

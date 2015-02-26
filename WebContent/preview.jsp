@@ -99,7 +99,7 @@ try{
 	String parentTitle=doc.getParentDocument().getTitle();
 	hasParent=true;
 }catch(Exception e){}%>
-<h2 id="parentdoctitle" style="padding-left:15%"> <%if(hasParent){%><%="Based on"+ doc.getParentDocument().getTitle() + "."%><%}else%><%=""%></h2>
+<h2 id="parentdoctitle" style="padding-left:10%; color:lightgrey; font-size:small"> <%if(hasParent){%><%="Based on "+ doc.getParentDocument().getTitle() + "."%><%}else%><%=""%></h2>
 <p style="white-space:pre-wrap; width:40ex; margin-left:5px; color:black" id="bodyarea"><%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
 </p>
 <p id="tagarea" style="padding-left:5%; color:black;">

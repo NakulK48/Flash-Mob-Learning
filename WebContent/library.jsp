@@ -79,7 +79,7 @@
             <a href="#menu"></a>
              <%=dt==DocumentType.SKULPT?"Skulpt - ":"Text - " %>Library
          </div>
-         <div class="content">
+         <div >
 <%
 	long uid = (Long) session.getAttribute(Attribute.USERID);
 	LoginManager lm = LoginManager.getInstance();

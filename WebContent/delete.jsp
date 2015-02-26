@@ -32,9 +32,9 @@
 		}
 	    String redirectURL = "landing.jsp" ;
 	    if (d==DocumentType.PLAINTEXT){
-	    	redirectURL = "hub.jsp?doctype=plaintext";
+	    	redirectURL = "library.jsp?doctype=plaintext";
 	    }else{
-	    	redirectURL = "hub.jsp?doctype=skulpt";
+	    	redirectURL = "library.jsp?doctype=skulpt";
 	    }
 	    response.sendRedirect(redirectURL);
 	%>

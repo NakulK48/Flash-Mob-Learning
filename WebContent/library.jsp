@@ -128,7 +128,7 @@
 				if (ageInDays == 1) ageString = "yesterday";
 				else ageString = ageInDays + " days ago";
 			}
-			String editor = dt==DocumentType.PLAINTEXT?"'plaintexteditor.jsp":"'editor.jsp";
+			String editor = dt==DocumentType.PLAINTEXT?"'preview.jsp":"'editor.jsp";
 			String entry = 
 			"<tr class='lowerRow'>" + 
 			"<td></td>" + 

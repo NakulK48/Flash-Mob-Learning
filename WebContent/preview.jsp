@@ -80,6 +80,15 @@ function editit(){
 function publishit(){
 	window.location ="publish.jsp?docID=<%=documentID%>";
 }
+function featureit(){
+	window.location ="feature.jsp?docID=<%=documentID%>&feature=true";
+	alert("Document featured!");
+}
+
+function unfeaturit(){
+	window.location ="feature.jsp?docID=<%=documentID%>&feature=false";
+	alert("Document unfeatured!");
+}
 
 //function upvoteit(){
  //<!-- TODO -->
@@ -133,6 +142,17 @@ try{
 			%>
 			<button class="fml_buttons" type="button" onclick="upvoteit()"
 					style="border-style: none; width:15%; min-width:60px;">Upvote</button><%			
+		}
+		if(isAdmin){
+			if(((PublishedDocument) doc).getFeatured()){
+				%>
+				<button class="fml_buttons" type="button" onclick="unfeatureit()"
+						style="border-style: none; width:15%; min-width:60px;">unfeature</button><%	
+			} else {
+				%>
+				<button class="fml_buttons" type="button" onclick="featureit()"
+						style="border-style: none; width:15%; min-width:60px;">feature</button><%
+			}
 		}
 	}
 	%>

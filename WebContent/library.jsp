@@ -182,11 +182,21 @@
 	            
 	});
 	</script>
+		
 	<div class="footer fixed"  >	
 		<div id="inner">
-			<div id = "previousLink" class="footerElem"><a href='<%=previousURL %>'>Previous</a></div>
-			<div id = "pageNumber" class="footerElem">Page <%=pageNumber %></div>
-			<div id = "nextLink" class="footerElem"><a href='<%=nextURL %>'>Next</a></div>	
+		<%
+			if (pageNumber != 1){
+				%><div id="previousLink" class="footerElem"><a href='<%=previousURL %>'>Previous</a></div><%
+			}else{
+				%><div id="previousLink" class="footerElem">Previous</div><%;
+			}
+			%><div id="pageNumber" class="footerElem">Page <%=pageNumber %></div><%
+			if (docs.size()==limit+1){
+				%><div id="nextLink" class="footerElem"><a href='<%=nextURL %>'>Next</a></div><%
+			}else{
+				%><div id="nextLink" class="footerElem">Next</div><%;
+			}%>
 		</div>
 	</div>	
 	

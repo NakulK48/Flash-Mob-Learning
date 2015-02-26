@@ -64,6 +64,13 @@ function cloneit(){
 	window.location = "fork.jsp?docID=<%=documentID%>";
 }
 
+function deleteit() {
+    if (confirm("Are you sure you want to delete this document ? This cannot be undone.") == true) {
+        window.location = "delete.jsp?docID=<%=documentID%>";
+    } else {
+    }
+}
+
 function editit(){
 	window.location = "plaintexteditor.jsp?docID=<%=documentID%>&newDoc=0&wipdoc=1";
 }
@@ -109,6 +116,9 @@ try{
 	
 		<button class="fml_buttons" type="button" onclick="publishit()"
 			style="border-style: none; width:10%; min-width:50px;">Publish</button>
+			
+		<button class="fml_buttons" type="button" onclick="deleteit()"
+			style="border-style: none; width:10%; min-width:50px;">Delete</button>
 	<%
 	}else{
 		%><button class="fml_buttons" type="button" onclick="cloneit()"

@@ -25,11 +25,11 @@
 		String priv = (String) session.getAttribute(Attribute.PRIVILEGE);
 		Long docID = Long.parseLong(request.getParameter("docID"));
 		Document doc = DocumentManager.getInstance().getDocumentById(docID);
+		DocumentType d = doc.docType;
 		if(priv.equals("admin")||doc.owner.getID()==((Long) session.getAttribute(Attribute.USERID))){
 			//allow admin to delete as well
 			DocumentManager.getInstance().deleteDocument(DocumentManager.getInstance().getDocumentById(docID));
 		}
-		DocumentType d = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 	    String redirectURL = "landing.jsp" ;
 	    if (d==DocumentType.PLAINTEXT){
 	    	redirectURL = "hub.jsp?doctype=plaintext";

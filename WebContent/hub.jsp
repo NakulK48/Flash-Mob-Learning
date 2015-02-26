@@ -278,9 +278,6 @@
 			out.println(entry);
 		} 
 		
-		//dm.deleteAllDocumentsByUser(jimmy);
-		//lm.deleteUser(jimmy);
-		
 		String previousURL = "hub.jsp?sort=" + sortType + "&page=" + previousPage;
 		String nextURL = "hub.jsp?sort=" + sortType + "&page=" + nextPage;
 		
@@ -344,7 +341,9 @@
          <ul>
             <li><a href="landing.jsp">Home</a></li>
             <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="CreateNew.jsp?doctype=skulpt">New Document</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
+            <li style="padding-top: 140%;"></li>
             <li><a href="logout.jsp">Logout</a></li>
          </ul>
       </nav>

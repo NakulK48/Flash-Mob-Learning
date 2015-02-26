@@ -111,9 +111,9 @@
 
 <table>
 	<tr>
-		<td class='heading' id='upvoteScoreHeading'></td>
-		<td class='heading' id='titleSubmitterHeading'>Title</td>
-		<td class='heading' id='ageHeading'>Last edited</td>
+		<th class='heading' id='upvoteScoreHeading'></th>
+		<th class='heading' id='titleSubmitterHeading'>Title</th>
+		<th class='heading' id='ageHeading'>Last edited</th>
 	</tr>
 	<%
 	
@@ -149,13 +149,56 @@
 		String nextURL = "library.jsp?page=" + nextPage;
 		
 	%>
-	
-	<tr id="pageHolder">	
-	<td id="previous"><a href='<%=previousURL %>'>Previous</a></td>
-	<td id="current">Page <%=pageNumber %></td>
-	<td id="next"><a href='<%=nextURL %>'>Next</a></td>
-	</tr>	
 </table>
+
+	<script>
+	$(window).bind("load", function() { 
+	    
+	    var footerHeight = 0,
+	        footerTop = 0,
+	        $footer = $("#footer");
+	        
+	    positionFooter();
+	    
+	    function positionFooter() {
+	    
+	             footerHeight = $footer.height();
+	             footerTop = ($(window).scrollTop()+$(window).height()-footerHeight)+"px";
+	    
+	            if ( ($(document.body).height()+footerHeight) < $(window).height()) {
+	                $footer.css({
+	                     position: "absolute"
+	                }).animate({
+	                     top: footerTop
+	                })
+	            } else {
+	                $footer.css({
+	                     position: "static"
+	                })
+	            }
+	            
+	    }
+	
+	    $(window)
+	            .scroll(positionFooter)
+	            .resize(positionFooter)
+	            
+	});
+	</script>
+	<div class="footer fixed"  >	
+		<div id="inner">
+			<div id = "previousLink" class="footerElem"><a href='<%=previousURL %>'>Previous</a></div>
+			<div id = "pageNumber" class="footerElem">Page <%=pageNumber %></div>
+			<div id = "nextLink" class="footerElem"><a href='<%=nextURL %>'>Next</a></div>	
+		</div>
+	</div>	
+	
+	<style>
+		
+		#footer { height: 100px}	
+		#inner{width:200px; display:block; margin:0 auto;}
+		.footerElem{float:left; padding-right:3%}
+	</style>
          </div>
       </div>
 
@@ -163,17 +206,12 @@
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="#">My Docs</a></li>
-            <%if(request.getParameter("doctype")=="skulpt"){ %>
-            	<li><a href="CreateNew.jsp?doctype=skulpt">New Document</a></li>
-           		<li><a href="hub.jsp?doctype=skulpt">Community Hub</a></li>
-           	<%} else if(request.getParameter("doctype")=="plaintext"){%>
-           	    <li><a href="CreateNew.jsp?doctype=plaintext">New Document</a></li>
-           		<li><a href="hub.jsp?doctype=plaintext">Community Hub</a></li>
-           	<%}%>
-          <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
+            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="CreateNew.jsp?doctype=skulpt">New Document</a></li>
+            <li><a href="hub.jsp">Community Hub</a></li>
+            <li style="padding-top: 140%;"></li>
+            <li><a href="logout.jsp">Logout</a></li>
          </ul>
-
       </nav>
 
    </body>

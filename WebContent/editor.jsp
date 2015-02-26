@@ -27,6 +27,7 @@
 	<link rel="stylesheet" type="text/css" href="jquery.taghandler.css"/>
     <!-- Fire the plugin onDocumentReady -->
     <script type="text/javascript">
+
 	$(function(){
 		$('.tagInputField').autocomplete();
 	})
@@ -215,6 +216,7 @@
 
 
 		function publishit(){
+			saveit();
 			window.location ="publish.jsp?docID=<%=docID%>";
 		}
 
@@ -268,9 +270,16 @@
 			<a href="#menu"></a> Code Editor
 		</div>
 			<div id ="title">
-        <input type="text" value="<%=document.getTitle()%>"
-		    id="titleBox" maxlength="30" placeholder="Title"><br>
-
+        
+        <%
+        if (published){
+        	%><div id="titleBox"><%=document.getTitle()%></div> <%
+        }else{
+        %><input type="text" value="<%=document.getTitle()%>"
+		    id="titleBox" maxlength="30" placeholder="Title" required ><br>
+		<%
+        }
+		%>
 
 			</div>
 			<style> 
@@ -280,7 +289,10 @@
 		<div class="codeEditor">
 
 
-	<textarea class="textbox" id="code"><%if(!newDoc.equals("1")){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}else{%><%="print 'Hello World'"%><%}%></textarea>
+	<textarea class="textbox" id="code"><%
+		if(!newDoc.equals("1")){%><%=
+			DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%
+		}else{%><%="print 'Hello World'"%><%}%></textarea>
 			<br />
 
 

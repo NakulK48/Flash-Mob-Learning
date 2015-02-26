@@ -24,11 +24,12 @@
 		User u = LoginManager.getInstance().getUser((Long) session.getAttribute(Attribute.USERID));
 		Long docID = Long.parseLong(request.getParameter("docID"));
 		Document doc = DocumentManager.getInstance().getDocumentById(docID);
+		DocumentType dt = doc.docType;
 		PublishedDocument pubdoc = (PublishedDocument) DocumentManager.getInstance().getDocumentById(docID);
 		WIPDocument wipdoc = pubdoc.fork(u);
 		Long wipdocid = wipdoc.getID();
 		
-	    String redirectURL = "plaintexteditor.jsp?docID="+Long.toString(wipdocid)+"&newDoc=0&myDoc=1&wipdoc=1" ;
+	    String redirectURL = (dt==DocumentType.PLAINTEXT?"plaintexteditor.jsp":"editor.jsp")+"?docID="+Long.toString(wipdocid)+"&newDoc=0&myDoc=1&wipdoc=1" ;
 	    response.sendRedirect(redirectURL);
 	%>
 </script>

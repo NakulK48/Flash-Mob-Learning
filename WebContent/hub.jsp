@@ -84,7 +84,6 @@
          <div class="content" style="padding-top:10px;">
 
 <%
-	long thisUserID = (Long) session.getAttribute(Attribute.USERID);
 
 	DocumentManager dm = DocumentManager.getInstance();
 
@@ -92,7 +91,7 @@
 	if (upvoted != null)
 	{
 		long thisDocumentID = Long.parseLong(upvoted);
-		User thisUser = LoginManager.getInstance().getUser(thisUserID);
+		User thisUser = LoginManager.getInstance().getUser(uid);
 		
 
 		PublishedDocument thisDocument = (PublishedDocument) dm.getDocumentById(thisDocumentID);

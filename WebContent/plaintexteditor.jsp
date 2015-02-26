@@ -97,6 +97,7 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
             dataType: "script"
         }).done(function( response ) {
 			//alert(response);
+			alert("Save successful");
         }).fail(function(response) { alert("Error")   ; });
 }
 

@@ -72,6 +72,10 @@
 	if (!searchDomain.equals("documents") && !searchDomain.equals("tags") && !searchDomain.equals("users") ) searchDomain = "documents";
 %>
 
+		<form id="tfnewsearch" method="get" action="results.jsp">
+		        <input type="text" name="query" size="21" maxlength="120"><input type="submit" value="search">
+		</form>
+
 	<div id="searchTypesHolder">
 		<a href='<%="results.jsp?query=" + searchQuery + "&domain=documents"%>'><div class="searchType">Documents</div></a>
 		<a href='<%="results.jsp?query=" + searchQuery + "&domain=users"%>'><div class="searchType">Users</div></a>

@@ -48,28 +48,7 @@
 
 	} 
 %>
-   </head>
-   <body>
 
-      <!-- The page -->
-      <div class="page">
-         <div class="header">
-            <a href="#menu"></a>
-            Community Hub
-         </div>
-         <div class="content" style="padding-top:10px;">
-<style>
-table {top:200px;}
-.title {font-size:16pt;}
-</style>
-</head>
-<body>
-<%
-	if(session.getAttribute(Attribute.USERID)==null){
-		response.sendRedirect("landing.jsp");
-		return;
-	}
-%>
 
 <%
 	long userID = 0;
@@ -135,6 +114,8 @@ table {top:200px;}
 	
 	
 %>
+   </head>
+   <body>
 
       <!-- The page -->
       <div class="page">
@@ -142,6 +123,23 @@ table {top:200px;}
             <a href="#menu"></a>
             Profile - <%= profileUser.getName() %>
          </div>
+         <div class="content" style="padding-top:10px;">
+<style>
+.title {font-size:16pt;}
+</style>
+</head>
+<body>
+<%
+	if(session.getAttribute(Attribute.USERID)==null){
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+%>
+
+
+      <!-- The page -->
+      <div class="page">
+
          <div class="content" style="padding-top:10px;">
 
 	<div id="orderHolder">
@@ -187,20 +185,59 @@ table {top:200px;}
 		String nextURL = "profile.jsp?sort=" + sortType + "&id=" + userIDString +  "&page=" + nextPage;
 		
 	%>
-	
-	<tr id="pageHolder">	
-	<td id="previous"><a href='<%=previousURL %>'>Previous</a></td>
-	<td id="current">Page <%=pageNumber %></td>
-	<td id="next"><a href='<%=nextURL %>'>Next</a></td>
-	</tr>	
+
 </table>
-	<div id="footer">	
-		<div style="bottom:0;float:left;"><a href='<%=previousURL %>'>Previous</a></div>
-		<div style="bottom:0;float:right;"><a href='<%=nextURL %>'>Next</a></div>
-		<div style="bottom:0;float:center;">Page <%=pageNumber %></div>
+	<script>
+	$(window).bind("load", function() { 
+	    
+	    var footerHeight = 0,
+	        footerTop = 0,
+	        $footer = $("#footer");
+	        
+	    positionFooter();
+	    
+	    function positionFooter() {
+	    
+	             footerHeight = $footer.height();
+	             footerTop = ($(window).scrollTop()+$(window).height()-footerHeight)+"px";
+	    
+	            if ( ($(document.body).height()+footerHeight) < $(window).height()) {
+	                $footer.css({
+	                     position: "absolute"
+	                }).animate({
+	                     top: footerTop
+	                })
+	            } else {
+	                $footer.css({
+	                     position: "static"
+	                })
+	            }
+	            
+	    }
+	
+	    $(window)
+	            .scroll(positionFooter)
+	            .resize(positionFooter)
+	            
+	});
+	</script>
+	<div class="footer fixed"  >	
+		<div id="inner">
+			<div id = "previousLink" class="footerElem"><a href='<%=previousURL %>'>Previous</a></div>
+			<div id = "pageNumber" class="footerElem">Page <%=pageNumber %></div>
+			<div id = "nextLink" class="footerElem"><a href='<%=nextURL %>'>Next</a></div>	
+		</div>
 	</div>	
+	
+	<style>
+		
+		#footer { height: 100px}	
+		#inner{width:200px; display:block; margin:0 auto;}
+		.footerElem{float:left; padding-right:3%}
+	</style>
          </div>
       </div>
+
 
       <!-- The menu -->
       <nav id="menu">

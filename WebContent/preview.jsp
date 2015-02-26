@@ -99,36 +99,35 @@ try{
 	String parentTitle=doc.getParentDocument().getTitle();
 	hasParent=true;
 }catch(Exception e){}%>
-<h2 id="parentdoctitle"> <%if(hasParent){%><%="Based on"+ doc.getParentDocument().getTitle() + "."%><%}else%><%=""%></h2>
-<p id="bodyarea">
-	<%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
+<h2 id="parentdoctitle" style="padding-left:15%"> <%if(hasParent){%><%="Based on"+ doc.getParentDocument().getTitle() + "."%><%}else%><%=""%></h2>
+<p style="white-space:pre-wrap; width:40ex; margin-left:5px; color:black" id="bodyarea"><%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
 </p>
-<p id="tagarea">
+<p id="tagarea" style="padding-left:5%; color:black;">
 	Tags : <%= doc.getTags() %>
 </p>
 <!-- TODO : upvote button qnd upvote count -->
 </div>
 
-<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
+<div id="buttons" style="padding-left: 20%; padding-right: auto;">
 	<%if(pageType.equals("Preview")){%>
 		<button class="fml_buttons" type="button" onclick="editit()"
-			style="border-style: none; width:10%; min-width:50px;">Edit</button>
+			style="border-style: none; width:15%; min-width:60px;">Edit</button>
 	
 		<button class="fml_buttons" type="button" onclick="publishit()"
-			style="border-style: none; width:10%; min-width:50px;">Publish</button>
+			style="border-style: none; width:15%; min-width:60px;">Publish</button>
 			
 		<button class="fml_buttons" type="button" onclick="deleteit()"
-			style="border-style: none; width:10%; min-width:50px;">Delete</button>
+			style="border-style: none; width:15%; min-width:60px;">Delete</button>
 	<%
 	}else{
 		%><button class="fml_buttons" type="button" onclick="cloneit()"
-				style="border-style: none; width:10%; min-width:50px;">Clone</button><%
+				style="border-style: none; width:15%; min-width:60px;">Clone</button><%
 		String myDoc = request.getParameter("myDoc");
 		if(!(myDoc!= null && ((String) myDoc).equals("1"))){
 			//Not my document
 			%>
 			<button class="fml_buttons" type="button" onclick="upvoteit()"
-					style="border-style: none; width:10%; min-width:50px;">Upvote</button><%
+					style="border-style: none; width:15%; min-width:60px;">Upvote</button><%
 		}
 	}
 	%>

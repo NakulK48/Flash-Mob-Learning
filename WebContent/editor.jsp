@@ -177,7 +177,14 @@
 
 		function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
 			   mycodemirror.save();
-			   var mytext = encodeURIComponent(document.getElementById("text").value); 
+			   var mytext = encodeURIComponent(document.getElementById("code").value); 
+			   var tags = [];
+			   var tagDiv = document.getElementById('array_tag_handler');
+			   var tagDivContent = tagDiv.childNodes;
+			   for(var i=0;i<tagDivContent.length-1;i++){
+				   tags.push(tagDivContent[i].textContent);
+				   
+			   }
 		        jQuery.ajax({
 		            type: "POST",
 		            url: "plaintextfunctions.jsp",
@@ -188,6 +195,7 @@
 		                docID: <%=docID%>,
 		        		text: mytext,
 		        		newDoc: <%=newDoc%>
+
 		        		
 		            },
 		            dataType: "script"
@@ -195,6 +203,7 @@
 					//alert(response);
 		        }).fail(function(response) { alert("Error")   ; });
 		}
+
 		//DOES NOT WORK
 		function previewit() {
 			saveit();
@@ -221,6 +230,7 @@
 			document.getElementById('selectedTags').innerText = selectedTagString;
 			
 		}
+
 		
 	</script>
 	<!-- The page -->

@@ -22,14 +22,20 @@
     <%
 		LoginManager l = LoginManager.getInstance();
 		User u = LoginManager.getInstance().getUser((Long) session.getAttribute(Attribute.USERID));
+		String priv = (String) session.getAttribute(Attribute.PRIVILEGE);
 		Long docID = Long.parseLong(request.getParameter("docID"));
 		Document doc = DocumentManager.getInstance().getDocumentById(docID);
-		if(doc.owner.getID()==((Long) session.getAttribute(Attribute.USERID))){
-			//TODO: allow admin to delete as well
+		if(priv.equals("admin")||doc.owner.getID()==((Long) session.getAttribute(Attribute.USERID))){
+			//allow admin to delete as well
 			DocumentManager.getInstance().deleteDocument(DocumentManager.getInstance().getDocumentById(docID));
 		}
-
+		DocumentType d = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 	    String redirectURL = "landing.jsp" ;
+	    if (d==DocumentType.PLAINTEXT){
+	    	redirectURL = "hub.jsp?doctype=plaintext";
+	    }else{
+	    	redirectURL = "hub.jsp?doctype=skulpt";
+	    }
 	    response.sendRedirect(redirectURL);
 	%>
 </script>

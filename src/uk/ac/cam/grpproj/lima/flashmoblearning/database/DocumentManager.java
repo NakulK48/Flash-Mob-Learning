@@ -656,6 +656,36 @@ public class DocumentManager {
             DuplicateEntryException.handle(e);
         }
 	}
+ 	
+ 	/**
+ 	 * Returns the list of document IDs which a user has upvoted, given
+ 	 * a list of documents to check.
+ 	 * @param user user to check if he/she has upvoted.
+ 	 * @param documents list of documents to check if user has upvoted.
+ 	 * @return List of document IDs the user has upvoted.
+ 	 */
+ 	public List<Long> hasUpvoted(User user, List<Document> documents) throws SQLException {
+ 		List<Long> ret = new ArrayList<Long>();
+ 		if(documents.size() > 0) {
+ 			// Form query
+ 			String query = "SELECT document_id FROM votes WHERE user_id = ? AND (document_id = ?";
+ 			for(int i=1; i<documents.size(); i++) query += " OR document_id = ?";
+ 			query += ")";
+ 			
+ 			// Attach document IDs to query
+ 			PreparedStatement ps = m_Database.getConnection().prepareStatement(query);
+ 			ps.setLong(1, user.getID());
+ 			for(int i=0; i<documents.size(); i++) {
+ 				ps.setLong(i+2, documents.get(i).getID());
+ 			}
+ 			
+ 			ResultSet rs = ps.executeQuery();
+ 			while(rs.next()) {
+ 				ret.add(rs.getLong("document_id"));
+ 			} 			
+ 		} 		
+ 		return ret;
+ 	}
 
     /**
      * Get the content of a revision on-the-fly. The content is kept separately and fetched lazily.

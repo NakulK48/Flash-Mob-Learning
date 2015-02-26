@@ -45,16 +45,30 @@
 	}
 	LoginManager l = LoginManager.getInstance();
 	User u = l.getUser((Long) session.getAttribute(Attribute.USERID));
-
+	
 //String body = DocumentManager.getInstance().getRevisionContent(doc.getLastRevision());
 %>
-	
+<%
+	String newDoc = request.getParameter("newDoc");
+	String docID = request.getParameter("docID");
+	if(docID==null) {
+		response.sendRedirect("error.jsp");
+		return;
+	}
+	if(newDoc==null) { 
+		response.sendRedirect("error.jsp");
+		return;
+	}
+%>
 <script type="text/javascript"> 
 // output functions are configurable.  This one just appends some text
 // to a pre element.
 var mycodemirror;
 function loadCodeMirror(){
-  mycodemirror = CodeMirror.fromTextArea(document.getElementById("text"), {lineNumbers: false});
+  mycodemirror = CodeMirror.fromTextArea(document.getElementById("text"), {
+	  lineNumbers: false,
+	  lineWrapping: true
+	});
 }
 setTimeout(function () {
     $('.textbox').css({
@@ -68,13 +82,6 @@ function builtinRead(x) {
     return Sk.builtinFiles["files"][x];
 }
 
-// Here's everything you need to run a python program in skulpt
-// grab the code from your textarea
-// get a reference to your pre element for output
-// configure the output function
-// call Sk.importMainWithBody()
-
-
 function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
 	   mycodemirror.save();
 	   var mytext = encodeURIComponent(document.getElementById("text").value); 
@@ -85,19 +92,21 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
             	
             	title: encodeURIComponent(document.getElementById('titleBox').value),
       			funct: "save",
-                docID: <%=request.getParameter("docID")%>,
+                docID: <%=docID%>,
         		text: mytext,
-        		newDoc: <%=request.getParameter("newDoc")%>
+        		newDoc: <%=newDoc%>
         		
             },
             dataType: "script"
         }).done(function( response ) {
-			alert(response);
+			//alert(response);
+			alert("Save successful");
         }).fail(function(response) { alert("Error")   ; });
 }
+
 function previewit() {
 	saveit();
-	window.location="preview.jsp?docID=<%=request.getParameter("docID")%>&WIPDoc=1&myDoc=1";
+	window.location="preview.jsp?WIPDoc=1&myDoc=1&docID=<%=docID%>";
 }
         
 
@@ -109,14 +118,14 @@ function previewit() {
 
         <form action="demo_form.asp" id="tagtitlebox">
         <input type="text" value=<%
-    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(request.getParameter("docID")));%>"<%=document.getTitle()%>"
+    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(docID));%>"<%=document.getTitle()%>"
     id="titleBox" maxlength="30" placeholder="Title" required><br>
         <input type="text" placeholder="Tags" required><br>
         </form>
 
 
 
-    <textarea class="textbox" id="text" ><%if(Integer.parseInt(request.getParameter("newDoc"))!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
+    <textarea class="textbox" id="text" ><%if(Integer.parseInt(newDoc)!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
 
     <!-- complete these buttons-->
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
@@ -132,7 +141,7 @@ function previewit() {
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="library.jsp">My Documents</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>

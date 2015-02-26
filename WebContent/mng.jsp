@@ -24,7 +24,6 @@
 	<h1>Manage:</h1>
 	<h2></h2><a href="userList.jsp">Users</a></h2>
 	<h2></h2><a href="banner.jsp">Login banner</a></h2>
-	<h2></h2><a href=>Documents</a></h2>
 	
 	</div>
 	      <nav id="menu">

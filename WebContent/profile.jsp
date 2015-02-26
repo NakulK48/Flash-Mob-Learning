@@ -48,34 +48,29 @@
 
 	} 
 %>
-   </head>
-   <body>
 
-      <!-- The page -->
-      <div class="page">
-         <div class="header">
-            <a href="#menu"></a>
-            Community Hub
-         </div>
-         <div class="content" style="padding-top:10px;">
-<style>
-table {top:200px;}
-.title {font-size:16pt;}
-</style>
-</head>
-<body>
+
 <%
 	if(session.getAttribute(Attribute.USERID)==null){
-		response.sendRedirect("landing.jsp");
+		response.sendRedirect("login.jsp");
 		return;
 	}
-%>
+	
+	long uid = (Long) session.getAttribute(Attribute.USERID);
 
-<%
 	long userID = 0;
 	String userIDString = request.getParameter("id");
+	if(userIDString==null){
+		response.sendRedirect("error.jsp");
+		return;
+	}
 	
 	DocumentType dt = DocumentType.ALL;
+	if (request.getParameter("doctype")!=null) {
+		String doctype = request.getParameter("doctype");
+		if (doctype.equals("plaintext"))session.setAttribute(Attribute.DOCTYPE, DocumentType.PLAINTEXT);
+		else if (doctype.equals("plaintext"))session.setAttribute(Attribute.DOCTYPE, DocumentType.SKULPT);
+	}
 	if (session.getAttribute(Attribute.DOCTYPE) == null) response.sendRedirect("landing.jsp");
 	else dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE); //browsing text or skulpt?
 	
@@ -93,8 +88,8 @@ table {top:200px;}
 		pageNumber = 1;
 		previousPage = 1;
 	}
-
-	int offset = (pageNumber - 1) * 25;
+	int limit = 25;
+	int offset = (pageNumber - 1) * limit;
 	
 	try
 	{
@@ -115,12 +110,12 @@ table {top:200px;}
 		QueryParam p;
 		if (sortType.equals("new"))
 		{
-			p = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+			p = new QueryParam(limit + 1, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 		}
 		
 		else
 		{
-			p = new QueryParam(25, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
+			p = new QueryParam(limit + 1, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 		}
 
 		thisUserDocuments = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByUser(profileUser, dt, p);
@@ -135,6 +130,8 @@ table {top:200px;}
 	
 	
 %>
+   </head>
+   <body>
 
       <!-- The page -->
       <div class="page">
@@ -142,6 +139,23 @@ table {top:200px;}
             <a href="#menu"></a>
             Profile - <%= profileUser.getName() %>
          </div>
+         <div class="content" style="padding-top:10px;">
+<style>
+.title {font-size:16pt;}
+</style>
+</head>
+<body>
+<%
+	if(session.getAttribute(Attribute.USERID)==null){
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+%>
+
+
+      <!-- The page -->
+      <div class="page">
+
          <div class="content" style="padding-top:10px;">
 
 	<div id="orderHolder">
@@ -152,8 +166,9 @@ table {top:200px;}
 <h2><%= capitalisedSortType %> Documents</h2>
 <table>
 <%
-	for (PublishedDocument pd : thisUserDocuments)
+	for (int i = 0; i < Math.min(thisUserDocuments.size(),limit); i++)
 	{
+		PublishedDocument pd = thisUserDocuments.get(i);
 		String ageString;
 		int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
 		if (ageInHours < 1) ageString = "Less than an hour ago";
@@ -187,27 +202,78 @@ table {top:200px;}
 		String nextURL = "profile.jsp?sort=" + sortType + "&id=" + userIDString +  "&page=" + nextPage;
 		
 	%>
-	
-	<tr id="pageHolder">	
-	<td id="previous"><a href='<%=previousURL %>'>Previous</a></td>
-	<td id="current">Page <%=pageNumber %></td>
-	<td id="next"><a href='<%=nextURL %>'>Next</a></td>
-	</tr>	
+
 </table>
-	<div id="footer">	
-		<div style="bottom:0;float:left;"><a href='<%=previousURL %>'>Previous</a></div>
-		<div style="bottom:0;float:right;"><a href='<%=nextURL %>'>Next</a></div>
-		<div style="bottom:0;float:center;">Page <%=pageNumber %></div>
-	</div>	
+	<script>
+	$(window).bind("load", function() { 
+	    
+	    var footerHeight = 0,
+	        footerTop = 0,
+	        $footer = $("#footer");
+	        
+	    positionFooter();
+	    
+	    function positionFooter() {
+	    
+	             footerHeight = $footer.height();
+	             footerTop = ($(window).scrollTop()+$(window).height()-footerHeight)+"px";
+	    
+	            if ( ($(document.body).height()+footerHeight) < $(window).height()) {
+	                $footer.css({
+	                     position: "absolute"
+	                }).animate({
+	                     top: footerTop
+	                })
+	            } else {
+	                $footer.css({
+	                     position: "static"
+	                })
+	            }
+	            
+	    }
+	
+	    $(window)
+	            .scroll(positionFooter)
+	            .resize(positionFooter)
+	            
+	});
+	</script>
+	<div class="footer fixed"  >	
+		<div id="inner">
+		<%
+			if (pageNumber != 1){
+				%><div id="previousLink" class="footerElem"><a href='<%=previousURL %>'>Previous</a></div><%
+			}else{
+				%><div id="previousLink" class="footerElem">Previous</div><%;
+			}
+			%><div id="pageNumber" class="footerElem">Page <%=pageNumber %></div><%
+			if (thisUserDocuments.size()==limit+1){
+				%><div id="nextLink" class="footerElem"><a href='<%=nextURL %>'>Next</a></div><%
+			}else{
+				%><div id="nextLink" class="footerElem">Next</div><%;
+			}%>
+		</div>
+	</div>		
+	<style>
+		
+		#footer { height: 100px}	
+		#inner{width:200px; display:block; margin:0 auto;}
+		.footerElem{float:left; padding-right:3%}
+	</style>
          </div>
       </div>
+
 
       <!-- The menu -->
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+            <li><a href="library.jsp">Library</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">My Published Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="results.jsp">Search</a></li>
+            <li style="padding-top: 140%;"></li>
             <li><a href="logout.jsp">Logout</a></li>
          </ul>
       </nav>

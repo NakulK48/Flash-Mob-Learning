@@ -5,7 +5,7 @@
 <html>
    <head>
 
-      <title>Flash Mob Learning</title>
+      <title>Hub - Flash Mob Learning</title>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link type="text/css" href="css/demo.css" rel="stylesheet" />
@@ -29,6 +29,9 @@
          });
       </script>
       <link rel="stylesheet" type="text/css" href="css/HubStyle.css">
+
+   </head>
+   <body>
 <%!
  	public void jspInit()
 	{
@@ -49,30 +52,46 @@
 
 	} 
 %>
-   </head>
-   <body>
+<%
+	if(session.getAttribute(Attribute.USERID)==null){
+		response.sendRedirect("login.jsp");
+		return;
+	}
+	
+	long uid = (Long) session.getAttribute(Attribute.USERID);
+
+	DocumentType dt = DocumentType.ALL;
+	if (request.getParameter("doctype") != null)
+	{
+		String doctypeString = request.getParameter("doctype");
+		if (doctypeString.equals("skulpt")) dt = DocumentType.SKULPT;
+		else dt = DocumentType.PLAINTEXT;
+		session.setAttribute(Attribute.DOCTYPE, dt);
+	}
+	if (session.getAttribute(Attribute.DOCTYPE) == null) {
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+	dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE); //browsing text or skulpt?
+%>
 
       <!-- The page -->
       <div class="page">
          <div class="header">
             <a href="#menu"></a>
-            Community Hub
+            <%=dt==DocumentType.SKULPT?"Skulpt - ":"Text - " %>Community Hub
          </div>
          <div class="content" style="padding-top:10px;">
+
 <%
-	if(session.getAttribute(Attribute.USERID)==null){
-		response.sendRedirect("landing.jsp");
-		return;
-	}
-%>
-<%
+	long thisUserID = (Long) session.getAttribute(Attribute.USERID);
+
 	DocumentManager dm = DocumentManager.getInstance();
 
 	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
 	if (upvoted != null)
 	{
 		long thisDocumentID = Long.parseLong(upvoted);
-		long thisUserID = (Long) session.getAttribute(Attribute.USERID);
 		User thisUser = LoginManager.getInstance().getUser(thisUserID);
 		
 
@@ -92,10 +111,6 @@
 	
 	String showFeatured = request.getParameter("showFeatured");
 	if (showFeatured == null) showFeatured = "true";
-	
-	DocumentType dt = DocumentType.ALL;
-	if (session.getAttribute("doctype") == null) response.sendRedirect("landing.jsp");
-	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
 			
 	String sortType = request.getParameter("sort");
 	String pageNumberString = request.getParameter("page");
@@ -108,8 +123,9 @@
 		pageNumber = 1;
 		previousPage = 1;
 	}
-
-	int offset = (pageNumber - 1) * 25;
+	
+	int limit = 25;
+	int offset = (pageNumber - 1) * limit;
 	
 	if (sortType == null) sortType = "hot";
 	if (!sortType.equals("new") && !sortType.equals("top") && !sortType.equals("hot")) sortType = "hot";
@@ -227,21 +243,21 @@
 				else ageString = ageInDays + " days ago";
 			}
 			
+			
 			String upvoteLink = "<a href='hub.jsp?page=" + pageNumber + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
 			String entry = 
 			"<tr class='upperRow'>" + 
 			"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID())+(thisUserID==pd.owner.getID()?"&myDoc=1":"")+ "'>" + pd.getTitle() + "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
 			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
+			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + (thisUserID==pd.owner.getID()?"me":pd.owner.getName())+ "</a></td>" + //submitter
 			"<td></td>" +
 			"</tr>"; 
-			
 			out.println(entry);
 		} 
 		
@@ -274,20 +290,17 @@
 			"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
 			//TODO: Replace with upvote sprite
 			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) +(thisUserID==pd.owner.getID()?"&myDoc=1":"")+"'>" + pd.getTitle() + "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
 			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
+			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + (thisUserID==pd.owner.getID()?"me":pd.owner.getName())	+ "</a></td>" + //submitter
 			"<td></td>" +
 			"</tr>"; 
 			
 			out.println(entry);
 		} 
-		
-		//dm.deleteAllDocumentsByUser(jimmy);
-		//lm.deleteUser(jimmy);
 		
 		String previousURL = "hub.jsp?sort=" + sortType + "&page=" + previousPage;
 		String nextURL = "hub.jsp?sort=" + sortType + "&page=" + nextPage;
@@ -351,8 +364,12 @@
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+            <li><a href="library.jsp">Library</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">My Published Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="results.jsp">Search</a></li>
+            <li style="padding-top: 140%;"></li>
             <li><a href="logout.jsp">Logout</a></li>
          </ul>
       </nav>

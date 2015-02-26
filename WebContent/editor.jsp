@@ -94,9 +94,17 @@
 	%>
 	<%
 		if(session.getAttribute(Attribute.USERID)==null){
+			response.sendRedirect("login.jsp");
+			return;
+		}
+	
+		long uid = (Long) session.getAttribute(Attribute.USERID);
+		
+		if (session.getAttribute(Attribute.DOCTYPE) == null) {
 			response.sendRedirect("landing.jsp");
 			return;
 		}
+		DocumentType dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 	%>
 
 </head >
@@ -105,7 +113,18 @@
 	<script type="text/javascript">
 		// output functions are configurable.  This one just appends some text
 		// to a pre element.
-		
+<%
+	String newDoc = request.getParameter("newDoc");
+	String docID = request.getParameter("docID");
+	if(docID==null) {
+		response.sendRedirect("error.jsp");
+		return;
+	}
+	if(newDoc==null) { 
+		response.sendRedirect("error.jsp");
+		return;
+	}
+%>
 		var mycodemirror;
 		function loadCodeMirror() {
 			mycodemirror = CodeMirror.fromTextArea(document
@@ -166,8 +185,6 @@
 				   tags.push(tagDivContent[i].textContent);
 				   
 			   }
-
-			   
 		        jQuery.ajax({
 		            type: "POST",
 		            url: "plaintextfunctions.jsp",
@@ -175,18 +192,44 @@
 		            	
 		            	title: encodeURIComponent(document.getElementById('titleBox').value),
 		      			funct: "save",
-		                docID: <%=request.getParameter("docID")%>,
+		                docID: <%=docID%>,
 		        		text: mytext,
-		        		newDoc: <%=request.getParameter("newDoc")%>
-		                //tags:
+		        		newDoc: <%=newDoc%>
+
 		        		
 		            },
 		            dataType: "script"
 		        }).done(function( response ) {
-					alert(response);
+					//alert(response);
 		        }).fail(function(response) { alert("Error")   ; });
 		}
+
+		//DOES NOT WORK
+		function previewit() {
+			saveit();
+			window.location="preview.jsp?WIPDoc=1&myDoc=1&docID=<%=docID%>";
+		}
+
+		function addTag(){
+			var newTag = document.getElementById('tags').value;
+			console.log(newTag);
+			var selectedTags = document.getElementById('selectedTags');
+			var removeTagList = document.getElementById('removeTagList');
+			if(selectedTags.innerText.indexOf(newTag) == -1){ // to prevent duplicate Tags
+				selectedTags.innerText += " "+newTag;
+				removeTagList.options[removeTagList.options.length] = new Option(newTag, newTag);
+			}
+			
+		}
 		
+		function removeTag(){
+			var option = document.getElementById('removeTagList').value;
+			$("#removeTagList option[value="+option+"]").remove();
+			var selectedTagString = document.getElementById('selectedTags').innerText;
+			selectedTagString = selectedTagString.replace(option,'');
+			document.getElementById('selectedTags').innerText = selectedTagString;
+			
+		}
 
 		
 	</script>
@@ -218,7 +261,9 @@
 				<button class="fml_buttons" type="button" onclick="runit()"
 					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Run</button>
 				<button class="fml_buttons" type="button" onclick="saveit()"
-					style="border-style: none; background: #7AA3CC;width:10%; min-width:50px;">Save</button>
+					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Save</button>
+				<button class="fml_buttons" type="button" onclick="previewit()"
+					style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Preview</button>
 			</div>
 			
 			<ul id="array_tag_handler" style="list-style-type:none;"></ul>
@@ -230,16 +275,18 @@
 	</div>
 
 	<!-- The menu -->
-	<nav id="menu">
-	<ul>
-		<li><a href="landing.jsp"><img src="fml_logo_head.png" style="width:20px;height:20px"></img>Home</a></li>
-		<li><a href="library.jsp?doctype=skulpt">My Docs</a></li>
-		<li><a href="hub.jsp">Community Hub</a></li>
-		<li style="padding-top: 140%;"></li>
-		<li><a href="logout.jsp">Logout</a></li>
-	</ul>
-
-	</nav>
+      <nav id="menu">
+         <ul>
+            <li><a href="landing.jsp">Home</a></li>
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+            <li><a href="library.jsp">Library</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">My Published Docs</a></li>
+            <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="results.jsp">Search</a></li>
+            <li style="padding-top: 140%;"></li>
+            <li><a href="logout.jsp">Logout</a></li>
+         </ul>
+      </nav>
 
 </body> 
  

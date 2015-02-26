@@ -27,64 +27,61 @@
           });
        });
     </script>
-<title>Preview</title>
-<%!
- 	public void jspInit()
-	{
-		try
-		{
-			Database.init();
-		}
-		
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-
-	} 
-%>
-
-</head >
-
-<body>
 <%		
 		//Session check
-	if(session.getAttribute("uid")==null){
-		//session invalid
+	if(session.getAttribute(Attribute.USERID)==null){
 		response.sendRedirect("login.jsp");
 		return;
 	}
+
+	long uid = (Long) session.getAttribute(Attribute.USERID);
+	
+	if (session.getAttribute(Attribute.DOCTYPE) == null) {
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+	DocumentType dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
+
+	String documentID = (String) request.getParameter("docID");
+	LoginManager l = LoginManager.getInstance();
+	User u = l.getUser((String) session.getAttribute(Attribute.USERNAME));
+	Long docID = Long.parseLong(documentID);
+	Document doc = DocumentManager.getInstance().getDocumentById(docID);
+	String title = doc.getTitle();
+	String pageType = "Preview";
+	if (doc instanceof PublishedDocument){
+		pageType = "Published";
+	} 	
 %>
+<title><%=title%> - <%=pageType %></title>
+</head >
+
+<body>
 
 <script type="text/javascript"> 
 
-	<%
-	LoginManager l = LoginManager.getInstance();
-	User u = l.getUser((String) session.getAttribute(Attribute.USERNAME));
-	Long docID = Long.parseLong(request.getParameter("docID"));
-	Document doc = DocumentManager.getInstance().getDocumentById(docID);
-	%>
-
 function cloneit(){
-	document.location.href = "fork.jsp?docid="+request.getParameter("docid")
+	window.location = "fork.jsp?docID=<%=documentID%>";
+}
+
+function deleteit() {
+    if (confirm("Are you sure you want to delete this document ? This cannot be undone.") == true) {
+        window.location = "delete.jsp?docID=<%=documentID%>";
+    } else {
+    }
 }
 
 function editit(){
-	document.location.href = "plaintexteditor.jsp?docID="+request.getParameter("docID")+"&newdoc=0&wipdoc=1&mydoc=1"
+	window.location = "plaintexteditor.jsp?docID=<%=documentID%>&newDoc=0&wipdoc=1";
 }
 
 function publishit(){
-	document.location.href = "publish.jsp?docID="+request.getParameter("docID");
+	window.location ="publish.jsp?docID=<%=documentID%>";
 }
 
-function upvoteit(){
- <!-- TODO -->
-}
+//function upvoteit(){
+ //<!-- TODO -->
+//}
 
 </script>
           <div class="header">
@@ -93,38 +90,47 @@ function upvoteit(){
         </div>
 
 <div>
+
 <h1 id="titlearea">
-     <%=doc.getTitle() %>
+     <%=doc.getTitle()+" - "+pageType %>
 </h1>
 <%	boolean hasParent = false;
 try{
 	String parentTitle=doc.getParentDocument().getTitle();
 	hasParent=true;
-	}catch(Exception e){}%>
-<h2 id="parentdoctitle"> <%if(hasParent){%><%="Based on"+ doc.getParentDocument().getTitle() + "."%><%}else%><%=""%></h2>
-<p id="bodyarea">
-	<%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
+}catch(Exception e){}%>
+<h2 id="parentdoctitle" style="padding-left:15%"> <%if(hasParent){%><%="Based on"+ doc.getParentDocument().getTitle() + "."%><%}else%><%=""%></h2>
+<p style="white-space:pre-wrap; width:40ex; margin-left:5px; color:black" id="bodyarea"><%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
 </p>
-<p id="tagarea">
+<p id="tagarea" style="padding-left:5%; color:black;">
 	Tags : <%= doc.getTags() %>
 </p>
 <!-- TODO : upvote button qnd upvote count -->
 </div>
 
-<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
-	<%if(session.getAttribute("myDoc")=="1"){%>
+<div id="buttons" style="padding-left: 20%; padding-right: auto;">
+	<%if(pageType.equals("Preview")){%>
 		<button class="fml_buttons" type="button" onclick="editit()"
-				style="border-style: none; width:10%; min-width:50px;">Edit</button>
-		<%if(session.getAttribute("WIPDoc")=="1"){%>
-			<button class="fml_buttons" type="button" onclick="publishit()"
-				style="border-style: none; width:10%; min-width:50px;">Publish</button>
+			style="border-style: none; width:15%; min-width:60px;">Edit</button>
 	
-	<%}}else{%>
-		<button class="fml_buttons" type="button" onclick="cloneit()"
-				style="border-style: none; width:10%; min-width:50px;">Clone</button>
-		<button class="fml_buttons" type="button" onclick="upvoteit()"
-				style="border-style: none; width:10%; min-width:50px;">Upvote</button>
-	<%}%>
+		<button class="fml_buttons" type="button" onclick="publishit()"
+			style="border-style: none; width:15%; min-width:60px;">Publish</button>
+			
+		<button class="fml_buttons" type="button" onclick="deleteit()"
+			style="border-style: none; width:15%; min-width:60px;">Delete</button>
+	<%
+	}else{
+		%><button class="fml_buttons" type="button" onclick="cloneit()"
+				style="border-style: none; width:15%; min-width:60px;">Clone</button><%
+		String myDoc = request.getParameter("myDoc");
+		if(!(myDoc!= null && ((String) myDoc).equals("1"))){
+			//Not my document
+			%>
+			<button class="fml_buttons" type="button" onclick="upvoteit()"
+					style="border-style: none; width:15%; min-width:60px;">Upvote</button><%
+		}
+	}
+	%>
 </div>
 
 
@@ -132,12 +138,15 @@ try{
       <!-- The menu -->
       <nav id="menu">
          <ul>
-            <li><a href="home.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="landing.jsp">Home</a></li>
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+            <li><a href="library.jsp">Library</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">My Published Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
-          <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
+            <li><a href="results.jsp">Search</a></li>
+            <li style="padding-top: 140%;"></li>
+            <li><a href="logout.jsp">Logout</a></li>
          </ul>
-
       </nav>
 
 </body> 

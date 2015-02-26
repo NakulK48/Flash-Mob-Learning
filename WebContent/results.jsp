@@ -44,9 +44,17 @@
 %>
 <%
 	if(session.getAttribute(Attribute.USERID)==null){
+		response.sendRedirect("login.jsp");
+		return;
+	}
+
+	long uid = (Long) session.getAttribute(Attribute.USERID);
+	
+	if (session.getAttribute(Attribute.DOCTYPE) == null) {
 		response.sendRedirect("landing.jsp");
 		return;
 	}
+	DocumentType dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 %>
 
 </head>
@@ -56,14 +64,11 @@
       <div class="page">
          <div class="header">
             <a href="#menu"></a>
-            Search Results
+            Search
          </div>
          <div class="content" style="padding-top:10px;">
 
 <%
-	DocumentType dt = DocumentType.ALL;
-	if (session.getAttribute(Attribute.DOCTYPE) == null) response.sendRedirect("landing.jsp");
-	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
 
 	String searchQuery = request.getParameter("query");
 	if (searchQuery == null) searchQuery = "";
@@ -71,6 +76,10 @@
 	if (searchDomain == null) searchDomain = "documents";
 	if (!searchDomain.equals("documents") && !searchDomain.equals("tags") && !searchDomain.equals("users") ) searchDomain = "documents";
 %>
+
+		<form id="tfnewsearch" method="get" action="results.jsp">
+		        <input type="text" name="query" size="21" maxlength="120"><input type="submit" value="search">
+		</form>
 
 	<div id="searchTypesHolder">
 		<a href='<%="results.jsp?query=" + searchQuery + "&domain=documents"%>'><div class="searchType">Documents</div></a>
@@ -80,7 +89,11 @@
 	<br>
 	
 <%
-	if (searchQuery == null || searchQuery.length() == 0) out.println("<p class='error'>Whoops! We need something to search for.</p>");
+	if (searchQuery == null || searchQuery.length() == 0) 
+	{
+		out.println("<p class='error'>Enter a search string.</p>");
+		return;
+	}
 	
 	else
 	{
@@ -174,8 +187,12 @@
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+            <li><a href="library.jsp">Library</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">My Published Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="results.jsp">Search</a></li>
+            <li style="padding-top: 140%;"></li>
             <li><a href="logout.jsp">Logout</a></li>
          </ul>
       </nav>

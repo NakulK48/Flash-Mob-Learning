@@ -42,16 +42,15 @@
 		}
 	}
 %>
-<style>
-table {top:200px;}
-</style>
 </head>
 <body>
 <%
 	if(session.getAttribute(Attribute.USERID)==null){
-		response.sendRedirect("landing.jsp");
+		response.sendRedirect("login.jsp");
 		return;
 	}
+	
+	long uid = (Long) session.getAttribute(Attribute.USERID);
 %>
 
 <%
@@ -159,19 +158,55 @@ table {top:200px;}
 		String nextURL = "tag.jsp?sort=" + sortType + "&name=" + tagName + "&page=" + nextPage;
 		
 	%>
-	
-	<tr id="pageHolder">	
-	<td id="previous"><a href='<%=previousURL %>'>Previous</a></td>
-	<td id="current">Page <%=pageNumber %></td>
-	<td id="next"><a href='<%=nextURL %>'>Next</a></td>
-	</tr>	
 </table>
-
-	<div id="footer">	
-		<div style="bottom:0;float:left;"><a href='<%=previousURL %>'>Previous</a></div>
-		<div style="bottom:0;float:right;"><a href='<%=nextURL %>'>Next</a></div>
-		<div style="bottom:0;float:center;">Page <%=pageNumber %></div>
+	<script>
+	$(window).bind("load", function() { 
+	    
+	    var footerHeight = 0,
+	        footerTop = 0,
+	        $footer = $("#footer");
+	        
+	    positionFooter();
+	    
+	    function positionFooter() {
+	    
+	             footerHeight = $footer.height();
+	             footerTop = ($(window).scrollTop()+$(window).height()-footerHeight)+"px";
+	    
+	            if ( ($(document.body).height()+footerHeight) < $(window).height()) {
+	                $footer.css({
+	                     position: "absolute"
+	                }).animate({
+	                     top: footerTop
+	                })
+	            } else {
+	                $footer.css({
+	                     position: "static"
+	                })
+	            }
+	            
+	    }
+	
+	    $(window)
+	            .scroll(positionFooter)
+	            .resize(positionFooter)
+	            
+	});
+	</script>
+	<div class="footer fixed"  >	
+		<div id="inner">
+			<div id = "previousLink" class="footerElem"><a href='<%=previousURL %>'>Previous</a></div>
+			<div id = "pageNumber" class="footerElem">Page <%=pageNumber %></div>
+			<div id = "nextLink" class="footerElem"><a href='<%=nextURL %>'>Next</a></div>	
+		</div>
 	</div>	
+	
+	<style>
+		
+		#footer { height: 100px}	
+		#inner{width:200px; display:block; margin:0 auto;}
+		.footerElem{float:left; padding-right:3%}
+	</style>
          </div>
       </div>
 
@@ -179,8 +214,12 @@ table {top:200px;}
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+            <li><a href="library.jsp">Library</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">My Published Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
+            <li><a href="results.jsp">Search</a></li>
+            <li style="padding-top: 140%;"></li>
             <li><a href="logout.jsp">Logout</a></li>
          </ul>
       </nav>

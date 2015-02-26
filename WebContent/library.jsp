@@ -27,8 +27,7 @@
             });
          });
       </script>
-      
-      <%!
+<%!
  	public void jspInit()
 	{
 		try
@@ -51,25 +50,15 @@
 
    </head>
    <body>
-
-      <!-- The page -->
-      <div class="page">
-         <div class="header">
-            <a href="#menu"></a>
-            Library
-         </div>
-         <div class="content">
-<%
-	
+<%	
 	if(session.getAttribute(Attribute.USERID)==null){
 		//session invalid
 		response.sendRedirect("login.jsp");
 		return;
 	}
 
-	if (request.getParameter("doctype") != null)
-	{
-		String doctypeString = request.getParameter("doctype");
+	String doctypeString = request.getParameter("doctype");
+	if (doctypeString != null) {
 		DocumentType dt = null;
 		if (doctypeString.equals("skulpt")) dt = DocumentType.SKULPT;
 		else dt = DocumentType.PLAINTEXT;
@@ -82,11 +71,17 @@
 		return;
 	}
 	dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE); //browsing text or skulpt?
-//TODO: Check whether viewing Skulpt or Text
-	DocumentType doctype = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
-	
+%>
+
+      <!-- The page -->
+      <div class="page">
+         <div class="header">
+            <a href="#menu"></a>
+             <%=dt==DocumentType.SKULPT?"Skulpt - ":"Text - " %>Library
+         </div>
+         <div class="content">
+<%
 	long uid = (Long) session.getAttribute(Attribute.USERID);
-	//TODO: Remove above placeholder
 	LoginManager lm = LoginManager.getInstance();
 	DocumentManager dm = DocumentManager.getInstance();
 	
@@ -115,9 +110,9 @@
 
 <table>
 	<tr>
-		<td class='heading' id='upvoteScoreHeading'></td>
-		<td class='heading' id='titleSubmitterHeading'>Title</td>
-		<td class='heading' id='ageHeading'>Last edited</td>
+		<th class='heading' id='upvoteScoreHeading'></th>
+		<th class='heading' id='titleSubmitterHeading'>Title</th>
+		<th class='heading' id='ageHeading'>Last edited</th>
 	</tr>
 	<%
 		for (int i=0; i<Math.min(docs.size(),limit);i++){
@@ -151,23 +146,66 @@
 		String nextURL = "library.jsp?page=" + nextPage;
 		
 	%>
-	
-	<tr id="pageHolder">	
-	<% 
-		if (pageNumber != 1){
-			%><td id="previous"><a href='<%=previousURL %>'>Previous</a></td><%
-		}else{
-			%> <td id="previous">Previous</td><%;
-		}
-		%><td id="current">Page <%=pageNumber %></td><%
-		if (docs.size()==limit+1){
-			%><td id="next"><a href='<%=nextURL %>'>Next</a></td><%
-		}else{
-			%> <td id="next">Next</td><%;
-		}
-	%>
-	</tr>	
 </table>
+
+	<script>
+	$(window).bind("load", function() { 
+	    
+	    var footerHeight = 0,
+	        footerTop = 0,
+	        $footer = $("#footer");
+	        
+	    positionFooter();
+	    
+	    function positionFooter() {
+	    
+	             footerHeight = $footer.height();
+	             footerTop = ($(window).scrollTop()+$(window).height()-footerHeight)+"px";
+	    
+	            if ( ($(document.body).height()+footerHeight) < $(window).height()) {
+	                $footer.css({
+	                     position: "absolute"
+	                }).animate({
+	                     top: footerTop
+	                })
+	            } else {
+	                $footer.css({
+	                     position: "static"
+	                })
+	            }
+	            
+	    }
+	
+	    $(window)
+	            .scroll(positionFooter)
+	            .resize(positionFooter)
+	            
+	});
+	</script>
+		
+	<div class="footer fixed"  >	
+		<div id="inner">
+		<%
+			if (pageNumber != 1){
+				%><div id="previousLink" class="footerElem"><a href='<%=previousURL %>'>Previous</a></div><%
+			}else{
+				%><div id="previousLink" class="footerElem">Previous</div><%;
+			}
+			%><div id="pageNumber" class="footerElem">Page <%=pageNumber %></div><%
+			if (docs.size()==limit+1){
+				%><div id="nextLink" class="footerElem"><a href='<%=nextURL %>'>Next</a></div><%
+			}else{
+				%><div id="nextLink" class="footerElem">Next</div><%;
+			}%>
+		</div>
+	</div>	
+	
+	<style>
+		
+		#footer { height: 100px}	
+		#inner{width:200px; display:block; margin:0 auto;}
+		.footerElem{float:left; padding-right:3%}
+	</style>
          </div>
       </div>
 
@@ -175,12 +213,14 @@
       <nav id="menu">
          <ul>
             <li><a href="landing.jsp">Home</a></li>
+            <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+            <li><a href="library.jsp">Library</a></li>
+            <li><a href="profile.jsp?id=<%=uid%>">My Published Docs</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
-            <li><a href="CreateNew.jsp?doctype=skulpt">New Skulpt Document</a></li>
-           	<li><a href="CreateNew.jsp?doctype=plaintext">New Text Document</a></li>
-          <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
+            <li><a href="results.jsp">Search</a></li>
+            <li style="padding-top: 140%;"></li>
+            <li><a href="logout.jsp">Logout</a></li>
          </ul>
-
       </nav>
 
    </body>

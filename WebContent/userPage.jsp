@@ -35,10 +35,16 @@
 	<div><a href="userList.jsp">Back</a></div>
 	<div class="login-card" >
 		<form method="post" action="userModify.jsp?uid=<%=userID%>">
-			<input type="text" name="username" value=<%=u.getName()%> required> <input
+			<input type="text" name="username" value=<%=u.getName()%> required>
+			<input type="submit" name="modifyU"class="login login-submit" value="Change Username">
+			 
+		</form>
+		<form method="post" action="userModify.jsp?uid=<%=userID%>">
+			
+			<input
 				type="password" name="pwd" placeholder="New Password" required> 
 			<input type="password" name="rpwd" placeholder="Repeat Password" required>
-			<input type="submit" name="modify"class="login login-submit"  value="Sumbit Changes">
+			<input type="submit" name="modifyP"class="login login-submit"  value="Change Password">
 			
 		</form>
 		<form method="post" action="userModify.jsp?uid=<%=userID%>">

@@ -16,7 +16,8 @@
 	<%
 		// get request parameters
 		
-		String mod = request.getParameter("modify");
+		String modp = request.getParameter("modifyP");
+		String modu = request.getParameter("modifyU");	
 		String del = request.getParameter("delete");
 		String userID = request.getParameter("uid");
 		String name = request.getParameter("username");
@@ -25,11 +26,11 @@
 		if (userID==null){
 			response.sendRedirect("error.jsp");
 		}
-		if ((mod!=null&&del!=null)||(mod==null&&del==null)){
+		if ((modu!=null&&modp!=null&&del!=null)||(modu==null&&modp==null&&del==null)){
 			response.sendRedirect("error.jsp");
 			return;
 		}
-		if (mod!=null){
+		if (modp!=null){
 			if (pwd.length()<8||pwd.length()>22){
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/userPage.jsp");
 				response.getWriter().println("<center><font color=red>Password length must be between 8 and 22 characters.</font></center>");
@@ -43,7 +44,6 @@
 					
 					LoginManager l = LoginManager.getInstance();
 					User u = l.getUser(Long.parseLong(userID));
-					u.setName(name);
 					u.setPassword(pwd);
 					if (Long.parseLong(userID)!=((Long)session.getAttribute(Attribute.USERID))){
 						RequestDispatcher rd = getServletContext().getRequestDispatcher("/userList.jsp");
@@ -67,8 +67,27 @@
 					return;
 				}
 			}
-			
-		}else{
+		}else if (modu!=null){
+			LoginManager l = LoginManager.getInstance();
+			User u = l.getUser(Long.parseLong(userID));
+			u.setName(name);
+			if (Long.parseLong(userID)!=((Long)session.getAttribute(Attribute.USERID))){
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/userList.jsp");
+				response.getWriter().println("<center><font color=green>User detail successfully updated</font></center>");
+				rd.include(request, response);			
+				return;
+			}else{
+				session.setAttribute(Attribute.DOCTYPE, null);
+				session.setAttribute(Attribute.USERID, null);
+				session.setAttribute(Attribute.USERNAME, null);
+				session.setAttribute(Attribute.PRIVILEGE, null);
+				RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.jsp");
+				response.getWriter().println("<center><font color=green>User detail successfully updated, please login again</font></center>");
+				rd.include(request, response);			
+				return;
+			}
+
+		}else if (del!=null){
 			if (Long.parseLong(userID)!=((Long)session.getAttribute(Attribute.USERID))){
 				LoginManager l = LoginManager.getInstance();
 				User u = l.getUser(Long.parseLong(userID));

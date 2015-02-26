@@ -49,6 +49,12 @@
 	}
 
 	long uid = (Long) session.getAttribute(Attribute.USERID);
+	
+	if (session.getAttribute(Attribute.DOCTYPE) == null) {
+		response.sendRedirect("landing.jsp");
+		return;
+	}
+	dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
 %>
 
 </head>

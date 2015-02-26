@@ -64,14 +64,11 @@
       <div class="page">
          <div class="header">
             <a href="#menu"></a>
-            Search Results
+            Search
          </div>
          <div class="content" style="padding-top:10px;">
 
 <%
-	DocumentType dt = DocumentType.ALL;
-	if (session.getAttribute(Attribute.DOCTYPE) == null) response.sendRedirect("landing.jsp");
-	else dt = (DocumentType) session.getAttribute("doctype"); //browsing text or skulpt?
 
 	String searchQuery = request.getParameter("query");
 	if (searchQuery == null) searchQuery = "";

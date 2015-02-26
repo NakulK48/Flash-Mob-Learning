@@ -65,6 +65,29 @@
 		return;
 	}
 	
+	DocumentManager dm = DocumentManager.getInstance();
+
+	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
+	if (upvoted != null)
+	{
+		long thisDocumentID = Long.parseLong(upvoted);
+		User thisUser = LoginManager.getInstance().getUser(uid);
+		
+
+		PublishedDocument thisDocument = (PublishedDocument) dm.getDocumentById(thisDocumentID);
+		
+		try
+		{
+			dm.addVote(thisUser, thisDocument);
+		}
+		catch (DuplicateEntryException e)
+		{
+			thisDocument.setVotes(thisDocument.getVotes() - 1);
+		}
+
+		thisDocument.setVotes(thisDocument.getVotes() + 1);
+	}
+	
 	DocumentType dt = DocumentType.ALL;
 	if (request.getParameter("doctype")!=null) {
 		String doctype = request.getParameter("doctype");
@@ -150,6 +173,7 @@
 		response.sendRedirect("landing.jsp");
 		return;
 	}
+
 %>
 
 
@@ -181,9 +205,10 @@
 			else ageString = ageInDays + " days ago";
 		}
 		
+		String upvoteLink = "<a href='profile.jsp?page=" + pageNumber + "&id=" + userIDString + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
 		String entry = 
 		"<tr class='upperRow'>" + 
-		"<td class='upvote'><button name='upvote" + Long.toString(pd.getID()) + "' >UP</button></td>" + //upvote
+		"<td class='upvote'>" + upvoteLink + " <button name='upvote'>UP</button></a></td>" + //upvote
 		//TODO: Replace with upvote sprite
 		//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
 		"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title

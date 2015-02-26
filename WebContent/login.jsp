@@ -5,13 +5,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Login - Flash Mob Learning</title>
 
 <link rel="stylesheet" href="LoginStyle.css" media="screen"
 	type="text/css" />
 
 </head>
-<body>
+<body >
 	<%!
 		//init db on login page??
 		public void jspInit(){
@@ -24,11 +25,13 @@
 	%>
 	<%
 		//Check if user already logged in.
-		if(session.getAttribute(Attribute.USERID)!=null){
+		if(!(session.getAttribute(Attribute.USERID)==null)){
 			response.sendRedirect("landing.jsp");
+			return;
 		}
 	%>
-	<div class="login-card">
+	<img alt="logo" src="fml_logo.png" style="width:100%">
+	<div class="login-card" >
 	<center><%=LoginManager.getInstance().getLoginBanner()%></center><br>
 		<form method="post" action="loginCheck.jsp">
 			<input type="text" name="username" placeholder="Username" required> <input

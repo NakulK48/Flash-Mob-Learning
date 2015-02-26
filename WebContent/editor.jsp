@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.sql.*"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.sql.*,uk.ac.cam.grpproj.lima.flashmoblearning.*, java.util.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html> 
 <head> 
@@ -31,22 +31,45 @@
 		$('.tagInputField').autocomplete();
 	})
 	$(document).ready(function(){
+		var availableTags = [];
+	<%
+	DocumentManager dm = DocumentManager.getInstance();
+	Set<Tag> tagList = dm.getTagsNotBanned();
+	for(Tag t:tagList){
+		out.println("availableTags.push('"+t.name+"');");
+	}
+	
+	%>
+	
 
 	$("#array_tag_handler").tagHandler({
-    assignedTags: [ 'C', 'Perl', 'PHP' ],
-    availableTags: [ 'C', 'C++', 'C#', 'Java', 'Perl', 'PHP', 'Python' ],
-    autocomplete: true
+	assignedTags:['+ New Tag'],
+    availableTags: availableTags,
+    autocomplete: true,
 	});
 
 
 	})
+
        $(document).ready(function() {
           $("#menu").mmenu({
              "slidingSubmenus": false,
              "classes": "mm-white",
-             "searchfield": true
+             "searchfield":{
+            	 add:true,
+            	 search:false
+             }
           });
        });
+	
+	$("#menu .mm-search input")
+    .bind( "change", function() {
+        // do your search
+
+        // maybe close the menu?
+        $("#foo").trigger( "close" );
+    }
+);
     </script>
     
     <%!
@@ -68,22 +91,20 @@
 		}
 
 	} 
-%>
+	%>
+	<%
+		if(session.getAttribute(Attribute.USERID)==null){
+			response.sendRedirect("landing.jsp");
+			return;
+		}
+	%>
+
 </head >
 
 <body onload="loadCodeMirror()">
 	<script type="text/javascript">
 		// output functions are configurable.  This one just appends some text
 		// to a pre element.
-		
-		$(function(){
-			$('#tagbox').tagsInput({
-				'width':'auto',
-				'height':'auto',
-				'autocomplete':true
-			});
-			
-		});
 		
 		var mycodemirror;
 		function loadCodeMirror() {
@@ -135,8 +156,25 @@
 			}
 		}
 
-		function saveit() {
-
+		function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
+			   mycodemirror.save();
+			   var mytext = encodeURIComponent(document.getElementById("code").value); 
+		        jQuery.ajax({
+		            type: "POST",
+		            url: "plaintextfunctions.jsp",
+		            data: {
+		            	
+		            	title: encodeURIComponent(document.getElementById('titleBox').value),
+		      			funct: "save",
+		                docID: <%=request.getParameter("docID")%>,
+		        		text: mytext,
+		        		newDoc: <%=request.getParameter("newDoc")%>
+		        		
+		            },
+		            dataType: "script"
+		        }).done(function( response ) {
+					alert(response);
+		        }).fail(function(response) { alert("Error")   ; });
 		}
 		
 		function addTag(){
@@ -166,35 +204,25 @@
 		<div class="header">
 			<a href="#menu"></a> Code Editor
 		</div>
-			<div style="padding-left: 10%;">
-			<label>Title</label>
-			<input>
-			</br>
-<!-- 			<label>Select Tag</label>
-			<input type="text" id="tags" list="tagOptions" />
-			<datalist id="tagOptions">
-			   <select onchange="$('#tags').val(this.value);">
-			    <option label="United States" value="USA"></option>
-			    <option label="United Kingdom" value="UK"></option>
-			    <option label="Uruguay" value="URU"></option>
-			    <option label="Brazil" value="BRA"></option>
-			    <option label="Russia" value="RUS"></option>
-			   </select>
-			</datalist>
-			<button type="button" onclick="addTag()">Add</button>
-			
-			</br> -->
-			
+			<div id ="title">
+        <form action="demo_form.asp" id="tagtitlebox">
+        <input type="text" value=<%
+		    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(request.getParameter("docID")));%>"<%=document.getTitle()%>"
+		    id="titleBox" maxlength="30" placeholder="Title" required><br>
+
+        </form>
+			</div>
+			<style> 
+				#title{width:10px;margin:auto auto}}
+			</style>
 
 		<div class="codeEditor">
 
 
-	<textarea class="textbox" id="code">print "hello world"</textarea>
+	<textarea class="textbox" id="code"><%if(Integer.parseInt(request.getParameter("newDoc"))!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}else{%><%="print 'Hello World'"%><%}%></textarea>
 			<br />
 
 
-
-			
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
 				<button class="fml_buttons" type="button" onclick="runit()"
 					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Run</button>
@@ -225,6 +253,17 @@
             <li><a href="logout.jsp">Logout</a></li>
          </ul>
       </nav>
+	<nav id="menu">
+	<ul>
+	    <li><a href="CreateNew.jsp?doctype=<%=(dt==DocumentType.SKULPT?"skulpt":"plaintext")%>">New Document</a></li>
+		<li><a href="landing.jsp"><img src="fml_logo_head.png" style="width:20px;height:20px"></img>Home</a></li>
+		<li><a href="library.jsp?doctype=skulpt">My Docs</a></li>
+		<li><a href="hub.jsp">Community Hub</a></li>
+		<li style="padding-top: 140%;"></li>
+		<li><a href="logout.jsp">Logout</a></li>
+	</ul>
+
+	</nav>
 
 </body> 
  

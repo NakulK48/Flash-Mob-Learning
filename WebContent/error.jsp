@@ -8,6 +8,6 @@
 </head>
 <body>
 	<div><p2><font color="red">A dragon ate your page!</font></p2></div>
-	<div><p3>return to <a href='landing.html'>the homepage</a></p3></div>
+	<div><p3>return to <a href='landing.jsp'>the homepage</a></p3></div>
 </body>
 </html>

@@ -14,6 +14,9 @@
 				session.removeAttribute(Attribute.PRIVILEGE);
 		if(session.getAttribute(Attribute.USERNAME)!=null)
 			session.removeAttribute(Attribute.USERNAME);
+		if(session.getAttribute(Attribute.DOCTYPE)!=null)
+			session.removeAttribute(Attribute.DOCTYPE);
+		
 		out.println("Logout successful, redirecting to login page...");
 	%>
 </body>

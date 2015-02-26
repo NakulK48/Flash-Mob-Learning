@@ -21,11 +21,12 @@
 		if(session.getAttribute(Attribute.USERID)==null){
 			//session invalid
 			response.sendRedirect("login.jsp");
+			return;
 		}else if(session.getAttribute(Attribute.PRIVILEGE)==null||
 				!session.getAttribute(Attribute.PRIVILEGE).equals("admin")){
 			response.sendRedirect("landing.jsp");
+			return;
 		}
-		//TODO: set new limit
 		int limit = 5;
 		int pageno = request.getParameter("page")==null?0:Integer.parseInt((String) request.getParameter("page"));
 		int offset = pageno * limit;
@@ -42,6 +43,7 @@
 				<tr><td><a href="userPage.jsp?uid=<%=uid%>"><%=u.getName() %></a></td><td><%=u.getID()%></td></tr>
 			<%
 		}
+		//TODO: set new limit
 
 	%>
 	</table></center>

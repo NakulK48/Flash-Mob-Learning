@@ -29,6 +29,8 @@
              "searchfield": true
           });
        });
+       
+       
     </script>
 </head >
 
@@ -39,13 +41,25 @@
 	if(session.getAttribute(Attribute.USERID)==null){
 		//session invalid
 		response.sendRedirect("login.jsp");
+		return;
 	}
-
-LoginManager l = LoginManager.getInstance();
-User u = l.getUser((long) session.getAttribute(Attribute.USERID));
+	LoginManager l = LoginManager.getInstance();
+	User u = l.getUser((Long) session.getAttribute(Attribute.USERID));
+	
 //String body = DocumentManager.getInstance().getRevisionContent(doc.getLastRevision());
 %>
-	
+<%
+	String newDoc = request.getParameter("newDoc");
+	String docID = request.getParameter("docID");
+	if(docID==null) {
+		response.sendRedirect("error.jsp");
+		return;
+	}
+	if(newDoc==null) { 
+		response.sendRedirect("error.jsp");
+		return;
+	}
+%>
 <script type="text/javascript"> 
 // output functions are configurable.  This one just appends some text
 // to a pre element.
@@ -65,33 +79,32 @@ function builtinRead(x) {
     return Sk.builtinFiles["files"][x];
 }
 
-// Here's everything you need to run a python program in skulpt
-// grab the code from your textarea
-// get a reference to your pre element for output
-// configure the output function
-// call Sk.importMainWithBody()
-
-	<% String docID = request.getParameter("docID");%>
-
 function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
 	   mycodemirror.save();
-	   var mytext = document.getElementById("text").value; 
+	   var mytext = encodeURIComponent(document.getElementById("text").value); 
         jQuery.ajax({
             type: "POST",
             url: "plaintextfunctions.jsp",
             data: {
             	
-            	title: document.getElementById('titleBox').value,
-      			funct: save,
+            	title: encodeURIComponent(document.getElementById('titleBox').value),
+      			funct: "save",
                 docID: <%=docID%>,
         		text: mytext,
-        		newDoc: request.getParameter("newDoc")
+        		newDoc: <%=newDoc%>
         		
             },
             dataType: "script"
         }).done(function( response ) {
-			alert(response);
-        });
+			//alert(response);
+        }).fail(function(response) { alert("Error")   ; });
+}
+
+function previewit() {
+	saveit();
+	window.location="preview.jsp?WIPDoc=1&myDoc=1&docID=<%=docID%>";
+}
+        
 
   </script>
   <div class="header">
@@ -100,26 +113,22 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
   </div>
 
         <form action="demo_form.asp" id="tagtitlebox">
-        <input type="text" value=<%if(session.getAttribute("newDoc")=="1"){%><%=""%><%}
-    else{
-    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong((String)session.getAttribute("docID")));%>
-    	<%=document.getTitle()%>
-    <%}%> id="titleBox" maxlength="30" placeholder="Title" required><br>
+        <input type="text" value=<%
+    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong(docID));%>"<%=document.getTitle()%>"
+    id="titleBox" maxlength="30" placeholder="Title" required><br>
         <input type="text" placeholder="Tags" required><br>
         </form>
 
 
 
-    <textarea class="textbox" id="text" ><%if(session.getAttribute("newDoc")=="1"){}
-    else{
-    Document document = DocumentManager.getInstance().getDocumentById(Long.parseLong((String)session.getAttribute("docID")));%>
-    	<%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%>
-    <%}%></textarea><br /> 
+    <textarea class="textbox" id="text" ><%if(Integer.parseInt(newDoc)!=1){%><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%}%></textarea><br /> 
 
     <!-- complete these buttons-->
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%;">
 				<button class="fml_buttons" type="button" onclick="saveit()"
 					style="border-style: none; background: #00CC66; color: #ff7865; width:10%; min-width:50px;">Save</button>
+				<button class="fml_buttons" type="button" onclick="previewit()"
+					style="border-style: none; background: #ffdfe0; color: #000000; width:10%; min-width:50px;">Preview</button>
 			</div>
 
 
@@ -127,8 +136,8 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
       <!-- The menu -->
       <nav id="menu">
          <ul>
-            <li><a href="home.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="landing.jsp">Home</a></li>
+            <li><a href="library.jsp">My Documents</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>

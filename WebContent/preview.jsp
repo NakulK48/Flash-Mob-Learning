@@ -27,63 +27,47 @@
           });
        });
     </script>
-<title>Preview</title>
-<%!
- 	public void jspInit()
-	{
-		try
-		{
-			Database.init();
-		}
-		
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
+<%		
+		//Session check
+	if(session.getAttribute(Attribute.USERID)==null){
+		//session invalid
+		response.sendRedirect("login.jsp");
+		return;
+	}
 
-	} 
+	String documentID = (String) request.getParameter("docID");
+	LoginManager l = LoginManager.getInstance();
+	User u = l.getUser((String) session.getAttribute(Attribute.USERNAME));
+	Long docID = Long.parseLong(documentID);
+	Document doc = DocumentManager.getInstance().getDocumentById(docID);
+	String title = doc.getTitle();
+	String pageType = "Preview";
+	if (doc instanceof PublishedDocument){
+		pageType = "Published";
+	} 	
 %>
-
+<title><%=title%> - <%=pageType %></title>
 </head >
 
 <body>
-<%		
-		//Session check
-	if(session.getAttribute("uid")==null){
-		//session invalid
-		response.sendRedirect("login.jsp");
-	}
-%>
 
 <script type="text/javascript"> 
 
-	<%
-	LoginManager l = LoginManager.getInstance();
-	User u = l.getUser((String) session.getAttribute("username"));
-	Long docID = Long.parseLong(request.getParameter("docID"));
-	Document doc = DocumentManager.getInstance().getDocumentById(docID);
-	%>
-
 function cloneit(){
-	document.location.href = "fork.jsp?docid="+request.getParameter("docid")
+	window.location = "fork.jsp?docID=<%=documentID%>";
 }
 
 function editit(){
-	document.location.href = "plaintexteditor.jsp?docID="+request.getParameter("docID")+"&WIPDoc=1&myDoc=1"
+	window.location = "plaintexteditor.jsp?docID=<%=documentID%>&newDoc=0&wipdoc=1";
 }
 
 function publishit(){
-	document.location.href = "publish.jsp?docID="+request.getParameter("docID");
+	window.location ="publish.jsp?docID=<%=documentID%>";
 }
 
-function upvoteit(){
- <!-- TODO -->
-}
+//function upvoteit(){
+ //<!-- TODO -->
+//}
 
 </script>
           <div class="header">
@@ -92,11 +76,16 @@ function upvoteit(){
         </div>
 
 <div>
+
 <h1 id="titlearea">
-     <%=doc.getTitle() %>
+     <%=doc.getTitle()+" - "+pageType %>
 </h1>
-<h2 id="parentdoctitle">
-	Based on "<%= doc.getParentDocument().getTitle() %>"</h2>
+<%	boolean hasParent = false;
+try{
+	String parentTitle=doc.getParentDocument().getTitle();
+	hasParent=true;
+}catch(Exception e){}%>
+<h2 id="parentdoctitle"> <%if(hasParent){%><%="Based on"+ doc.getParentDocument().getTitle() + "."%><%}else%><%=""%></h2>
 <p id="bodyarea">
 	<%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
 </p>
@@ -107,19 +96,25 @@ function upvoteit(){
 </div>
 
 <div id="buttons" style="padding-left: 40%; padding-right: 30%;">
-	<%if(session.getAttribute("myDoc")=="1"){%>
+	<%if(pageType.equals("Preview")){%>
 		<button class="fml_buttons" type="button" onclick="editit()"
-				style="border-style: none; width:10%; min-width:50px;">Edit</button>
-		<%if(session.getAttribute("WIPDoc")=="1"){%>
-			<button class="fml_buttons" type="button" onclick="publishit()"
-				style="border-style: none; width:10%; min-width:50px;">Publish</button>
+			style="border-style: none; width:10%; min-width:50px;">Edit</button>
 	
-	<%}}else{%>
-		<button class="fml_buttons" type="button" onclick="cloneit()"
-				style="border-style: none; width:10%; min-width:50px;">Clone</button>
-		<button class="fml_buttons" type="button" onclick="upvoteit()"
-				style="border-style: none; width:10%; min-width:50px;">Upvote</button>
-	<%}%>
+		<button class="fml_buttons" type="button" onclick="publishit()"
+			style="border-style: none; width:10%; min-width:50px;">Publish</button>
+	<%
+	}else{
+		%><button class="fml_buttons" type="button" onclick="cloneit()"
+				style="border-style: none; width:10%; min-width:50px;">Clone</button><%
+		String myDoc = request.getParameter("myDoc");
+		if(!(myDoc!= null && ((String) myDoc).equals("1"))){
+			//Not my document
+			%>
+			<button class="fml_buttons" type="button" onclick="upvoteit()"
+					style="border-style: none; width:10%; min-width:50px;">Upvote</button><%
+		}
+	}
+	%>
 </div>
 
 
@@ -127,8 +122,8 @@ function upvoteit(){
       <!-- The menu -->
       <nav id="menu">
          <ul>
-            <li><a href="home.jsp">Home</a></li>
-            <li><a href="library.jsp">My Docs</a></li>
+            <li><a href="landing.jsp">Home</a></li>
+            <li><a href="library.jsp">My Documents</a></li>
             <li><a href="hub.jsp">Community Hub</a></li>
           <div style="padding-top:60%;"><a href="logout.jsp">Logout</a></div>  
          </ul>

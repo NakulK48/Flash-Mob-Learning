@@ -182,9 +182,9 @@
 			   var tagDiv = document.getElementById('array_tag_handler');
 			   var tagDivContent = tagDiv.childNodes;
 			   for(var i=0;i<tagDivContent.length-1;i++){
-				   tags.push(tagDivContent[i].textContent);
-				   
+				   tags.push(tagDivContent[i].textContent);   
 			   }
+			   
 		        jQuery.ajax({
 		            type: "POST",
 		            url: "plaintextfunctions.jsp",
@@ -194,7 +194,8 @@
 		      			funct: "save",
 		                docID: <%=docID%>,
 		        		text: mytext,
-		        		newDoc: <%=newDoc%>
+		        		newDoc: <%=newDoc%>,
+		        		tags:encodeUIComponent(tags)
 
 		        		
 		            },

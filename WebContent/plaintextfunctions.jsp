@@ -5,7 +5,7 @@
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*, java.sql.*, javax.servlet.http.*, java.net.URLDecoder"%>
 
 <%!
-String processRequest(String text, String docID, Long uid, String title) {
+String processRequest(String text, String docID, Long uid, String title, String[] tags) {
 	//if("${funct}".equals("save")){ 
 		try{
 		String docTitle = URLDecoder.decode(title, "UTF-8");
@@ -41,4 +41,4 @@ String processRequest(String text, String docID, Long uid, String title) {
 	//else return("Unknown function call");
 }
 %>
-<% processRequest(URLDecoder.decode(request.getParameter("text"), "UTF-8"), (String) request.getParameter("docID"), (Long) session.getAttribute("uid"), (String) request.getParameter("title")); %>
+<% processRequest(URLDecoder.decode(request.getParameter("text"), "UTF-8"), (String) request.getParameter("docID"), (Long) session.getAttribute("uid"), (String) request.getParameter("title"), (String[]) request.getParameter("tags")); %>

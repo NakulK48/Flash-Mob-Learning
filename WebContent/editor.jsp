@@ -89,7 +89,7 @@
 	}
 	%>],
     availableTags: availableTags,
-    autocomplete: true,
+    autocomplete: true
 	});
 
 
@@ -176,12 +176,8 @@
 		function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
 			   mycodemirror.save();
 			   var mytext = encodeURIComponent(document.getElementById("code").value); 
-			   var tags = [];
-			   var tagDiv = document.getElementById('array_tag_handler');
-			   var tagDivContent = tagDiv.childNodes;
-			   for(var i=0;i<tagDivContent.length-1;i++){
-				   tags.push(tagDivContent[i].textContent);   
-			   }
+			   var tags = $('#array_tag_handler').tagHandler("getTags");
+			   
 		       jQuery.ajax({
 		            type: "POST",
 		            url: "plaintextfunctions.jsp",

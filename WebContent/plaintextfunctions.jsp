@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*"%>
-<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*, java.sql.*, javax.servlet.http.*, java.net.URLDecoder"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*, java.sql.*, javax.servlet.http.*, java.net.URLDecoder, java.util.Arrays, org.json.*, javax.*"%>
 
 <%!
 String processRequest(String text, String docID, Long uid, String title, String[] tags) {
@@ -45,7 +45,8 @@ String processRequest(String text, String docID, Long uid, String title, String[
 }
 %>
 <% 
-String str = request.getParameter("tags");
-String [] arr = str.split("%2C");
-System.out.println(arr.length);				
+String str = URLDecoder.decode(request.getParameter("tags"), "UTF-8"); 
+System.out.println(str);
+String [] arr = str.split(",");
+System.out.println(Arrays.toString(arr));				
 processRequest(URLDecoder.decode(request.getParameter("text"), "UTF-8"), (String) request.getParameter("docID"), (Long) session.getAttribute("uid"), (String) request.getParameter("title"), arr); %>

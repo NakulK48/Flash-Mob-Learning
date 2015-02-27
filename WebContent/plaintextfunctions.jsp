@@ -2,12 +2,13 @@
     pageEncoding="UTF-8"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*"%>
-<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*, java.sql.*, javax.servlet.http.*, java.net.URLDecoder, java.util.Arrays"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*, java.sql.*, javax.servlet.http.*, java.net.URLDecoder, java.util.*"%>
 
 <%!
 String processRequest(String text, String docID, Long uid, String title, String[] tags) {
 	//if("${funct}".equals("save")){ 
 	try{
+		System.out.println(Arrays.toString(tags));
 		String docTitle = URLDecoder.decode(title, "UTF-8");
 		Date date = new Date();
 		User u = LoginManager.getInstance().getUser(uid);
@@ -20,9 +21,16 @@ String processRequest(String text, String docID, Long uid, String title, String[
 				wipdoc.setTitle(docTitle);
 				String oldContent = wipdoc.getLastRevision().getContent();
 				String newContent = URLDecoder.decode(text, "UTF-8");
-				for (String tag: tags){
-					System.out.println(wipdoc.addTag(Tag.create(tag)));
+				Set<Tag> oldTags = wipdoc.getTags();
+				
+				for(Tag t:oldTags){ //erasing all the tags
+					System.out.println(t.name);
+					wipdoc.deleteTag(t);
 				}
+			
+ 				for (String tag: tags){
+					wipdoc.addTag(Tag.create(tag));
+				} 
 				if(!oldContent.equals(newContent)){
 					wipdoc.addRevision(date, newContent);
 					return("Save successful");
@@ -48,5 +56,5 @@ String processRequest(String text, String docID, Long uid, String title, String[
 String str = URLDecoder.decode(request.getParameter("tags"), "UTF-8"); 
 System.out.println(str);
 String [] arr = str.split(",");
-System.out.println(Arrays.toString(arr));				
+//System.out.println(Arrays.toString(arr));				
 processRequest(URLDecoder.decode(request.getParameter("text"), "UTF-8"), (String) request.getParameter("docID"), (Long) session.getAttribute("uid"), (String) request.getParameter("title"), arr); %>

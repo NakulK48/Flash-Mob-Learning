@@ -80,14 +80,14 @@
 		myDoc = document.owner.getID() == uid;
 		Set<Tag> thisTags = document.getTags();
 		%>
-
-	$("#array_tag_handler").tagHandler({
-	assignedTags:['+ New Tag'
+	var currentTags = [];
 	<%
 	for(Tag t : thisTags) {
-		out.println(",'"+ t.name+"'");
+		out.println("currentTags.push('"+t.name+"')");
 	}
-	%>],
+	%>
+	$("#array_tag_handler").tagHandler({
+	assignedTags:currentTags,
     availableTags: availableTags,
     autocomplete: true
 	});

@@ -80,6 +80,7 @@
          <div class="header">
             <a href="#menu"></a>
              <%=dt==DocumentType.SKULPT?"Skulpt - ":"Text - " %>Library
+             <img src="fml_logo_head.png" alt="Smiley face" height="30" width="30">
          </div>
          <div >
 <%

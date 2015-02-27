@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*"%>
-<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*, java.sql.*, javax.servlet.http.*, java.net.URLDecoder, java.util.Arrays, org.json.*, javax.*"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*, java.sql.*, javax.servlet.http.*, java.net.URLDecoder, java.util.Arrays"%>
 
 <%!
 String processRequest(String text, String docID, Long uid, String title, String[] tags) {

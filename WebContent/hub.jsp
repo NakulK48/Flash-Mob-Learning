@@ -1,13 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="java.sql.*, java.util.ArrayList, uk.ac.cam.grpproj.lima.flashmoblearning.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*" %>
+    pageEncoding="ISO-8859-1" import="javax.servlet.*,java.sql.*, java.util.ArrayList, uk.ac.cam.grpproj.lima.flashmoblearning.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.*, uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*" %>
 
 <!DOCTYPE html>
 <html>
    <head>
-
-      <title>Hub - Flash Mob Learning</title>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1">
+		<%	//get attributes/parameters
+			if(session.getAttribute(Attribute.USERID)==null){
+				response.sendRedirect("login.jsp");
+				return;
+			}
+						
+			long uid = (Long) session.getAttribute(Attribute.USERID);
+			DocumentType dt = DocumentType.ALL;
+		
+			if (request.getParameter("doctype") != null)
+			{
+				String doctypeString = request.getParameter("doctype");
+				if (doctypeString.equals("skulpt")) dt = DocumentType.SKULPT;
+				else dt = DocumentType.PLAINTEXT;
+				session.setAttribute(Attribute.DOCTYPE, dt);
+			}
+			if (session.getAttribute(Attribute.DOCTYPE) == null) {
+				response.sendRedirect("landing.jsp");
+				return;
+			}
+			dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE);
+		%>
+      	<title>Hub - Flash Mob Learning</title>
+      	<meta charset="utf-8" />
+      	<meta name="viewport" content="width=device-width, initial-scale=1">
       <link type="text/css" href="css/demo.css" rel="stylesheet" />
 
       <!-- Include jQuery.mmenu .css files -->
@@ -32,48 +53,6 @@
 
    </head>
    <body>
-<%!
- 	public void jspInit()
-	{
-		try
-		{
-			Database.init();
-		}
-		
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-
-	} 
-%>
-<%
-	if(session.getAttribute(Attribute.USERID)==null){
-		response.sendRedirect("login.jsp");
-		return;
-	}
-	
-	long uid = (Long) session.getAttribute(Attribute.USERID);
-
-	DocumentType dt = DocumentType.ALL;
-	if (request.getParameter("doctype") != null)
-	{
-		String doctypeString = request.getParameter("doctype");
-		if (doctypeString.equals("skulpt")) dt = DocumentType.SKULPT;
-		else dt = DocumentType.PLAINTEXT;
-		session.setAttribute(Attribute.DOCTYPE, dt);
-	}
-	if (session.getAttribute(Attribute.DOCTYPE) == null) {
-		response.sendRedirect("landing.jsp");
-		return;
-	}
-	dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE); //browsing text or skulpt?
-%>
 
       <!-- The page -->
       <div class="page">
@@ -82,29 +61,61 @@
             <%=dt==DocumentType.SKULPT?"Skulpt - ":"Text - " %>Community Hub
          </div>
          <div class="content" style="padding-top:10px;">
-
-<%
-
-	DocumentManager dm = DocumentManager.getInstance();
-
-	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
-	if (upvoted != null)
-	{
-		long thisDocumentID = Long.parseLong(upvoted);
-		User thisUser = LoginManager.getInstance().getUser(uid);
-		
-
-		PublishedDocument thisDocument = (PublishedDocument) dm.getDocumentById(thisDocumentID);
-		
-		try
+<%! //Outputs a single entry
+	String entry(PublishedDocument d, int page, String sort, ArrayList<Long> upvoted, long uid){
+		String ageString;
+		int ageInHours = (int) ((System.currentTimeMillis() - d.creationTime)/3600000);
+		if (ageInHours < 1) ageString = "Less than an hour ago";
+		else if (ageInHours < 2) ageString = "An hour ago";
+		else if (ageInHours < 24) ageString = ageInHours + " hours ago";
+		else
 		{
+			int ageInDays = ageInHours / 24;
+			if (ageInDays == 1) ageString = "yesterday";
+			else ageString = ageInDays + " days ago";
+		}		
+		String upvoteLink = "<a href='hub.jsp?page=" + page + "&sort=" + sort + "&upvote=" + Long.toString(d.getID()) + "'>";
+		String upvoteImage = "UpvoteNormal.png";
+		if (upvoted.contains(d.getID())) upvoteImage = "UpvoteEngaged.png";
+		String entry = 
+		"<tr class='upperRow'>" + 
+		"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
+		//TODO: Replace with upvote sprite
+		//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
+		"<td class='title'> <a href="+(d.docType==DocumentType.SKULPT?"'editor.jsp":"'preview.jsp")+"?docID=" + Long.toString(d.getID())+(uid==d.owner.getID()?"&myDoc=1":"")+ "'>" + d.getTitle() + "</a></td>" + //title
+		"<td class='age'>" + ageString + "</td>" + //age
+		"</tr>" + 
+		"<tr class='lowerRow'>" +
+		"<td id='score" + Long.toString(d.getID()) + "' class='votes'>" + d.getVotes()	+ "</td>" + //score
+		"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(d.owner.getID()) + "'>" + (uid==d.owner.getID()?"me":d.owner.getName())+ "</a></td>" + //submitter
+		"<td></td>" +
+		"</tr>"; 
+		return entry;		
+	}
+%>
+<%
+	DocumentManager dm;
+	LoginManager lm;
+	try{
+		dm = DocumentManager.getInstance();
+		lm = LoginManager.getInstance();
+	}catch(NotInitializedException e){
+		Database.init();
+		RequestDispatcher rd = request.getRequestDispatcher("hub.jsp");
+		rd.include(request, response);
+		return;
+	}
+	User thisUser = lm.getUser(uid);
+	String upvoted = request.getParameter("upvote"); //specifies which document to upvote
+	if (upvoted != null) {
+		long thisDocumentID = Long.parseLong(upvoted);
+		PublishedDocument thisDocument = (PublishedDocument) dm.getDocumentById(thisDocumentID);
+		try {
 			dm.addVote(thisUser, thisDocument);
 		}
-		catch (DuplicateEntryException e)
-		{
+		catch (DuplicateEntryException e) {
 			thisDocument.setVotes(thisDocument.getVotes() - 1);
 		}
-
 		thisDocument.setVotes(thisDocument.getVotes() + 1);
 	}
 	
@@ -133,24 +144,24 @@
 	QueryParam pf;
 	
 	int featuredCount = 5;
-	if (showFeatured.equals("only")) featuredCount = 25;
+	if (showFeatured.equals("only")) featuredCount = limit;
 	
 	if (sortType.equals("new"))
 	{
-		p = new QueryParam(25, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
-		pf = new QueryParam(featuredCount, 0, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+		p = new QueryParam(limit+1, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
+		pf = new QueryParam(featuredCount+1, offset, QueryParam.SortField.TIME, QueryParam.SortOrder.DESCENDING);
 	}
 	
 	else if (sortType.equals("top"))
 	{
-		p = new QueryParam(25, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
-		pf = new QueryParam(featuredCount, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
+		p = new QueryParam(limit+1, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
+		pf = new QueryParam(featuredCount+1, offset, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
 	}
 	
 	else // "hot"
 	{
-		p = new QueryParam(25, offset, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
-		pf = new QueryParam(featuredCount, 0, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
+		p = new QueryParam(limit+1, offset, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
+		pf = new QueryParam(featuredCount+1, offset, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
 	}
 	
 	ArrayList<PublishedDocument> featuredSubs = new ArrayList<PublishedDocument>();
@@ -158,6 +169,9 @@
 
 	if (pageNumber == 1 && (showFeatured.equals("true") || showFeatured.equals("only"))) 
 	{
+		featuredSubs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getFeatured(dt, p);
+	}
+	else if(showFeatured.equals("only")){
 		featuredSubs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getFeatured(dt, p);
 	}
 	
@@ -220,91 +234,30 @@
 		}
 		//TODO list featured documents
 		
-		User thisUser = LoginManager.getInstance().getUser(uid);
-		ArrayList<Long> upvotedDocuments = (ArrayList<Long>) dm.hasUpvoted(thisUser, featuredSubs);
+		ArrayList<Long> upvotedDocuments = (ArrayList<Long>) dm.hasUpvoted(thisUser, subs);
 		
-		for (PublishedDocument pd : featuredSubs)
-		{
-
-			String ageString;
-			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
-			if (ageInHours < 1) ageString = "Less than an hour ago";
-			else if (ageInHours < 2) ageString = "An hour ago";
-			else if (ageInHours < 24) ageString = ageInHours + " hours ago";
-			else
-			{
-				int ageInDays = ageInHours / 24;
-				if (ageInDays == 1) ageString = "yesterday";
-				else ageString = ageInDays + " days ago";
-			}
-			
-			
-			String upvoteLink = "<a href='hub.jsp?page=" + pageNumber + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
-			String upvoteImage = "UpvoteNormal.png";
-			if (upvotedDocuments.contains(pd.getID())) upvoteImage = "UpvoteEngaged.png";
-			String entry = 
-			"<tr class='upperRow'>" + 
-			"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
-			//TODO: Replace with upvote sprite
-			//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-			"<td class='title'> <a href="+(dt==DocumentType.SKULPT?"'editor.jsp":"'preview.jsp")+"?docID=" + Long.toString(pd.getID())+(uid==pd.owner.getID()?"&myDoc=1":"")+ "'>" + pd.getTitle() + "</a></td>" + //title
-			"<td class='age'>" + ageString + "</td>" + //age
-			"</tr>" + 
-			"<tr class='lowerRow'>" +
-			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + (uid==pd.owner.getID()?"me":pd.owner.getName())+ "</a></td>" + //submitter
-			"<td></td>" +
-			"</tr>"; 
-			out.println(entry);
+		for (int i = 0; i < featuredSubs.size() && i < featuredCount; i++) {
+			PublishedDocument pd  = featuredSubs.get(i);
+			out.println(entry(pd, pageNumber, sortType, upvotedDocuments, uid));
 		} 
 		
 
-		if (pageNumber == 1 && !showFeatured.equals("only"))
-		{
+		if (pageNumber == 1 && !showFeatured.equals("only")){
 			%>
 			<tr><th>The Rest</th></tr>
 			<tr><td>&nbsp;</td></tr>
 			<%
 		}
 		
-		upvotedDocuments = (ArrayList<Long>) dm.hasUpvoted(thisUser, subs);
-
-		
-		for (PublishedDocument pd : subs)
-		{
-
-			String ageString;
-			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
-			if (ageInHours < 1) ageString = "Less than an hour ago";
-			else if (ageInHours < 2) ageString = "An hour ago";
-			else if (ageInHours < 24) ageString = ageInHours + " hours ago";
-			else
-			{
-				int ageInDays = ageInHours / 24;
-				if (ageInDays == 1) ageString = "yesterday";
-				else ageString = ageInDays + " days ago";
-			}
-			
-			String upvoteLink = "<a href='hub.jsp?page=" + pageNumber + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
-			String upvoteImage = "UpvoteNormal.png";
-			if (upvotedDocuments.contains(pd.getID())) upvoteImage = "UpvoteEngaged.png";
-			String entry = 
-			"<tr class='upperRow'>" + 
-			"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
-			"<td class='title'> <a href="+(dt==DocumentType.SKULPT?"'editor.jsp":"'preview.jsp")+"?docID=" + Long.toString(pd.getID()) +(uid==pd.owner.getID()?"&myDoc=1":"")+"'>" + pd.getTitle() + "</a></td>" + //title
-			"<td class='age'>" + ageString + "</td>" + //age
-			"</tr>" + 
-			"<tr class='lowerRow'>" +
-			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + (uid==pd.owner.getID()?"me":pd.owner.getName())	+ "</a></td>" + //submitter
-			"<td></td>" +
-			"</tr>"; 
-			
-			out.println(entry);
+		for (int i = 0; i < subs.size() && i < limit; i++){
+			PublishedDocument pd = subs.get(i);
+			out.println(entry(pd, pageNumber, sortType, upvotedDocuments, uid));
 		} 
+		boolean hasNext = subs.size() > limit||(showFeatured.equals("only")&&featuredSubs.size()>featuredCount);
+		boolean hasPre = pageNumber!=1;
 		
-		String previousURL = "hub.jsp?sort=" + sortType + "&page=" + previousPage;
-		String nextURL = "hub.jsp?sort=" + sortType + "&page=" + nextPage;
+		String previousURL = "hub.jsp?sort=" + sortType + "&page=" + previousPage + "&showFeatured=" + showFeatured;
+		String nextURL = "hub.jsp?sort=" + sortType + "&page=" + nextPage + "&showFeatured=" + showFeatured;
 		
 	%>
 
@@ -346,9 +299,25 @@
 	</script>
 	<div class="footer fixed"  >	
 		<div id="inner">
-			<div id = "previousLink" class="footerElem"><a href='<%=previousURL %>'>Previous</a></div>
+			<div id = "previousLink" class="footerElem">
+			<%
+			if (hasPre){
+			%><a href='<%=previousURL %>'>Previous</a><%
+			}else{
+			%>Previous<%	
+			}
+			%>
+			</div>
 			<div id = "pageNumber" class="footerElem">Page <%=pageNumber %></div>
-			<div id = "nextLink" class="footerElem"><a href='<%=nextURL %>'>Next</a></div>	
+			<div id = "nextLink" class="footerElem">
+			<%
+			if (hasNext){
+			%><a href='<%=nextURL %>'>Next</a><%
+			}else{
+			%>Next<%	
+			}
+			%>
+			</a></div>	
 		</div>
 	</div>	
 

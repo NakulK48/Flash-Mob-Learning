@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date, java.util.Set"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*, java.sql.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -114,7 +114,11 @@ try{
 <p style="white-space:pre-wrap; width:40ex; margin-left:5px; color:black" id="bodyarea"><%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
 </p>
 <p id="tagarea" style="padding-left:5%; color:black;">
-	Tags : <%= doc.getTags() %>
+	Tags : <%
+	Set<Tag> tags = doc.getTags();
+	for(Tag t : tags){%>
+		<%=t.name+" "%>
+	<%} %>
 </p>
 <!-- TODO : upvote button qnd upvote count -->
 </div>

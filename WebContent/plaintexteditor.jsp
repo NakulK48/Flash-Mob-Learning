@@ -173,22 +173,20 @@ function removeTag(){
    <a href="#menu"></a>
           Text Editor
   </div>
-
+<div>
         <form id="tagtitlebox">
-        <input type="text" value=<%
-
-    %>
-    "<%=document.getTitle()%>"
+        <input type="text" value="<%=document.getTitle()%>"
     id="titleBox" maxlength="30" placeholder="Title" style="margin-bottom:10px" required><br>
         </form>
 
 
-
+	
     <textarea class="textbox" id="plaintext" ><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%></textarea><br /> 
 	
 	<div>
 		<ul id="array_tag_handler" style="list-style-type:none; margin-top:10px; margin-bottom:10px"></ul>
 	</div>
+</div>
 	
     <!-- complete these buttons-->
 			<div id="buttons" style="padding-left: 40%; padding-right: 30%; min-width:60px;">

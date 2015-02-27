@@ -27,6 +27,7 @@
 	<link rel="stylesheet" type="text/css" href="jquery.taghandler.css"/>
     <!-- Fire the plugin onDocumentReady -->
     <script type="text/javascript">
+    
 
 	$(function(){
 		$('.tagInputField').autocomplete();
@@ -80,6 +81,17 @@
 		myDoc = document.owner.getID() == uid;
 		Set<Tag> thisTags = document.getTags();
 		%>
+		
+	var allowEdit;
+		<%
+    if (published){
+    	%>allowEdit = false;<%
+    }else{
+    %>allowEdit = true;
+	<%
+    }
+	%>
+	
 	var currentTags = [];
 	<%
 	for(Tag t : thisTags) {
@@ -89,23 +101,19 @@
 	$("#array_tag_handler").tagHandler({
 	assignedTags:currentTags,
     availableTags: availableTags,
-    autocomplete: true
+    autocomplete: true,
+    allowEdit : allowEdit
 	});
-
-
-	})
-
-       $(document).ready(function() {
-          $("#menu").mmenu({
-             "slidingSubmenus": false,
-             "classes": "mm-white",
-             "searchfield":{
-            	 add:true,
-            	 search:false
-             }
-          });
-       });
 	
+    $("#menu").mmenu({
+        "slidingSubmenus": false,
+        "classes": "mm-white",
+        "searchfield":{
+       	 add:true,
+       	 search:false
+        }
+     });
+    
 	$("#menu .mm-search input")
     .bind( "change", function() {
         // do your search
@@ -114,137 +122,134 @@
         $("#foo").trigger( "close" );
     }
 );
+	
+	
+
+	})
+	
+	// output functions are configurable.  This one just appends some text
+	// to a pre element.
+
+	var mycodemirror;
+	var allowEdit;
+	<%
+	if (published){
+		%>allowEdit = false;<%
+	}else{
+		%>allowEdit = true;
+	<%
+	}
+	%>
+	function loadCodeMirror() {
+
+		mycodemirror = CodeMirror.fromTextArea(document
+				.getElementById("code"), {
+			lineNumbers : true,
+			mode : "python",
+			lineWrapping:true,
+			readOnly:!allowEdit
+		});
+
+	}
+	setTimeout(function() {
+		$('.textbox').css({
+			'height' : 'auto'
+		});
+	}, 50);
+
+	function outf(text) {
+		var mypre = document.getElementById("output");
+		mypre.innerHTML = mypre.innerHTML + text;
+	}
+	function builtinRead(x) {
+		if (Sk.builtinFiles === undefined
+				|| Sk.builtinFiles["files"][x] === undefined)
+			throw "File not found: '" + x + "'";
+		return Sk.builtinFiles["files"][x];
+	}
+
+	// Here's everything you need to run a python program in skulpt
+	// grab the code from your textarea
+	// get a reference to your pre element for output
+	// configure the output function
+	// call Sk.importMainWithBody()
+
+	function runit() {
+		mycodemirror.save();
+		var prog = document.getElementById("code").value;
+		var mypre = document.getElementById("output");
+		mypre.innerHTML = '';
+		Sk.canvas = "mycanvas";
+		Sk.pre = "output";
+		Sk.configure({
+			output : outf,
+			read : builtinRead
+		});
+		try {
+			eval(Sk.importMainWithBody("<stdin>", false, prog));
+		} catch (e) {
+			alert(e.toString())
+		}
+	}
+
+	function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
+		   mycodemirror.save();
+		   var mytext = encodeURIComponent(document.getElementById("code").value); 
+		   var tags = $('#array_tag_handler').tagHandler("getTags");
+		   
+	       jQuery.ajax({
+	            type: "POST",
+	            url: "plaintextfunctions.jsp",
+	            data: {
+	            	
+	            	title: encodeURIComponent(document.getElementById('titleBox').value),
+	      			funct: "save",
+	                docID: <%=docID%>,
+	        		text: mytext,
+	        		newDoc: <%=newDoc%>,
+	        		tags:encodeURIComponent(tags)
+	            },
+	            dataType: "script"
+	        }).done(function( response ) {
+				alert("Save successful");
+	        }).fail(function(response) { alert("Error")   ; });
+	}
+
+
+	function publishit(){
+		saveit();
+		window.location ="publish.jsp?docID=<%=docID%>";
+	}
+
+	
+	function deleteit() {
+	    if (confirm("Are you sure you want to delete this document ? This cannot be undone.") == true) {
+	        window.location = "delete.jsp?docID=<%=docID%>";
+	    } else {
+	    }
+	}
+	function featureit(){
+		window.location ="feature.jsp?docID=<%=docID%>&feature=true";
+		alert("Document featured!");
+	}
+
+	function unfeaturit(){
+		window.location ="feature.jsp?docID=<%=docID%>&feature=false";
+		alert("Document unfeatured!");
+	}
+	
+	function cloneit(){
+		window.location = "fork.jsp?docID=<%=docID%>";
+	}
+
+	
     </script>
     
 </head >
 
 <body onload="loadCodeMirror()">
 	<script type="text/javascript">
-		// output functions are configurable.  This one just appends some text
-		// to a pre element.
 
-		var mycodemirror;
-		function loadCodeMirror() {
-			mycodemirror = CodeMirror.fromTextArea(document
-					.getElementById("code"), {
-				lineNumbers : true,
-				mode : "python"
-			});
-
-		}
-		setTimeout(function() {
-			$('.textbox').css({
-				'height' : 'auto'
-			});
-		}, 50);
-
-		function outf(text) {
-			var mypre = document.getElementById("output");
-			mypre.innerHTML = mypre.innerHTML + text;
-		}
-		function builtinRead(x) {
-			if (Sk.builtinFiles === undefined
-					|| Sk.builtinFiles["files"][x] === undefined)
-				throw "File not found: '" + x + "'";
-			return Sk.builtinFiles["files"][x];
-		}
-
-		// Here's everything you need to run a python program in skulpt
-		// grab the code from your textarea
-		// get a reference to your pre element for output
-		// configure the output function
-		// call Sk.importMainWithBody()
-
-		function runit() {
-			mycodemirror.save();
-			var prog = document.getElementById("code").value;
-			var mypre = document.getElementById("output");
-			mypre.innerHTML = '';
-			Sk.canvas = "mycanvas";
-			Sk.pre = "output";
-			Sk.configure({
-				output : outf,
-				read : builtinRead
-			});
-			try {
-				eval(Sk.importMainWithBody("<stdin>", false, prog));
-			} catch (e) {
-				alert(e.toString())
-			}
-		}
-
-		function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
-			   mycodemirror.save();
-			   var mytext = encodeURIComponent(document.getElementById("code").value); 
-			   var tags = $('#array_tag_handler').tagHandler("getTags");
-			   
-		       jQuery.ajax({
-		            type: "POST",
-		            url: "plaintextfunctions.jsp",
-		            data: {
-		            	
-		            	title: encodeURIComponent(document.getElementById('titleBox').value),
-		      			funct: "save",
-		                docID: <%=docID%>,
-		        		text: mytext,
-		        		newDoc: <%=newDoc%>,
-		        		tags:encodeURIComponent(tags)
-		            },
-		            dataType: "script"
-		        }).done(function( response ) {
-					alert("Save successful");
-		        }).fail(function(response) { alert("Error")   ; });
-		}
-
-
-		function publishit(){
-			saveit();
-			window.location ="publish.jsp?docID=<%=docID%>";
-		}
-
-
-		function addTag(){
-			var newTag = document.getElementById('tags').value;
-			console.log(newTag);
-			var selectedTags = document.getElementById('selectedTags');
-			var removeTagList = document.getElementById('removeTagList');
-			if(selectedTags.innerText.indexOf(newTag) == -1){ // to prevent duplicate Tags
-				selectedTags.innerText += " "+newTag;
-				removeTagList.options[removeTagList.options.length] = new Option(newTag, newTag);
-			}
-			
-		}
-		
-		function removeTag(){
-			var option = document.getElementById('removeTagList').value;
-			$("#removeTagList option[value="+option+"]").remove();
-			var selectedTagString = document.getElementById('selectedTags').innerText;
-			selectedTagString = selectedTagString.replace(option,'');
-			document.getElementById('selectedTags').innerText = selectedTagString;
-			
-		}
-		
-		function deleteit() {
-		    if (confirm("Are you sure you want to delete this document ? This cannot be undone.") == true) {
-		        window.location = "delete.jsp?docID=<%=docID%>";
-		    } else {
-		    }
-		}
-		function featureit(){
-			window.location ="feature.jsp?docID=<%=docID%>&feature=true";
-			alert("Document featured!");
-		}
-
-		function unfeaturit(){
-			window.location ="feature.jsp?docID=<%=docID%>&feature=false";
-			alert("Document unfeatured!");
-		}
-		
-		function cloneit(){
-			window.location = "fork.jsp?docID=<%=docID%>";
-		}
-
-		
 	</script>
 	<!-- The page -->
 	<div class="page">
@@ -255,7 +260,7 @@
         
         <%
         if (published){
-        	%><div id="titleBox"><%=document.getTitle()%></div> <%
+        	%><div id="titleBox" readonly><%=document.getTitle()%></div> <%
         }else{
         %><input type="text" value="<%=document.getTitle()%>"
 		    id="titleBox" maxlength="30" placeholder="Title" required ><br>
@@ -271,7 +276,7 @@
 		<div class="codeEditor">
 
 
-	<textarea class="textbox" id="code"><%
+	<textarea class="textbox"  id="code" disabled><%
 		if(!newDoc.equals("1")){%><%=
 			DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%
 		}else{%><%="print 'Hello World'"%><%}%></textarea>

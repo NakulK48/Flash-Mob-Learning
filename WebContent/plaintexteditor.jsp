@@ -89,8 +89,6 @@
 		response.sendRedirect("error.jsp");
 		return;
 	}
-		response.sendRedirect("error.jsp");
-		return;
 
 %>
 <script type="text/javascript"> 

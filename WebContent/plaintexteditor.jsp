@@ -184,7 +184,7 @@ function removeTag(){
 
 
 
-    <textarea class="textbox" id="plaintext" ><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%>></textarea><br /> 
+    <textarea class="textbox" id="plaintext" ><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%></textarea><br /> 
 	
 	<div>
 		<ul id="array_tag_handler" style="list-style-type:none; margin-top:10px; margin-bottom:10px"></ul>

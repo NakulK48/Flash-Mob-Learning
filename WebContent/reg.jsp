@@ -17,11 +17,13 @@
 			response.sendRedirect("home.jsp");
 			return;
 		}
+		String username = request.getParameter("username");
+		
 	%>
 	<div class="login-card">
 	<center><%=LoginManager.getInstance().getLoginBanner() %></center></br>
 		<form method="post" action="regCheck.jsp">
-			<input type="text" name="username" placeholder="Username" required> 
+			<input type="text" name="username" placeholder="Username" <%=(username!=null?"value='"+username+"'":"") %>required> 
 			<input type="password" name="pwd" placeholder="Password" required> 
 			<input type="password" name="rpwd" placeholder="Repeat Password" required>
 			<input type="submit" class="login login-submit" value="Register">

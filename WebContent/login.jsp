@@ -29,12 +29,14 @@
 			response.sendRedirect("landing.jsp");
 			return;
 		}
+		String username = request.getParameter("username");
+
 	%>
 	<img alt="logo" src="fml_logo.png" style="width:100%">
 	<div class="login-card" >
 	<center><%=LoginManager.getInstance().getLoginBanner()%></center><br>
 		<form method="post" action="loginCheck.jsp">
-			<input type="text" name="username" placeholder="Username" required> <input
+			<input type="text" name="username" placeholder="Username" <%=(username!=null?"value='"+username+"'":"") %>required> <input
 				type="password" name="pwd" placeholder="Password" required> <input
 				type="submit" class="login login-submit" value="Login">
 		</form>

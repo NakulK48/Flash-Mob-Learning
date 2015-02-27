@@ -163,9 +163,6 @@
             Profile - <%= profileUser.getName() %>
          </div>
          <div class="content" style="padding-top:10px;">
-<style>
-.title {font-size:16pt;}
-</style>
 </head>
 <body>
 <%

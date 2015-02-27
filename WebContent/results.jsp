@@ -149,7 +149,7 @@
 				if (ageInDays == 1) ageString = "yesterday";
 				else ageString = ageInDays + " days ago";
 			}
-			String upvoteLink = "<a href='profile.jsp?query=" + searchQuery + "&domain=" + searchDomain + "&upvote=" + Long.toString(pd.getID()) + "'>";
+			String upvoteLink = "<a href='results.jsp?query=" + searchQuery + "&domain=" + searchDomain + "&upvote=" + Long.toString(pd.getID()) + "'>";
 			String upvoteImage = "UpvoteNormal.png";
 			if (upvotedDocuments.contains(pd.getID())) upvoteImage = "UpvoteEngaged.png";
 			String entry = 

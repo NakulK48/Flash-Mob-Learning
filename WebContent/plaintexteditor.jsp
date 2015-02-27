@@ -89,10 +89,8 @@
 		response.sendRedirect("error.jsp");
 		return;
 	}
-	if(newDoc==null) { 
 		response.sendRedirect("error.jsp");
 		return;
-	}
 
 %>
 <script type="text/javascript"> 

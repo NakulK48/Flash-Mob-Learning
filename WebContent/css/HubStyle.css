@@ -4,9 +4,15 @@ table
 {
 	width:100%;
 	border-collapse:collapse;
-	font-size:14pt;
+	font-size:10pt;
 	position:relative;
 }
+
+.content
+{
+	padding: 10px 10px 10px 10px;
+}
+
 
 td
 {
@@ -27,13 +33,13 @@ td
 
 #titleSubmitterHeading
 {
-	width:75%;
+	width:65%;
 }
 
 
 #ageHeading
 {
-	width:15%;
+	width:25%;
 }
 
 tr.lowerRow td

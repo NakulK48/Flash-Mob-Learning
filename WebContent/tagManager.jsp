@@ -65,7 +65,6 @@
 			try{
 				Tag t = dm.getTag(tagName);
 				t.setBanned(true);
-				dm.updateTagBanned(t);
 			}catch(NoSuchObjectException e){
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("tagList.jsp");
 				response.getWriter().println("<center><font color=red>Ban failed: Tag does not exist!</font></center>");
@@ -93,7 +92,6 @@
 			try{
 				Tag t = dm.getTag(tagName);
 				t.setBanned(false);
-				dm.updateTagBanned(t);
 			}catch(NoSuchObjectException e){
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("tagList.jsp");
 				response.getWriter().println("<center><font color=red>Unban failed: Tag does not exist!</font></center>");

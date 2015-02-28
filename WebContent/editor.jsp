@@ -39,7 +39,6 @@
 	for(Tag t:tagList){
 		out.println("availableTags.push('"+t.name+"');");
 	}
-	
 	%>
 	
 	<%
@@ -83,7 +82,8 @@
 	var currentTags = [];
 	<%
 	for(Tag t : thisTags) {
-		out.println("currentTags.push('"+t.name+"')");
+		if (!t.getBanned())
+			out.println("currentTags.push('"+t.name+"')");
 	}
 	%>
 	$("#array_tag_handler").tagHandler({

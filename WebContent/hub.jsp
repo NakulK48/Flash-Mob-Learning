@@ -75,11 +75,16 @@
 			else ageString = ageInDays + " days ago";
 		}		
 		String upvoteLink = "<a href='hub.jsp?page=" + page + "&sort=" + sort + "&upvote=" + Long.toString(d.getID()) + "'>";
+		String upvoteEndLink = "</a>";
 		String upvoteImage = "UpvoteNormal.png";
-		if (upvoted.contains(d.getID())) upvoteImage = "UpvoteEngaged.png";
+		if (upvoted.contains(d.getID())) {
+			upvoteImage = "UpvoteEngaged.png";
+			upvoteLink = "";
+			upvoteEndLink = "";
+		}
 		String entry = 
 		"<tr class='upperRow'>" + 
-		"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
+		"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'>"+upvoteEndLink+"</td>" + //upvote
 		//TODO: Replace with upvote sprite
 		//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
 		"<td class='title'> <a href="+(d.docType==DocumentType.SKULPT?"'editor.jsp":"'preview.jsp")+"?docID=" + Long.toString(d.getID())+(uid==d.owner.getID()?"&myDoc=1":"")+ "'>" + d.getTitle() + "</a></td>" + //title
@@ -114,9 +119,8 @@
 			dm.addVote(thisUser, thisDocument);
 		}
 		catch (DuplicateEntryException e) {
-			thisDocument.setVotes(thisDocument.getVotes() - 1);
+			// Already voted
 		}
-		thisDocument.setVotes(thisDocument.getVotes() + 1);
 	}
 	
 	String showFeatured = request.getParameter("showFeatured");

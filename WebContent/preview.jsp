@@ -102,7 +102,7 @@ function unfeaturit(){
 
 <div>
 
-<h1 id="titlearea">
+<h1 id="titlearea" style="padding-left:3%">
      <%=doc.getTitle()+" - "+pageType %>
 </h1>
 <%	boolean hasParent = false;
@@ -110,14 +110,14 @@ try{
 	String parentTitle=doc.getParentDocument().getTitle();
 	hasParent=true;
 }catch(Exception e){}%>
-<h2 id="parentdoctitle" style="padding-left:10%; color:lightgrey; font-size:small"> <%if(hasParent){%><%="Based on "+ doc.getParentDocument().getTitle() + "."%><%}else%><%=""%></h2>
-<p style="white-space:pre-wrap; width:40ex; margin-left:5px; color:black" id="bodyarea"><%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
+<h2 id="parentdoctitle" style="padding-left:10%; color:lightgrey; font-size:small"> <%if(hasParent){%><%="Based on "+ doc.getParentDocument().getTitle() + ", by "+ doc.getParentDocument().owner.getName()+"."%><%}else%><%=""%></h2>
+<p style="white-space:pre-wrap; width:40ex; padding-left:5%; color:black" id="bodyarea"><%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
 </p>
-<p id="tagarea" style="padding-left:5%; color:black;">
+<p id="tagarea" style="padding-left:8%; color:darkgrey;">
 	Tags : <%
 	Set<Tag> tags = doc.getTags();
 	for(Tag t : tags){%>
-		<%=t.name+" "%>
+		<%=t.name+", "%>
 	<%} %>
 </p>
 <!-- TODO : upvote button qnd upvote count -->
@@ -126,13 +126,13 @@ try{
 <div id="buttons" style="padding-left: 20%; padding-right: auto;">
 	<%if(pageType.equals("Preview")){%>
 		<button class="fml_buttons" type="button" onclick="editit()"
-			style="border-style: none; width:15%; min-width:60px;">Edit</button>
+			style="border-style: none; width:15%; min-width:60px; background-color:#ff91cc">Edit</button>
 	
 		<button class="fml_buttons" type="button" onclick="publishit()"
-			style="border-style: none; width:15%; min-width:60px;">Publish</button>
+			style="border-style: none; width:15%; min-width:60px; background-color:#e7b3ff">Publish</button>
 			
 		<button class="fml_buttons" type="button" onclick="deleteit()"
-			style="border-style: none; width:15%; min-width:60px;">Delete</button>
+			style="border-style: none; width:15%; min-width:60px; background-color:#ff8b99">Delete</button>
 	<%
 	}else{
 		%><button class="fml_buttons" type="button" onclick="cloneit()"

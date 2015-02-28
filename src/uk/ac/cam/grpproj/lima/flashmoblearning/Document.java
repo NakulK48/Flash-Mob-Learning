@@ -72,8 +72,9 @@ public class Document {
 	 * @return True unless the tag was already present. 
 	 * @throws NoSuchObjectException If the Document has not been stored.
 	 * @throws SQLException 
-	 * @throws NotInitializedException If the database has not been initialised. */
-	public boolean addTag(Tag t) throws NotInitializedException, SQLException, NoSuchObjectException {
+	 * @throws NotInitializedException If the database has not been initialised. 
+	 * @throws BannedTagException If the tag has been banned. */
+	public boolean addTag(Tag t) throws NotInitializedException, SQLException, NoSuchObjectException, BannedTagException {
 		try {
 			DocumentManager.getInstance().addTag(this, t);
 			return true;
@@ -176,7 +177,11 @@ public class Document {
 		}
 		Revision.createRevision(d, new Date(), content);
 		for(Tag t : getTags())
-			d.addTag(t);
+			try {
+				d.addTag(t);
+			} catch (BannedTagException e) {
+				// Don't copy banned tags.
+			}
 	}
 	
 	@Override

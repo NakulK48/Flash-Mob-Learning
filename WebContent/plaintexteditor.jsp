@@ -20,7 +20,6 @@
     <script type="text/javascript" src="jquery.mobile-1.4.5/jquery-2.1.3.min.js"></script>
     <script type="text/javascript" src="jQuery.mmenu-master/src/js/jquery.mmenu.min.all.js"></script>
     
-     <script src="jquery.tagsinput.js"></script>
     <script src="jquery-ui.js"></script>
     
 	<script src="jquery.taghandler.js"></script>
@@ -54,17 +53,20 @@
           });
        });
        
-       $("#array_tag_handler").tagHandler({
-    		assignedTags:['+ New Tag'
-    		<%
-    		for(Tag t : thisTags) {
-    			out.println(",'"+ t.name+"'");
-    		}
-    		%>],
-    	    availableTags: availableTags,
-    	    autocomplete: true,
-    		});
-       })
+       var currentTags = [];
+   	<%
+   	for(Tag t : thisTags) {
+   		out.println("currentTags.push('"+t.name+"')");
+   	}
+   	%>
+   	$("#array_tag_handler").tagHandler({
+   	assignedTags:currentTags,
+       availableTags: availableTags,
+       autocomplete: true
+   	});
+
+
+   	})
 
        
        
@@ -97,7 +99,7 @@
 var mycodemirror;
 function loadCodeMirror(){
   mycodemirror = CodeMirror.fromTextArea(document.getElementById("plaintext"), {
-	  lineNumbers: false,
+	  lineNumbers: true,
 	  lineWrapping: true
 	});
 }
@@ -116,12 +118,7 @@ function builtinRead(x) {
 function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAGS YET.
 	   mycodemirror.save();
 	   var mytext = encodeURIComponent(document.getElementById("plaintext").value); 
-	   var tags = [];
-	   var tagDiv = document.getElementById('array_tag_handler');
-	   var tagDivContent = tagDiv.childNodes;
-	   for(var i=0;i<tagDivContent.length-1;i++){
-		   tags.push(tagDivContent[i].textContent);   
-	   }
+	   var tags = $('#array_tag_handler').tagHandler("getTags");
         jQuery.ajax({
             type: "POST",
             url: "plaintextfunctions.jsp",
@@ -146,26 +143,6 @@ function previewit() {
 	window.location="preview.jsp?WIPDoc=1&myDoc=1&docID=<%=docID%>";
 }
 
-function addTag(){
-	var newTag = document.getElementById('tags').value;
-	console.log(newTag);
-	var selectedTags = document.getElementById('selectedTags');
-	var removeTagList = document.getElementById('removeTagList');
-	if(selectedTags.innerText.indexOf(newTag) == -1){ // to prevent duplicate Tags
-		selectedTags.innerText += " "+newTag;
-		removeTagList.options[removeTagList.options.length] = new Option(newTag, newTag);
-	}
-	
-}
-
-function removeTag(){
-	var option = document.getElementById('removeTagList').value;
-	$("#removeTagList option[value="+option+"]").remove();
-	var selectedTagString = document.getElementById('selectedTags').innerText;
-	selectedTagString = selectedTagString.replace(option,'');
-	document.getElementById('selectedTags').innerText = selectedTagString;
-	
-}
         
 
   </script>
@@ -176,7 +153,7 @@ function removeTag(){
 <div>
         <form id="tagtitlebox">
         <input type="text" value="<%=document.getTitle()%>"
-    id="titleBox" maxlength="30" placeholder="Title" style="margin-bottom:10px" required><br>
+    id="titleBox" maxlength="28" placeholder="Title" style="margin-bottom:10px; font-size:130%" required><br>
         </form>
 
 

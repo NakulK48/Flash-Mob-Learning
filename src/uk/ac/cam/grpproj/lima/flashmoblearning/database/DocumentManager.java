@@ -437,7 +437,7 @@ public class DocumentManager {
 		ps.setString(3, document.getTitle());
 		ps.setBoolean(4, document instanceof PublishedDocument);
 		ps.setBoolean(5, document instanceof PublishedDocument && ((PublishedDocument) document).getFeatured());
-		ps.setTimestamp(6, new Timestamp(document.creationTime));
+		ps.setTimestamp(6, new Timestamp((new Date()).getTime()));
 		ps.setLong(7, document.getID());
 
 		int affected_rows = ps.executeUpdate();
@@ -569,8 +569,11 @@ public class DocumentManager {
      * @param tag tag to add.
      * @throws SQLException an error has occurred in the database.
      * @throws DuplicateEntryException If the tag has already been added to the document.
+     * @throws BannedTagException If the tag has been banned already. (Does not do a new
+     * database query to check, just checks the tag object)
      */
-	public void addTag(Document document, Tag tag) throws SQLException, DuplicateEntryException {
+	public void addTag(Document document, Tag tag) throws SQLException, DuplicateEntryException, BannedTagException {
+		if(tag.getBanned()) throw new BannedTagException(tag.name);
 		PreparedStatement ps = m_Database.getConnection().prepareStatement("INSERT INTO document_tags (tag_id, document_id) VALUES (?, ?)");
 		ps.setLong(1, tag.getID());
 		ps.setLong(2, document.getID());

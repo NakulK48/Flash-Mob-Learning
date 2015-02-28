@@ -14,8 +14,19 @@
 </head>
 <body>
 	<%
+		if(session.getAttribute(Attribute.USERID)==null){
+			//session invalid
+			response.sendRedirect("login.jsp");
+			return;
+		}
+		if(session.getAttribute(Attribute.PRIVILEGE)==null||
+				!session.getAttribute(Attribute.PRIVILEGE).equals("admin")){
+			response.sendRedirect("landing.jsp");
+			return;
+		}
+	%>
+	<%
 		// get request parameters
-		
 		String modp = request.getParameter("modifyP");
 		String modu = request.getParameter("modifyU");	
 		String del = request.getParameter("delete");

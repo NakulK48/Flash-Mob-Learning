@@ -437,7 +437,7 @@ public class DocumentManager {
 		ps.setString(3, document.getTitle());
 		ps.setBoolean(4, document instanceof PublishedDocument);
 		ps.setBoolean(5, document instanceof PublishedDocument && ((PublishedDocument) document).getFeatured());
-		ps.setTimestamp(6, new Timestamp(document.creationTime));
+		ps.setTimestamp(6, new Timestamp((new Date()).getTime()));
 		ps.setLong(7, document.getID());
 
 		int affected_rows = ps.executeUpdate();

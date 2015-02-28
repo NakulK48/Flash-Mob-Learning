@@ -114,9 +114,8 @@
 			dm.addVote(thisUser, thisDocument);
 		}
 		catch (DuplicateEntryException e) {
-			thisDocument.setVotes(thisDocument.getVotes() - 1);
+			// Already voted
 		}
-		thisDocument.setVotes(thisDocument.getVotes() + 1);
 	}
 	
 	String showFeatured = request.getParameter("showFeatured");

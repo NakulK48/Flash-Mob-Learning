@@ -82,10 +82,8 @@
 		}
 		catch (DuplicateEntryException e)
 		{
-			thisDocument.setVotes(thisDocument.getVotes() - 1);
+			// Already voted.
 		}
-
-		thisDocument.setVotes(thisDocument.getVotes() + 1);
 	}
 	
 	DocumentType dt = DocumentType.ALL;

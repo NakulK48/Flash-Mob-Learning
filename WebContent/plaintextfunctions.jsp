@@ -29,15 +29,15 @@ String processRequest(String text, String docID, Long uid, String title, String[
 				}
 			
  				for (String tag: tags){
-					wipdoc.addTag(Tag.create(tag));
+ 					if(tag.equals("")) continue;
+					try{
+						wipdoc.addTag(Tag.create(tag));
+					}catch(DuplicateEntryException e){
+						wipdoc.addTag(DocumentManager.getInstance().getTag(tag));
+					}
 				} 
-				if(!oldContent.equals(newContent)){
-					wipdoc.addRevision(date, newContent);
-					return("Save successful");
-				}
-				else{
-					return("Already saved");
-				}
+				wipdoc.addRevision(date, newContent);
+				return("Save successful");
 			}
 			else{
 				return("Invalid document type");

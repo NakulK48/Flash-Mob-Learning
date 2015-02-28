@@ -39,7 +39,7 @@ public class TagTest {
 	final String payloadSimple = "Test payload";
 
 	@Test
-	public void testCreateAndFetch() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
+	public void testCreateAndFetch() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException, BannedTagException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 
@@ -61,7 +61,7 @@ public class TagTest {
 	}
 
 	@Test
-	public void testBanTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
+	public void testBanTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException, BannedTagException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 
@@ -92,10 +92,16 @@ public class TagTest {
 		Assert.assertEquals(0, published.getTags().size());
 		doc = (WIPDocument) DocumentManager.getInstance().getDocumentById(doc.getID());
 		Assert.assertEquals(0, doc.getTags().size());
+		try {
+			doc.addTag(t);
+			Assert.fail();
+		} catch (BannedTagException e) {
+			// Ok.
+		}
 	}
 
 	@Test
-	public void testDeleteTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
+	public void testDeleteTag() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException, BannedTagException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 
@@ -132,7 +138,7 @@ public class TagTest {
 	}
 	
 	@Test
-	public void testDeleteTagFromDocument() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException {
+	public void testDeleteTagFromDocument() throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException, IDAlreadySetException, BannedTagException {
 		Tag t = Tag.create(tagName1);
 		Assert.assertNotSame(-1, t.getID());
 		WIPDocument doc = new WIPDocument(-1, docType, owner, titleSimple, 

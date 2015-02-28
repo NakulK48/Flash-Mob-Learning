@@ -23,6 +23,23 @@ public class Tag {
 	public static Tag create(String name) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException {
 		return DocumentManager.getInstance().createTag(name, false);
 	}
+	
+	public static Tag makeUnbanned(String name) throws NotInitializedException, SQLException, NoSuchObjectException, BannedTagException {
+		DocumentManager d = DocumentManager.getInstance();
+		while(true) {
+			try {
+				Tag t = d.getTag(name);
+				if(t.banned)
+					throw new BannedTagException(t.name);
+			} catch (NoSuchObjectException e) {
+				try {
+					return create(name);
+				} catch (DuplicateEntryException e1) {
+					// Try again.
+				}
+			}
+		}
+	}
 
 	/** Get the tag ID. Called by database */
 	public long getID() {

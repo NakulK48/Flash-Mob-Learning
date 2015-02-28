@@ -31,9 +31,11 @@ String processRequest(String text, String docID, Long uid, String title, String[
  				for (String tag: tags){
  					if(tag.equals("")) continue;
 					try{
-						wipdoc.addTag(Tag.create(tag));
+						wipdoc.addTag(Tag.makeUnbanned(tag));
 					}catch(DuplicateEntryException e){
-						wipdoc.addTag(DocumentManager.getInstance().getTag(tag));
+						// Impossible.
+					}catch(BannedTagException e){
+						// Ignore.
 					}
 				} 
 				wipdoc.addRevision(date, newContent);

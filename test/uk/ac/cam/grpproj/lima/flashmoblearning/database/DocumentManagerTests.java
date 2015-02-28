@@ -438,11 +438,11 @@ public class DocumentManagerTests {
     
     @Test
     public void testCheckUpvote() throws Exception {
-    	List<Document> docs = new ArrayList<Document>();
+    	ArrayList<PublishedDocument> docs = new ArrayList<PublishedDocument>();
     	docs.add(m_Published_Document);
         List<Long> upvotes = DocumentManager.getInstance().hasUpvoted(m_TestUser, docs);
         Assert.assertEquals("Test user has upvoted a document", 1, upvotes.size());
-        Assert.assertEquALS("Test user upvoted the right document", m_Published_Document.getID(), upvotes.get(0));
+        Assert.assertEquals("Test user upvoted the right document", m_Published_Document.getID(), (long) upvotes.get(0));
     }
 
     @Test(expected=DuplicateEntryException.class)

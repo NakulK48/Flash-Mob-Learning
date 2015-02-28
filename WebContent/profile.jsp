@@ -92,7 +92,7 @@
 	if (request.getParameter("doctype")!=null) {
 		String doctype = request.getParameter("doctype");
 		if (doctype.equals("plaintext"))session.setAttribute(Attribute.DOCTYPE, DocumentType.PLAINTEXT);
-		else if (doctype.equals("plaintext"))session.setAttribute(Attribute.DOCTYPE, DocumentType.SKULPT);
+		else if (doctype.equals("skulpt"))session.setAttribute(Attribute.DOCTYPE, DocumentType.SKULPT);
 	}
 	if (session.getAttribute(Attribute.DOCTYPE) == null) response.sendRedirect("landing.jsp");
 	else dt = (DocumentType) session.getAttribute(Attribute.DOCTYPE); //browsing text or skulpt?

@@ -168,12 +168,16 @@
 			else ageString = ageInDays + " days ago";
 		}
 		String upvoteLink = "<a href='tag.jsp?page=" + pageNumber + "&name=" + tagName + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
+		String upvoteEndLink = "</a>";
 		String upvoteImage = "UpvoteNormal.png";
-		if (upvotedDocuments.contains(pd.getID())) upvoteImage = "UpvoteEngaged.png";
-		
+		if (upvotedDocuments.contains(pd.getID())) {
+			upvoteImage = "UpvoteEngaged.png";
+			upvoteLink = "";
+			upvoteEndLink = "";
+		}
 		String entry = 
 		"<tr class='upperRow'>" + 
-		"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
+		"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'>"+upvoteEndLink+"</td>" + //upvote
 		"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
 		"<td class='age'>" + ageString + "</td>" + //age
 		"</tr>" + 

@@ -15,6 +15,9 @@ public class HTMLEncoderTest {
 	String out4 = "&#39;";
 	String in5 = "hello";
 	String out5 = in5;
+	String in6 = "///";
+	String out6 = "&#47;&#47;&#47;";
+	
 	
 	@Test
 	public void testEncode() {
@@ -23,6 +26,7 @@ public class HTMLEncoderTest {
 		test(in3, out3);
 		test(in4, out4);
 		test(in5, out5);
+		test(in6, out6);
 	}
 
 	private void test(String in, String out) {

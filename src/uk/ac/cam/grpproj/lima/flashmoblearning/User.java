@@ -57,13 +57,15 @@ public class User {
 				throw new IDAlreadySetException();
 		}
 	}
-
+	
+	static final int LEN_MIGRATE = 100;
+	
 	/** Try to log in.
 	 * @return True if the password is correct. */
 	public boolean checkPassword(String password) {
 		if(encryptedPassword == null || encryptedPassword.equals("")) return false;
 		// FIXME REMOVE BACK COMPATIBILITY
-		if(encryptedPassword.length() < 100 && password.equals(encryptedPassword)) {
+		if(encryptedPassword.length() < LEN_MIGRATE && password.equals(encryptedPassword)) {
 			// Note that encrypted passwords are ~ 135 characters long...
 			System.out.println("Upgrading old password to encrypted for "+name);
 			try {
@@ -138,7 +140,7 @@ public class User {
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
 	public void setPassword(String newPassword) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException {
-		if(checkPassword(newPassword)) return;
+		if(encryptedPassword.length() >= LEN_MIGRATE && checkPassword(newPassword)) return;
 		byte[] pwb;
 		try {
 			pwb = newPassword.getBytes("UTF-8");

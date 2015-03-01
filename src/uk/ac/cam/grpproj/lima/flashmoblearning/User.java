@@ -62,6 +62,18 @@ public class User {
 	 * @return True if the password is correct. */
 	public boolean checkPassword(String password) {
 		if(encryptedPassword == null || encryptedPassword.equals("")) return false;
+		// FIXME REMOVE BACK COMPATIBILITY
+		if(encryptedPassword.length() < 100 && password.equals(encryptedPassword)) {
+			// Note that encrypted passwords are ~ 135 characters long...
+			System.out.println("Upgrading old password to encrypted for "+name);
+			try {
+				setPassword(password);
+			} catch (SQLException
+					| NoSuchObjectException | DuplicateEntryException e) {
+				// Ignore.
+			}
+			return true;
+		}
 		String[] split = encryptedPassword.split(":");
 		if(split.length != 4) {
 			System.err.println("ERROR: Password for "+name+" invalid");

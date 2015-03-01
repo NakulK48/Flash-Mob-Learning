@@ -40,7 +40,7 @@
 			User u = users.get(i);
 			Long uid = u.getID();
 			%>
-				<tr><td><a href="userPage.jsp?uid=<%=uid%>"><%=u.getName() %></a></td><td><%=u.getID()%></td></tr>
+				<tr><td><a href="userPage.jsp?uid=<%=uid%>"><%=HTMLEncoder.encode(u.getName()) %></a></td><td><%=u.getID()%></td></tr>
 			<%
 		}
 		//TODO: set new limit

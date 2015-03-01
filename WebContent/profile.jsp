@@ -158,7 +158,7 @@
       <div class="page">
          <div class="header">
             <a href="#menu"></a>
-            Profile - <%= profileUser.getName() %>
+            Profile - <%= HTMLEncoder.encode(profileUser.getName()) %>
          </div>
          <div class="content" style="padding-top:10px;">
 </head>
@@ -217,7 +217,7 @@
 		String entry = 
 		"<tr class='upperRow'>" + 
 		"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'></a></td>" + //upvote
-		"<td class='title'> <a href="+(dt==DocumentType.SKULPT?"'editor.jsp":"'preview.jsp")+"?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+		"<td class='title'> <a href="+(dt==DocumentType.SKULPT?"'editor.jsp":"'preview.jsp")+"?docID=" + Long.toString(pd.getID()) + "'>" + HTMLEncoder.encode(pd.getTitle()) 		+ "</a></td>" + //title
 		"<td class='age'>" + ageString + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +

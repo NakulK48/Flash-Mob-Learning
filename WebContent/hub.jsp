@@ -87,12 +87,12 @@
 		"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'>"+upvoteEndLink+"</td>" + //upvote
 		//TODO: Replace with upvote sprite
 		//TODO: JavaScript to change upvote sprite and increment score locally on upvote.
-		"<td class='title'> <a href="+(d.docType==DocumentType.SKULPT?"'editor.jsp":"'preview.jsp")+"?docID=" + Long.toString(d.getID())+(uid==d.owner.getID()?"&myDoc=1":"")+ "'>" + d.getTitle() + "</a></td>" + //title
+		"<td class='title'> <a href="+(d.docType==DocumentType.SKULPT?"'editor.jsp":"'preview.jsp")+"?docID=" + Long.toString(d.getID())+(uid==d.owner.getID()?"&myDoc=1":"")+ "'>" + HTMLEncoder.encode(d.getTitle()) + "</a></td>" + //title
 		"<td class='age'>" + ageString + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
 		"<td id='score" + Long.toString(d.getID()) + "' class='votes'>" + d.getVotes()	+ "</td>" + //score
-		"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(d.owner.getID()) + "'>" + (uid==d.owner.getID()?"me":d.owner.getName())+ "</a></td>" + //submitter
+		"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(d.owner.getID()) + "'>" + (uid==d.owner.getID()?"me":HTMLEncoder.encode(d.owner.getName()))+ "</a></td>" + //submitter
 		"<td></td>" +
 		"</tr>"; 
 		return entry;		
@@ -164,6 +164,7 @@
 	
 	else // "hot"
 	{
+		sortType = "hot"; // XSS: In case somebody is messing with it...
 		p = new QueryParam(limit+1, offset, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
 		pf = new QueryParam(featuredCount+1, offset, QueryParam.SortField.POPULARITY, QueryParam.SortOrder.DESCENDING);
 	}

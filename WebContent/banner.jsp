@@ -23,7 +23,7 @@
 
 	<h2>Change your banner here:</h2>
 	<form method="post" action="setBanner.jsp">
-		<textarea name = "banner" rows = "8" required><%=LoginManager.getInstance().getLoginBanner() %></textarea>
+		<textarea name = "banner" rows = "8" required><%=HTMLEncoder.encode(LoginManager.getInstance().getLoginBanner()) %></textarea>
 		<input type="submit" value="Submit">
 	</form>
 	

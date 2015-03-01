@@ -135,15 +135,12 @@
 			String entry = 
 			"<tr class='lowerRow'>" + 
 			"<td></td>" + 
-			"<td class='title'> <a href="+editor+"?docID=" + Long.toString(doc.getID())+"&newDoc="+0+ "'>" + doc.getTitle() + "</a></td>" + //title
+			"<td class='title'> <a href="+editor+"?docID=" + Long.toString(doc.getID())+"&newDoc="+0+ "'>" + HTMLEncoder.encode(doc.getTitle()) + "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>"; 
 			
 			out.println(entry);
 		}
-		
-		//dm.deleteAllDocumentsByUser(jimmy);
-		//lm.deleteUser(jimmy);
 		
 		String previousURL = "library.jsp?page=" + previousPage;
 		String nextURL = "library.jsp?page=" + nextPage;

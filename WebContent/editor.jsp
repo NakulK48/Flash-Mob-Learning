@@ -38,7 +38,7 @@
 	DocumentManager dm = DocumentManager.getInstance();
 	Set<Tag> tagList = dm.getTagsNotBanned();
 	for(Tag t:tagList){
-		out.println("availableTags.push('"+t.name+"');");
+		out.println("availableTags.push('"+HTMLEncoder.encode(t.name)+"');");
 	}
 	%>
 	
@@ -95,7 +95,7 @@
 	<%
 	for(Tag t : thisTags) {
 		if (!t.getBanned())
-			out.println("currentTags.push('"+t.name+"')");
+			out.println("currentTags.push('"+HTMLEncoder.encode(t.name)+"')");
 	}
 	%>
 	$("#array_tag_handler").tagHandler({
@@ -260,9 +260,9 @@
         
         <%
         if (published){
-        	%><div id="titleBox" readonly><%=document.getTitle()%></div> <%
+        	%><div id="titleBox" readonly><%=HTMLEncoder.encode(document.getTitle())%></div> <%
         }else{
-        %><input type="text" value="<%=document.getTitle()%>"
+        %><input type="text" value="<%=HTMLEncoder.encode(document.getTitle())%>"
 		    id="titleBox" maxlength="30" placeholder="Title" required ><br>
 		<%
         }
@@ -278,7 +278,7 @@
 
 	<textarea class="textbox"  id="code" disabled><%
 		if(!newDoc.equals("1")){%><%=
-			DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%><%
+			HTMLEncoder.encode(DocumentManager.getInstance().getRevisionContent(document.getLastRevision()))%><%
 		}else{%><%="print 'Hello World'"%><%}%></textarea>
 			<br />
 

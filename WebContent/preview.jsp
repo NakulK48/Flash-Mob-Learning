@@ -55,7 +55,7 @@
 		pageType = "Published";
 	} 	
 %>
-<title><%=title%> - <%=pageType %></title>
+<title><%=HTMLEncoder.encode(title)%> - <%=pageType %></title>
 </head >
 
 <body>
@@ -103,21 +103,21 @@ function unfeaturit(){
 <div>
 
 <h1 id="titlearea" style="padding-left:3%">
-     <%=doc.getTitle()+" - "+pageType %>
+     <%=HTMLEncoder.encode(doc.getTitle())+" - "+pageType %>
 </h1>
 <%	boolean hasParent = false;
 try{
 	String parentTitle=doc.getParentDocument().getTitle();
 	hasParent=true;
 }catch(Exception e){}%>
-<h2 id="parentdoctitle" style="padding-left:10%; color:lightgrey; font-size:small"> <%if(hasParent){%><%="Based on "+ doc.getParentDocument().getTitle() + ", by "+ doc.getParentDocument().owner.getName()+"."%><%}else%><%=""%></h2>
-<p style="white-space:pre-wrap; width:40ex; padding-left:5%; color:black" id="bodyarea"><%= DocumentManager.getInstance().getRevisionContent(doc.getLastRevision()) %>
+<h2 id="parentdoctitle" style="padding-left:10%; color:lightgrey; font-size:small"> <%if(hasParent){%><%="Based on "+ HTMLEncoder.encode(doc.getParentDocument().getTitle()) + ", by "+ HTMLEncoder.encode(doc.getParentDocument().owner.getName())+"."%><%}else%><%=""%></h2>
+<p style="white-space:pre-wrap; width:40ex; padding-left:5%; color:black" id="bodyarea"><%= HTMLEncoder.encode(DocumentManager.getInstance().getRevisionContent(doc.getLastRevision())) %>
 </p>
 <p id="tagarea" style="padding-left:8%; color:darkgrey;">
 	Tags : <%
 	Set<Tag> tags = doc.getTags();
 	for(Tag t : tags){%>
-		<%=t.name+", "%>
+		<%=HTMLEncoder.encode(t.name)+", "%>
 	<%} %>
 </p>
 <!-- TODO : upvote button qnd upvote count -->

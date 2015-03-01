@@ -12,8 +12,8 @@
 <%!
 String entry(String name, boolean banned){
 	String ban = banned?"unban":"ban";
-	return ("<tr><td>"+name+"</td><td>"+(banned?"<font color=\"red\">Banned</font>":"")+"</td><td><a href=\"tagManager.jsp?tagName="+name+"&action="+ban+"\">"+ban+"</a></td>"
-			+"<td><a href=\"tagManager.jsp?tagName="+name+"&action=del\">delete</a></td>"
+	return ("<tr><td>"+HTMLEncoder.encode(name)+"</td><td>"+(banned?"<font color=\"red\">Banned</font>":"")+"</td><td><a href=\"tagManager.jsp?tagName="+HTMLEncoder.encode(name)+"&action="+ban+"\">"+ban+"</a></td>"
+			+"<td><a href=\"tagManager.jsp?tagName="+HTMLEncoder.encode(name)+"&action=del\">delete</a></td>"
 			+"</tr>");
 }
 %>

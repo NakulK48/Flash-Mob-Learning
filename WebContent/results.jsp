@@ -147,7 +147,7 @@
 				if (ageInDays == 1) ageString = "yesterday";
 				else ageString = ageInDays + " days ago";
 			}
-			String upvoteLink = "<a href='results.jsp?query=" + searchQuery + "&domain=" + searchDomain + "&upvote=" + Long.toString(pd.getID()) + "'>";
+			String upvoteLink = "<a href='results.jsp?query=" + HTMLEncoder.encode(searchQuery) + "&domain=" + searchDomain + "&upvote=" + Long.toString(pd.getID()) + "'>";
 			String upvoteEndLink = "</a>";
 			String upvoteImage = "UpvoteNormal.png";
 			if (upvotedDocuments.contains(pd.getID())) {
@@ -158,12 +158,12 @@
 			String entry = 
 			"<tr class='upperRow'>" + 
 			"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'>"+upvoteEndLink+"</td>" + //upvote
-			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + HTMLEncoder.encode(pd.getTitle()) 		+ "</a></td>" + //title
 			"<td class='age'>" + ageString + "</td>" + //age
 			"</tr>" + 
 			"<tr class='lowerRow'>" +
 			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
+			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + HTMLEncoder.encode(pd.owner.getName()) 		+ "</a></td>" + //submitter
 			"<td></td>" +
 			"</tr>"; 
 			
@@ -180,7 +180,7 @@
 				User u = LoginManager.getInstance().getUser(searchQuery);
 				String userID = Long.toString(u.getID());
 				out.println(userID);
-				out.println("<a class='searchResult' href='profile.jsp?id=" + userID + "'>" + u.getName() + "</a>");		
+				out.println("<a class='searchResult' href='profile.jsp?id=" + userID + "'>" + HTMLEncoder.encode(u.getName()) + "</a>");		
 			}
 			catch (Exception e)
 			{
@@ -197,7 +197,7 @@
 			{
 				Tag tag = DocumentManager.getInstance().getTag(searchQuery);
 				String tagID = tag.name;
-				out.println("<a class='searchResult' href='tag.jsp?name=" + tagID + "'>" + tag.name + "</a>");		
+				out.println("<a class='searchResult' href='tag.jsp?name=" + HTMLEncoder.encode(tagID) + "'>" + HTMLEncoder.encode(tag.name) + "</a>");		
 			}
 			catch (Exception e)
 			{

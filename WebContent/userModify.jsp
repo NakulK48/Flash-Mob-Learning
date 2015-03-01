@@ -111,7 +111,7 @@
 					return;
 				}
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("/userList.jsp");
-				response.getWriter().println("<center><font color=green>User: "+u.getName()+" successfully removed!</font></center>");
+				response.getWriter().println("<center><font color=green>User: "+HTMLEncoder.encode(u.getName())+" successfully removed!</font></center>");
 				rd.include(request, response);			
 				return;
 			}else{

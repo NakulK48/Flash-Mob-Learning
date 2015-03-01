@@ -138,8 +138,8 @@
 
 	<div id="orderHolder">
 	<div id="inner">
-		<div class="order" id="left"><a href='<%="tag.jsp?name=" + tagName + "&sort=top"%>'>Top</a></div>
-		<div class="order" id="right"><a href='<%="tag.jsp?name=" + tagName + "&sort=new"%>'>New</a></div>
+		<div class="order" id="left"><a href='<%="tag.jsp?name=" + HTMLEncoder.encode(tagName) + "&sort=top"%>'>Top</a></div>
+		<div class="order" id="right"><a href='<%="tag.jsp?name=" + HTMLEncoder.encode(tagName) + "&sort=new"%>'>New</a></div>
 	</div>
 	</div>
 	
@@ -167,7 +167,7 @@
 			if (ageInDays == 1) ageString = "yesterday";
 			else ageString = ageInDays + " days ago";
 		}
-		String upvoteLink = "<a href='tag.jsp?page=" + pageNumber + "&name=" + tagName + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
+		String upvoteLink = "<a href='tag.jsp?page=" + pageNumber + "&name=" + HTMLEncoder.encode(tagName) + "&sort=" + sortType + "&upvote=" + Long.toString(pd.getID()) + "'>";
 		String upvoteEndLink = "</a>";
 		String upvoteImage = "UpvoteNormal.png";
 		if (upvotedDocuments.contains(pd.getID())) {
@@ -178,20 +178,20 @@
 		String entry = 
 		"<tr class='upperRow'>" + 
 		"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'>"+upvoteEndLink+"</td>" + //upvote
-		"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + pd.getTitle() 		+ "</a></td>" + //title
+		"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + HTMLEncoder.encode(pd.getTitle()) 		+ "</a></td>" + //title
 		"<td class='age'>" + ageString + "</td>" + //age
 		"</tr>" + 
 		"<tr class='lowerRow'>" +
 		"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-		"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + pd.owner.getName() 		+ "</a></td>" + //submitter
+		"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + HTMLEncoder.encode(pd.owner.getName()) 		+ "</a></td>" + //submitter
 		"<td></td>" +
 		"</tr>"; 
 		
 		out.println(entry);
 	}
 	
-		String previousURL = "tag.jsp?sort=" + sortType + "&name=" + tagName + "&page=" + previousPage;
-		String nextURL = "tag.jsp?sort=" + sortType + "&name=" + tagName + "&page=" + nextPage;
+		String previousURL = "tag.jsp?sort=" + sortType + "&name=" + HTMLEncoder.encode(tagName) + "&page=" + previousPage;
+		String nextURL = "tag.jsp?sort=" + sortType + "&name=" + HTMLEncoder.encode(tagName) + "&page=" + nextPage;
 		
 	%>
 </table>

@@ -26,7 +26,7 @@
 		User u = LoginManager.getInstance().getUser(userID);
 	%>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><%=u.getName() %></title>
+<title><%=HTMLEncoder.encode(u.getName()) %></title>
 </head>
 
 <link rel="stylesheet" href="LoginStyle.css" media="screen"
@@ -42,7 +42,7 @@
 		</form>
 		
 		<form method="post" action="userModify.jsp?uid=<%=userID%>">
-			<input type="text" name="username" value=<%=u.getName()%> required>
+			<input type="text" name="username" value=<%=HTMLEncoder.encode(u.getName())%> required>
 			<input type="submit" name="modifyU"class="login login-submit" value="Change Username">
 			 
 		</form>

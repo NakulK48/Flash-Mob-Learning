@@ -37,7 +37,7 @@
 	DocumentManager dm = DocumentManager.getInstance();
 	Set<Tag> tagList = dm.getTagsNotBanned();
 	for(Tag t:tagList){
-		out.println("availableTags.push('"+t.name+"');");
+		out.println("availableTags.push('"+HTMLEncoder.encode(t.name)+"');");
 	}
 	
 	String docID = request.getParameter("docID");
@@ -56,7 +56,7 @@
        var currentTags = [];
    	<%
    	for(Tag t : thisTags) {
-   		out.println("currentTags.push('"+t.name+"')");
+   		out.println("currentTags.push('"+HTMLEncoder.encode(t.name)+"')");
    	}
    	%>
    	$("#array_tag_handler").tagHandler({
@@ -173,13 +173,13 @@ function previewit() {
   </div>
 <div>
         <form id="tagtitlebox">
-        <input type="text" value="<%=document.getTitle()%>"
+        <input type="text" value="<%=HTMLEncoder.encode(document.getTitle())%>"
     id="titleBox" maxlength="28" placeholder="Title" style="margin-bottom:10px; font-size:130%" required><br>
         </form>
 
 
 	
-    <textarea class="textbox" id="plaintext" ><%=DocumentManager.getInstance().getRevisionContent(document.getLastRevision())%></textarea><br /> 
+    <textarea class="textbox" id="plaintext" ><%=HTMLEncoder.encode(DocumentManager.getInstance().getRevisionContent(document.getLastRevision()))%></textarea><br /> 
 	
 	<div>
 		<ul id="array_tag_handler" style="list-style-type:none; margin-top:10px; margin-bottom:10px"></ul>

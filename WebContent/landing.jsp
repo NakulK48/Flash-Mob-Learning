@@ -31,7 +31,7 @@
 	%>
 <div data-role="page">
    <div data-role="header">
-      <h1>Welcome, <%=session.getAttribute(Attribute.USERNAME) %>! <a href="logout.jsp">Logout</a></h1>
+      <h1>Welcome, <%=HTMLEncoder.encode(session.getAttribute(Attribute.USERNAME)) %>! <a href="logout.jsp">Logout</a></h1>
    </div> 
    <img alt="logo" src="fml_logo.png" style="width:100%">
 	<%

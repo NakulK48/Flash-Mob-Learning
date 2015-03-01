@@ -14,6 +14,16 @@ public class HTMLEncoder {
 	};
 	
 	public static String encode(String s) {
+		// Optimise common case - avoid memory churn.
+		boolean found = false;
+		for(int i=0;i<s.length();i++) {
+			char c = s.charAt(i);
+			if(BLACKLIST.indexOf(c) != -1) {
+				found = true;
+				break;
+			}
+		}
+		if(!found) return s;
 		assert(BLACKLIST.length() == BLACKLIST_ENCODED.length);
 		StringBuilder sb = new StringBuilder(s.length());
 		for(int i=0;i<s.length();i++) {

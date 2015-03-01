@@ -1,6 +1,15 @@
 package uk.ac.cam.grpproj.lima.flashmoblearning;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.SQLException;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.LoginManager;
 import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.DuplicateEntryException;
@@ -9,6 +18,8 @@ import uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.NotInitialized
 
 /** Base of Student and Teacher. */
 public class User {
+	
+	static final SecureRandom rng = new SecureRandom();
 	
 	/** Name of the user. Can be changed by administrator. */
 	private String name;
@@ -50,9 +61,63 @@ public class User {
 	/** Try to log in.
 	 * @return True if the password is correct. */
 	public boolean checkPassword(String password) {
-		// FIXME SECURITY: Hash passwords with a salt, use MessageDigest.isEqual etc.
-		return password.equals(encryptedPassword);
+		if(encryptedPassword == null || encryptedPassword.equals("")) return false;
+		String[] split = encryptedPassword.split(":");
+		if(split.length != 4) {
+			System.err.println("ERROR: Password for "+name+" invalid");
+			return false;
+		}
+		if(!split[0].equals("1")) {
+			System.err.println("ERROR: Password for "+name+" encrypted using unknown version "+split[0]);
+			return false;
+		}
+		int iterations;
+		try {
+			iterations = Integer.parseInt(split[1], 16);
+			if(iterations > MAX_ITERATIONS) {
+				System.err.println("ERROR: Password for "+name+" has invalid (too big) iterations "+split[1]);
+				return false;
+			}
+		} catch (NumberFormatException e) {
+			System.err.println("ERROR: Password for "+name+" has invalid iterations "+split[1]);
+			return false;
+		}
+		byte[] salt;
+		byte[] hpw;
+		try {
+			salt = DatatypeConverter.parseHexBinary(split[2]);
+			hpw = DatatypeConverter.parseHexBinary(split[3]);
+		} catch (IllegalArgumentException e) {
+			System.err.println("ERROR: Password for "+name+" has invalid salt or hash");
+			return false;
+		}
+		byte[] opwBytes;
+		try {
+			opwBytes = password.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new Error("Impossible: Get a better JVM", e);
+		}
+		Mac mac;
+		try {
+			mac = Mac.getInstance("HmacSHA256");
+		} catch (NoSuchAlgorithmException e) {
+			throw new Error("Get a better JVM", e);
+		}
+		SecretKeySpec keySpec = new SecretKeySpec(salt, "HmacSHA256");
+		try {
+			mac.init(keySpec);
+		} catch (InvalidKeyException e) {
+			throw new Error("Get a better JVM", e);
+		}
+		byte[] temp = opwBytes;
+		for(int i=0;i<ITERATIONS;i++) {
+			temp = mac.doFinal(temp);
+		}
+		return (MessageDigest.isEqual(temp, hpw));
 	}
+	
+	static final int ITERATIONS = 1024; // Pi is slow!
+	static final int MAX_ITERATIONS = ITERATIONS; // Could be different
 	
 	/** Set password 
 	 * @throws DuplicateEntryException Should not happen unless there are 
@@ -61,9 +126,35 @@ public class User {
 	 * @throws SQLException 
 	 * @throws NotInitializedException */
 	public void setPassword(String newPassword) throws NotInitializedException, SQLException, NoSuchObjectException, DuplicateEntryException {
-		// FIXME SECURITY: Hash passwords with a salt, use MessageDigest.isEqual etc.
-		if(this.encryptedPassword.equals(newPassword)) return;
-		encryptedPassword = newPassword;
+		if(checkPassword(newPassword)) return;
+		byte[] pwb;
+		try {
+			pwb = newPassword.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			throw new Error("Impossible: Get a better JVM", e1);
+		}
+		byte[] salt = new byte[32];
+		rng.nextBytes(salt);
+		Mac mac;
+		try {
+			mac = Mac.getInstance("HmacSHA256");
+		} catch (NoSuchAlgorithmException e) {
+			throw new Error("Get a better JVM", e);
+		}
+		SecretKeySpec keySpec = new SecretKeySpec(salt, "HmacSHA256");
+		try {
+			mac.init(keySpec);
+		} catch (InvalidKeyException e) {
+			throw new Error("Get a better JVM", e);
+		}
+		byte[] temp = pwb;
+		for(int i=0;i<ITERATIONS;i++) {
+			temp = mac.doFinal(temp);
+		}
+		encryptedPassword = "1:" // version
+				+ Integer.toHexString(ITERATIONS) + ":" +
+				DatatypeConverter.printHexBinary(salt) + ":" +  
+				DatatypeConverter.printHexBinary(temp);
 		LoginManager.getInstance().modifyUser(this);
 	}
 

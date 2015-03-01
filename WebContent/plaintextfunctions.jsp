@@ -42,12 +42,16 @@ String processRequest(String text, String docID, Long uid, String title, String[
 				return("Save successful");
 			}
 			else{
+				System.out.println("Invalid document type");
 				return("Invalid document type");
 			}
 		} else {
+			System.out.println("Invalid permissions");
 			return("Invalid permissions");
 		}
 	}catch(Exception e){
+		System.out.println("Error saving: "+e);
+		e.printStackTrace();
 		return("Something went wrong ! Please try again later");
 	}
 	//}

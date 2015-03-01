@@ -2,14 +2,15 @@ package uk.ac.cam.grpproj.lima.flashmoblearning;
 
 public class HTMLEncoder {
 	
-	static final String BLACKLIST = "<>&\"'";
+	static final String BLACKLIST = "<>&\"'/";
 	
 	static final String[] BLACKLIST_ENCODED = {
 		"&lt;",
 		"&gt;",
 		"&amp;",
 		"&quot;",
-		"&#39;"
+		"&#39;",
+		"&#47;"
 	};
 	
 	public static String encode(String s) {

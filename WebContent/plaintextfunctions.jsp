@@ -32,8 +32,6 @@ String processRequest(String text, String docID, Long uid, String title, String[
  					if(tag.equals("")) continue;
 					try{
 						wipdoc.addTag(Tag.makeUnbanned(tag));
-					}catch(DuplicateEntryException e){
-						// Impossible.
 					}catch(BannedTagException e){
 						// Ignore.
 					}

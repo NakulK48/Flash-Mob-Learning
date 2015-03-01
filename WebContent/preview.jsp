@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date, java.util.Set"%>
+<%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.*, java.util.Date, java.util.Set, java.util.ArrayList"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.database.exception.*"%>
 <%@ page import="uk.ac.cam.grpproj.lima.flashmoblearning.*, java.sql.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -136,17 +136,21 @@ try{
 	<%
 	}else{
 		%><button class="fml_buttons" type="button" onclick="cloneit()"
-				style="border-style: none; width:15%; min-width:60px;">Clone</button><%
+				style="border-style: none; width:15%; min-width:60px; background-color:#ff91cc">Clone</button><%
 		String myDoc = request.getParameter("myDoc");
 		if(myDoc!= null && ((String) myDoc).equals("1")||isAdmin){
 			//my document
 			%><button class="fml_buttons" type="button" onclick="deleteit()"
-					style="border-style: none; width:15%; min-width:60px;">Delete</button><%
+					style="border-style: none; width:15%; min-width:60px; background-color:#ff8b99">Delete</button><%
 		}else{
+			ArrayList<PublishedDocument> isUpvotedList = new ArrayList<PublishedDocument>();
+			isUpvotedList.add((PublishedDocument) doc);
+			ArrayList<Long> docIDList = DocumentManager.getInstance().hasUpvoted(u, isUpvotedList);
+			if(docIDList.isEmpty()){
 			%>
 			<button class="fml_buttons" type="button" onclick="upvoteit()"
 					style="border-style: none; width:15%; min-width:60px;">Upvote</button><%			
-		}
+		}}
 		if(isAdmin){
 			if(((PublishedDocument) doc).getFeatured()){
 				%>

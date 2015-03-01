@@ -139,9 +139,30 @@ function saveit() {//DOES NOT DO TAGS YET. DOES NOT DO TAGS YET. DOES NOT DO TAG
 }
 
 function previewit() {
-	saveit();
-	window.location="preview.jsp?WIPDoc=1&myDoc=1&docID=<%=docID%>";
+
+	   mycodemirror.save();
+	   var mytext = encodeURIComponent(document.getElementById("plaintext").value); 
+	   var tags = $('#array_tag_handler').tagHandler("getTags");
+        jQuery.ajax({
+            type: "POST",
+            url: "plaintextfunctions.jsp",
+            async: false,
+            data: {
+            	
+            	title: encodeURIComponent(document.getElementById('titleBox').value),
+      			funct: "save",
+                docID: <%=docID%>,
+        		text: mytext,
+        		tags:encodeURIComponent(tags)
+        		
+            },
+            dataType: "script"
+        }).done(function( response ) {
+        	window.location="preview.jsp?WIPDoc=1&myDoc=1&docID=<%=docID%>";
+        }).fail(function(response) { alert("Error")   ; });
+
 }
+
 
         
 

@@ -8,7 +8,6 @@
 String processRequest(String text, String docID, Long uid, String title, String[] tags) {
 	//if("${funct}".equals("save")){ 
 	try{
-		System.out.println(Arrays.toString(tags));
 		String docTitle = URLDecoder.decode(title, "UTF-8");
 		Date date = new Date();
 		User u = LoginManager.getInstance().getUser(uid);
@@ -24,7 +23,6 @@ String processRequest(String text, String docID, Long uid, String title, String[
 				Set<Tag> oldTags = wipdoc.getTags();
 				
 				for(Tag t:oldTags){ //erasing all the tags
-					System.out.println(t.name);
 					wipdoc.deleteTag(t);
 				}
 			
@@ -58,7 +56,5 @@ String processRequest(String text, String docID, Long uid, String title, String[
 %>
 <% 
 String str = URLDecoder.decode(request.getParameter("tags"), "UTF-8"); 
-System.out.println(str);
-String [] arr = str.split(",");
-//System.out.println(Arrays.toString(arr));				
+String [] arr = str.split(",");				
 processRequest(URLDecoder.decode(request.getParameter("text"), "UTF-8"), (String) request.getParameter("docID"), (Long) session.getAttribute("uid"), (String) request.getParameter("title"), arr); %>

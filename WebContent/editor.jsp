@@ -212,13 +212,32 @@
 	            dataType: "script"
 	        }).done(function( response ) {
 				alert("Save successful");
+				window.location ="library.jsp";
 	        }).fail(function(response) { alert("Error")   ; });
 	}
 
 
 	function publishit(){
-		saveit();
-		window.location ="publish.jsp?docID=<%=docID%>";
+	   mycodemirror.save();
+	   var mytext = encodeURIComponent(document.getElementById("code").value); 
+	   var tags = $('#array_tag_handler').tagHandler("getTags");
+        jQuery.ajax({
+            type: "POST",
+            url: "plaintextfunctions.jsp",
+            async: false,
+            data: {
+            	
+            	title: encodeURIComponent(document.getElementById('titleBox').value),
+      			funct: "save",
+                docID: <%=docID%>,
+        		text: mytext,
+        		tags:encodeURIComponent(tags)
+        		
+            },
+            dataType: "script"
+        }).done(function( response ) {
+			window.location ="publish.jsp?docID=<%=docID%>";
+        }).fail(function(response) { alert("Error")   ; });
 	}
 
 	

@@ -89,6 +89,11 @@
          </div>
          <div class="content" style="padding-top:10px;">
 
+
+		<form id="tfnewsearch" method="get" action="results.jsp">
+		        <input type="text" name="query" size="21" maxlength="120"><input type="submit" value="search">
+		</form>
+
 <%
 
 	String searchQuery = request.getParameter("query");
@@ -97,15 +102,10 @@
 	if (searchDomain == null) searchDomain = "documents";
 	if (!searchDomain.equals("documents") && !searchDomain.equals("tags") && !searchDomain.equals("users") ) searchDomain = "documents";
 %>
-
-		<form id="tfnewsearch" method="get" action="results.jsp">
-		        <input type="text" name="query" size="21" maxlength="120"><input type="submit" value="search">
-		</form>
-
 	<div id="searchTypesHolder">
-		<a href='<%="results.jsp?query=" + searchQuery + "&domain=documents"%>'><div class="searchType">Documents</div></a>
-		<a href='<%="results.jsp?query=" + searchQuery + "&domain=users"%>'><div class="searchType">Users</div></a>
-		<a href='<%="results.jsp?query=" + searchQuery + "&domain=tags"%>'><div class="searchType">Tags</div></a>
+		<div class="searchType"><a href='<%="results.jsp?query=" + searchQuery + "&domain=documents"%>'>Documents</a></div>
+		<div class="searchType"><a href='<%="results.jsp?query=" + searchQuery + "&domain=users"%>'>Users</a></div>
+		<div class="searchType"><a href='<%="results.jsp?query=" + searchQuery + "&domain=tags"%>'>Tags</a></div>
 	</div>
 	<br>
 	
@@ -113,103 +113,99 @@
 	if (searchQuery == null || searchQuery.length() == 0) 
 	{
 		out.println("<p class='error'>Enter a search string.</p>");
-		return;
+		
 	}
 	
 	else
 	{
 		out.println("<p id='query'>Searching " + searchDomain + " for '" + searchQuery + "'</p>");
-	}
-%>
-<table>
-<%
-
-	if (searchDomain.equals("documents"))
-	{
-		//TODO: query Document database for matching titles
-		QueryParam p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
-		ArrayList<PublishedDocument> matchingDocs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTitle(searchQuery, dt, p);
-				
-		User thisUser = LoginManager.getInstance().getUser(uid);
-		ArrayList<Long> upvotedDocuments = (ArrayList<Long>) dm.hasUpvoted(thisUser, matchingDocs);
-		
-		for (PublishedDocument pd : matchingDocs)
+		%><table><%
+	
+		if (searchDomain.equals("documents"))
 		{
-
-			String ageString;
-			int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
-			if (ageInHours < 1) ageString = "Less than an hour ago";
-			else if (ageInHours < 2) ageString = "An hour ago";
-			else if (ageInHours < 24) ageString = ageInHours + " hours ago";
-			else
-			{
-				int ageInDays = ageInHours / 24;
-				if (ageInDays == 1) ageString = "yesterday";
-				else ageString = ageInDays + " days ago";
-			}
-			String upvoteLink = "<a href='results.jsp?query=" + HTMLEncoder.encode(searchQuery) + "&domain=" + searchDomain + "&upvote=" + Long.toString(pd.getID()) + "'>";
-			String upvoteEndLink = "</a>";
-			String upvoteImage = "UpvoteNormal.png";
-			if (upvotedDocuments.contains(pd.getID())) {
-				upvoteImage = "UpvoteEngaged.png";
-				upvoteLink = "";
-				upvoteEndLink = "";
-			}
-			String entry = 
-			"<tr class='upperRow'>" + 
-			"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'>"+upvoteEndLink+"</td>" + //upvote
-			"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + HTMLEncoder.encode(pd.getTitle()) 		+ "</a></td>" + //title
-			"<td class='age'>" + ageString + "</td>" + //age
-			"</tr>" + 
-			"<tr class='lowerRow'>" +
-			"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
-			"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + HTMLEncoder.encode(pd.owner.getName()) 		+ "</a></td>" + //submitter
-			"<td></td>" +
-			"</tr>"; 
+			//TODO: query Document database for matching titles
+			QueryParam p = new QueryParam(25, 0, QueryParam.SortField.VOTES, QueryParam.SortOrder.DESCENDING);
+			ArrayList<PublishedDocument> matchingDocs = (ArrayList<PublishedDocument>) DocumentManager.getInstance().getPublishedByTitle(searchQuery, dt, p);
+					
+			User thisUser = LoginManager.getInstance().getUser(uid);
+			ArrayList<Long> upvotedDocuments = (ArrayList<Long>) dm.hasUpvoted(thisUser, matchingDocs);
 			
-			out.println(entry);
-		} 
+			for (PublishedDocument pd : matchingDocs)
+			{
+	
+				String ageString;
+				int ageInHours = (int) ((System.currentTimeMillis() - pd.creationTime)/3600000);
+				if (ageInHours < 1) ageString = "Less than an hour ago";
+				else if (ageInHours < 2) ageString = "An hour ago";
+				else if (ageInHours < 24) ageString = ageInHours + " hours ago";
+				else
+				{
+					int ageInDays = ageInHours / 24;
+					if (ageInDays == 1) ageString = "yesterday";
+					else ageString = ageInDays + " days ago";
+				}
+				String upvoteLink = "<a href='results.jsp?query=" + HTMLEncoder.encode(searchQuery) + "&domain=" + searchDomain + "&upvote=" + Long.toString(pd.getID()) + "'>";
+				String upvoteEndLink = "</a>";
+				String upvoteImage = "UpvoteNormal.png";
+				if (upvotedDocuments.contains(pd.getID())) {
+					upvoteImage = "UpvoteEngaged.png";
+					upvoteLink = "";
+					upvoteEndLink = "";
+				}
+				String entry = 
+				"<tr class='upperRow'>" + 
+				"<td class='upvote'>" + upvoteLink + " <img src='" + upvoteImage + "'>"+upvoteEndLink+"</td>" + //upvote
+				"<td class='title'> <a href='preview.jsp?docID=" + Long.toString(pd.getID()) + "'>" + HTMLEncoder.encode(pd.getTitle()) 		+ "</a></td>" + //title
+				"<td class='age'>" + ageString + "</td>" + //age
+				"</tr>" + 
+				"<tr class='lowerRow'>" +
+				"<td id='score" + Long.toString(pd.getID()) + "' class='votes'>" + pd.getVotes()	+ "</td>" + //score
+				"<td class='submitter'> <a href='profile.jsp?id=" + Long.toString(pd.owner.getID()) + "'>" + HTMLEncoder.encode(pd.owner.getName()) 		+ "</a></td>" + //submitter
+				"<td></td>" +
+				"</tr>"; 
+				
+				out.println(entry);
+			} 
+			
+		}
 		
-	}
+		else if (searchDomain.equals("users"))
+		{
+			//TODO: maybe implement a fuzzier search here?
+				try
+				{
+					User u = LoginManager.getInstance().getUser(searchQuery);
+					String userID = Long.toString(u.getID());
+					out.println(userID);
+					out.println("<a class='searchResult' href='profile.jsp?id=" + userID + "'>" + HTMLEncoder.encode(u.getName()) + "</a>");		
+				}
+				catch (Exception e)
+				{
+					out.println("No such user exists.");
+				}
 	
-	else if (searchDomain.equals("users"))
-	{
-		//TODO: maybe implement a fuzzier search here?
-			try
-			{
-				User u = LoginManager.getInstance().getUser(searchQuery);
-				String userID = Long.toString(u.getID());
-				out.println(userID);
-				out.println("<a class='searchResult' href='profile.jsp?id=" + userID + "'>" + HTMLEncoder.encode(u.getName()) + "</a>");		
-			}
-			catch (Exception e)
-			{
-				out.println("No such user exists.");
-			}
-
+		
+		}
+		
+		else if (searchDomain.equals("tags"))
+		{
+			//TODO: query Tag database for matching names
+				try
+				{
+					Tag tag = DocumentManager.getInstance().getTag(searchQuery);
+					String tagID = tag.name;
+					out.println("<a class='searchResult' href='tag.jsp?name=" + HTMLEncoder.encode(tagID) + "'>" + HTMLEncoder.encode(tag.name) + "</a>");		
+				}
+				catch (Exception e)
+				{
+					out.println("No such tag exists.");
+				}
 	
-	}
-	
-	else if (searchDomain.equals("tags"))
-	{
-		//TODO: query Tag database for matching names
-			try
-			{
-				Tag tag = DocumentManager.getInstance().getTag(searchQuery);
-				String tagID = tag.name;
-				out.println("<a class='searchResult' href='tag.jsp?name=" + HTMLEncoder.encode(tagID) + "'>" + HTMLEncoder.encode(tag.name) + "</a>");		
-			}
-			catch (Exception e)
-			{
-				out.println("No such tag exists.");
-			}
-
+		}
 	}
 %>
 </table>
 
-	<div id="footer">	
-	</div>	
          </div>
       </div>
 
